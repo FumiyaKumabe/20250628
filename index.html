@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEBシステム</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Inter font application */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Side menu styles */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: flex-end; /* Position menu to the right */
+            z-index: 1000;
+            visibility: hidden; /* Hidden by default */
+            opacity: 0; /* Transparent by default */
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .side-menu-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .side-menu-content {
+            background-color: white;
+            width: 100%;
+            max-width: 320px; /* Max width of side menu */
+            height: 100%;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(100%); /* Initially off-screen to the right */
+            transition: transform 0.3s ease-in-out;
+            padding: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .side-menu-overlay.open .side-menu-content {
+            transform: translateX(0); /* Slide in when open */
+        }
+        .side-menu-close-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.8rem; /* Slightly larger */
+            cursor: pointer;
+            color: #6b7280; /* gray-500 */
+        }
+        .side-menu-title {
+            font-size: 1.5rem; /* text-xl */
+            font-weight: bold;
+            margin-bottom: 1rem; /* mb-4 */
+            color: #1f2937; /* gray-800 */
+        }
+        .side-menu-item {
+            padding: 0.75rem 0; /* py-3 */
+            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            cursor: pointer;
+            font-size: 1.125rem; /* text-lg */
+            color: #374151; /* gray-700 */
+        }
+        .side-menu-item:last-child {
+            border-bottom: none; /* No bottom border for the last item */
+        }
+        .side-menu-item:hover {
+            background-color: #f3f4f6; /* gray-100 */
+            border-radius: 4px;
+        }
+
+        /* LINE Notification Modal Styles */
+        .line-notification-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1010; /* Higher than side menu */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .line-notification-modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .line-notification-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 95%;
+            width: 500px; /* Increased width for better table display */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .line-notification-modal-close-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280; /* gray-500 */
+        }
+        .line-notification-modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Sort indicator styles */
+        .sort-indicator {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 4px solid #9ca3af; /* gray-400 */
+            margin-left: 4px;
+            vertical-align: middle;
+            transition: transform 0.2s ease-in-out;
+            opacity: 0; /* Hidden by default */
+        }
+        .sort-indicator.active {
+            opacity: 1;
+        }
+        .sort-indicator.asc {
+            transform: rotate(0deg);
+        }
+        .sort-indicator.desc {
+            transform: rotate(180deg);
+        }
+
+        /* Calendar Modal Styles */
+        .calendar-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1020; /* Higher than other modals */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .calendar-modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .calendar-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 350px;
+            position: relative;
+            text-align: center;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+        .calendar-grid span {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .calendar-grid span.day-label {
+            font-weight: bold;
+            color: #4b5563; /* gray-700 */
+        }
+        .calendar-grid span.current-month {
+            color: #1f2937; /* gray-800 */
+        }
+        .calendar-grid span.other-month {
+            color: #9ca3af; /* gray-400 */
+        }
+        .calendar-grid span.today {
+            background-color: #bfdbfe; /* blue-200 */
+            font-weight: bold;
+        }
+        /* New styles for Saturday and Sunday */
+        .calendar-grid span.saturday {
+            color: #2563eb; /* blue-700 */
+        }
+        .calendar-grid span.sunday {
+            color: #dc2626; /* red-600 */
+        }
+        .calendar-grid span:not(.day-label):hover {
+            background-color: #e5e7eb; /* gray-200 */
+        }
+
+        /* Phone Call Modal Styles */
+        .phone-call-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1030; /* Higher than other modals */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .phone-call-modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .phone-call-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 95%;
+            width: 350px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+        .phone-call-modal-close-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280; /* gray-500 */
+        }
+        .phone-call-modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        /* Styles for Status Tags */
+        .status-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem; /* py-1 px-3 */
+            border-radius: 9999px; /* rounded-full */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* font-semibold */
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .status-tag-completed {
+            background-color: #dbeafe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+        }
+
+        .status-tag-pending {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+
+        /* Custom font size for small text */
+        .text-xxs {
+            font-size: 0.625rem; /* 10px */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
+    <!-- Main container: Centered on screen, max width -->
+    <div class="w-full max-w-screen-xl">
+        <!-- Top section: Modified to use justify-between for left and right alignment -->
+        <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
+            <!-- Date and navigation buttons block - aligned to the left -->
+            <div class="flex items-center flex-wrap gap-2">
+                <!-- Previous day button - smaller -->
+                <button class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                </button>
+                <!-- System date -->
+                <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
+                    <span id="system-date"></span>
+                </div>
+                <!-- Next day button - smaller -->
+                <button class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
+                <!-- Calendar icon (button) -->
+                <button id="calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                        <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search dropdown and other operation buttons block - aligned to the right -->
+            <div class="flex items-center flex-wrap gap-2 md:gap-3">
+                <!-- Status dropdown for search (always visible) -->
+                <select id="status-search-select" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
+                    <option value="">全てのステータス</option>
+                    <option value="報告待ち">報告待ち</option>
+                    <option value="上番待ち">上番待ち</option>
+                    <option value="上番完了">上番完了</option>
+                    <option value="下番待ち">下番待ち</option>
+                    <option value="下番完了">下番完了</option>
+                </select>
+                <!-- Notification icon (button) - yellow with badge -->
+                <button id="notification-button" class="relative flex items-center justify-center p-2 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-bell">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                    </svg>
+                    <!-- Notification badge -->
+                    <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                        <!-- Notification count will be displayed here -->
+                    </span>
+                </button>
+                <!-- Options icon (button) -->
+                <button id="options-button" class="flex items-center justify-center p-2 bg-gray-300 text-gray-800 rounded-full shadow-md hover:bg-gray-400 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-horizontal">
+                        <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Item area - changed to table format -->
+        <div class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <!-- Sortable Headers -->
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="no">
+                            <div class="flex items-center justify-center">
+                                <span>行NO</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap min-w-40 cursor-pointer" data-sort-key="teamMember">
+                            <div class="flex items-center justify-center">
+                                <span>隊員名</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="branch">
+                            <div class="flex items-center justify-center">
+                                <span>支店</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="client">
+                            <div class="flex items-center justify-center">
+                                <span>得意先</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="assignment">
+                            <div class="flex items-center justify-center">
+                                <span>配置先</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="workContent">
+                            <div class="flex items-center justify-center">
+                                <span>業務内容</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <!-- Non-sortable headers (text-left) -->
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">基本時間</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">報告時間</th>
+                        <!-- Sortable headers -->
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="status">
+                            <div class="flex items-center justify-center">
+                                <span>ステータス</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="remarks">
+                            <div class="flex items-center justify-center">
+                                <span>備考</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="receptionTime">
+                            <div class="flex items-center justify-center">
+                                <span>受信時間</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="memo">
+                            <div class="flex items-center justify-center">
+                                <span>メモ</span>
+                                <span class="sort-indicator"></span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" class="bg-white divide-y divide-gray-200">
+                    <!-- Table rows will be dynamically generated here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Notification Side Menu -->
+    <div id="side-menu-container" class="side-menu-overlay">
+        <div class="side-menu-content rounded-l-xl">
+            <button id="side-menu-close-button" class="side-menu-close-button">&times;</button>
+            <h3 id="dynamic-side-menu-title" class="side-menu-title"></h3>
+            <!-- Container for notification messages or option items -->
+            <div id="side-menu-content-area" class="space-y-3 text-left overflow-y-auto flex-grow">
+                <!-- Content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LINE Notification Settings Modal -->
+    <div id="line-notification-settings-modal" class="line-notification-modal-overlay">
+        <div class="line-notification-modal-content">
+            <button id="line-notification-modal-close-button" class="line-notification-modal-close-button">&times;</button>
+            <h3 class="line-notification-modal-title">LINE通知設定</h3>
+
+            <!-- Notification Settings Section -->
+            <div class="space-y-4">
+                <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">通知設定</h4>
+                <div class="flex items-center space-x-2">
+                    <label for="departure-time" class="text-gray-700 whitespace-nowrap">自宅出発：勤務開始の</label>
+                    <input type="number" id="departure-time" value="60" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分前</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="start-report-time" class="text-gray-700 whitespace-nowrap">上番報告：勤務開始の</label>
+                    <input type="number" id="start-report-time" value="10" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分前</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="end-report-time" class="text-gray-700 whitespace-nowrap">下番報告：勤務終了の</label>
+                    <input type="number" id="end-report-time" value="10" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分後</span>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="overflow-x-auto border border-gray-200 rounded-md mt-6">
+                <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2 px-4 pt-2">隊員情報</h4>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <!-- New column: NO/支店 -->
+                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                <span class="text-gray-400 text-xxs font-normal block">NO</span>
+                                <span>支店</span>
+                            </th>
+                            <!-- New column: NO/隊員名 -->
+                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                                <span class="text-gray-400 text-xxs font-normal block">NO</span>
+                                <span>隊員名</span>
+                            </th>
+                            <!-- Original LINE ID column -->
+                            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">LINE ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="line-member-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- Rows will be dynamically generated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Save and Cancel Buttons -->
+            <div class="flex justify-end space-x-4 mt-6">
+                <button id="save-line-settings" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">保存</button>
+                <button id="cancel-line-settings" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div id="calendar-modal" class="calendar-modal-overlay">
+        <div class="calendar-modal-content">
+            <button id="calendar-modal-close-button" class="line-notification-modal-close-button">&times;</button>
+            <div class="calendar-header">
+                <button id="prev-month-button" class="p-1 rounded-full hover:bg-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                </button>
+                <span id="calendar-month-year"></span>
+                <button id="next-month-button" class="p-1 rounded-full hover:bg-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Days of the week -->
+                <span class="day-label">日</span>
+                <span class="day-label">月</span>
+                <span class="day-label">火</span>
+                <span class="day-label">水</span>
+                <span class="day-label">木</span>
+                <span class="day-label">金</span>
+                <span class="day-label">土</span>
+                <!-- Calendar days will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Phone Call Modal -->
+    <div id="phone-call-modal" class="phone-call-modal-overlay">
+        <div class="phone-call-modal-content">
+            <button id="phone-call-modal-close-button" class="phone-call-modal-close-button">&times;</button>
+            <h3 id="phone-call-modal-title" class="phone-call-modal-title"></h3>
+            <p id="phone-call-modal-number" class="text-2xl font-bold text-gray-900 mb-4"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="call-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">電話をかける</button>
+                <button id="cancel-call-button" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System date dynamically configured
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateElement = document.getElementById('system-date');
+            if (dateElement) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Month starts from 0, so add 1
+                const day = String(today.getDate()).padStart(2, '0');
+                dateElement.textContent = `${year}/${month}/${day}`;
+            }
+
+            // Get elements
+            const notificationButton = document.getElementById('notification-button');
+            const notificationBadge = document.getElementById('notification-badge');
+            const optionsButton = document.getElementById('options-button');
+            const sideMenuContainer = document.getElementById('side-menu-container');
+            const dynamicSideMenuTitle = document.getElementById('dynamic-side-menu-title');
+            const sideMenuContentArea = document.getElementById('side-menu-content-area');
+            const sideMenuCloseButton = document.getElementById('side-menu-close-button');
+            const tableBody = document.getElementById('table-body');
+            const tableHeaders = document.querySelectorAll('th[data-sort-key]'); // Sortable headers
+
+            const statusSearchSelect = document.getElementById('status-search-select'); // Changed to select dropdown
+
+            const calendarButton = document.getElementById('calendar-button');
+            const calendarModal = document.getElementById('calendar-modal');
+            const calendarModalCloseButton = document.getElementById('calendar-modal-close-button');
+            const calendarMonthYear = document.getElementById('calendar-month-year');
+            const calendarGrid = document.getElementById('calendar-grid');
+            const prevMonthButton = document.getElementById('prev-month-button'); // New
+            const nextMonthButton = document.getElementById('next-month-button'); // New
+
+            const lineNotificationSettingsModal = document.getElementById('line-notification-settings-modal');
+            const lineNotificationModalCloseButton = document.getElementById('line-notification-modal-close-button');
+            const saveLineSettingsButton = document.getElementById('save-line-settings');
+            const cancelLineSettingsButton = document.getElementById('cancel-line-settings');
+
+            // Phone Call Modal elements
+            const phoneCallModal = document.getElementById('phone-call-modal');
+            const phoneCallModalCloseButton = document.getElementById('phone-call-modal-close-button');
+            const phoneCallModalTitle = document.getElementById('phone-call-modal-title');
+            const phoneCallModalNumber = document.getElementById('phone-call-modal-number');
+            const callButton = document.getElementById('call-button');
+            const cancelCallButton = document.getElementById('cancel-call-button');
+
+            // Table data (initial state) - Added phoneNumber
+            let allTableData = [ // Original full data
+                {
+                    no: 1,
+                    teamMember: '隈部 文哉',
+                    branch: '福岡支店',
+                    client: 'ビジコン建設',
+                    assignment: '博多駅筑紫口前工事',
+                    workContent: '日勤',
+                    baseTime: '08:00～17:00',
+                    reportTime: '08:00～17:00',
+                    status: '下番完了',
+                    remarks: '',
+                    receptionTime: '17:15',
+                    memo: '',
+                    phoneNumber: '09012345678',
+                    lineId: 'fumiya.kumabe' // Added LINE ID
+                },
+                {
+                    no: 2,
+                    teamMember: '山田 太郎',
+                    branch: '東京支店',
+                    client: '中央開発',
+                    assignment: '新宿駅東口再開発',
+                    workContent: '夜勤',
+                    baseTime: '22:00～07:00',
+                    reportTime: '',
+                    status: '報告待ち',
+                    remarks: '',
+                    receptionTime: '',
+                    memo: '',
+                    phoneNumber: '08098765432',
+                    lineId: 'taro.yamada' // Added LINE ID
+                },
+                {
+                    no: 3,
+                    teamMember: '佐藤 花子',
+                    branch: '大阪支店',
+                    client: '関西電鉄',
+                    assignment: '梅田地下街警備',
+                    workContent: '日勤',
+                    baseTime: '09:00～18:00',
+                    reportTime: '09:00～18:00',
+                    status: '下番完了',
+                    remarks: '',
+                    receptionTime: '18:10',
+                    memo: '',
+                    phoneNumber: '07011223344',
+                    lineId: 'hanako.sato' // Added LINE ID
+                }
+            ];
+
+            let displayedTableData = [...allTableData]; // Data currently displayed and subject to sorting/filtering
+
+            // Global state for sorting
+            let currentSortKey = null;
+            let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+            // Function to render the main table body based on displayedTableData
+            function renderTable() {
+                tableBody.innerHTML = ''; // Clear existing rows
+
+                displayedTableData.forEach(rowData => {
+                    const row = document.createElement('tr');
+                    // Apply special styling for "報告待ち" row
+                    if (rowData.status === '報告待ち') {
+                        row.classList.add('bg-yellow-50');
+                    }
+
+                    // Dynamically create and append cells
+                    // 行NO
+                    const noCell = document.createElement('td');
+                    noCell.classList.add('px-6', 'py-4', 'text-sm', 'font-medium', 'text-gray-900', 'text-center');
+                    noCell.textContent = rowData.no;
+                    row.appendChild(noCell);
+
+                    // 隊員名
+                    const teamMemberCell = document.createElement('td');
+                    teamMemberCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'whitespace-nowrap', 'min-w-40');
+                    const teamMemberDiv = document.createElement('div');
+                    teamMemberDiv.classList.add('flex', 'items-center', 'justify-center');
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = rowData.teamMember;
+                    teamMemberDiv.appendChild(nameSpan);
+                    
+                    // Phone SVG icon with click listener (Lucide Icons 'phone' - no call waves, filled)
+                    const phoneIconSvg = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone cursor-pointer text-gray-500 hover:text-gray-700 transition-colors">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-3.67A19.79 19.79 0 0 1 2 5.18 2 2 0 0 1 4.11 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    `;
+                    const phoneIconWrapper = document.createElement('span');
+                    phoneIconWrapper.classList.add('ml-2'); // Add margin to separate from name
+                    phoneIconWrapper.innerHTML = phoneIconSvg;
+                    phoneIconWrapper.addEventListener('click', () => {
+                        openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
+                    });
+                    teamMemberDiv.appendChild(phoneIconWrapper);
+                    teamMemberCell.appendChild(teamMemberDiv);
+                    row.appendChild(teamMemberCell);
+
+                    // 支店
+                    const branchCell = document.createElement('td');
+                    branchCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    branchCell.textContent = rowData.branch;
+                    row.appendChild(branchCell);
+
+                    // 得意先
+                    const clientCell = document.createElement('td');
+                    clientCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    clientCell.textContent = rowData.client;
+                    row.appendChild(clientCell);
+
+                    // 配置先
+                    const assignmentCell = document.createElement('td');
+                    assignmentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    assignmentCell.textContent = rowData.assignment;
+                    row.appendChild(assignmentCell);
+
+                    // 業務内容
+                    const workContentCell = document.createElement('td');
+                    workContentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'whitespace-nowrap');
+                    const workContentDiv = document.createElement('div');
+                    workContentDiv.classList.add('flex', 'items-center', 'justify-center');
+                    const workContentSpan = document.createElement('span');
+                    workContentSpan.textContent = rowData.workContent;
+                    workContentDiv.appendChild(workContentSpan);
+                    if (rowData.workContent === '日勤') {
+                        const sunIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                        sunIcon.setAttribute('width', '16');
+                        sunIcon.setAttribute('height', '16');
+                        sunIcon.setAttribute('viewBox', '0 0 24 24');
+                        sunIcon.setAttribute('fill', 'none');
+                        sunIcon.setAttribute('stroke', 'currentColor');
+                        sunIcon.setAttribute('stroke-width', '2');
+                        sunIcon.setAttribute('stroke-linecap', 'round');
+                        sunIcon.setAttribute('stroke-linejoin', 'round');
+                        sunIcon.classList.add('lucide', 'lucide-sun', 'ml-1', 'text-orange-500');
+                        sunIcon.innerHTML = '<circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="2" y2="4"/><line x1="12" x2="12" y1="20" y2="22"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="2" x2="4" y1="12" y2="12"/><line x1="20" x2="22" y1="12" y2="12"/><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>';
+                        workContentDiv.appendChild(sunIcon);
+                    } else if (rowData.workContent === '夜勤') {
+                        const moonIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                        moonIcon.setAttribute('width', '16');
+                        moonIcon.setAttribute('height', '16');
+                        moonIcon.setAttribute('viewBox', '0 0 24 24');
+                        moonIcon.setAttribute('fill', 'none');
+                        moonIcon.setAttribute('stroke', 'currentColor');
+                        moonIcon.setAttribute('stroke-width', '2');
+                        moonIcon.setAttribute('stroke-linecap', 'round');
+                        moonIcon.setAttribute('stroke-linejoin', 'round');
+                        moonIcon.classList.add('lucide', 'lucide-moon', 'ml-1', 'text-blue-500');
+                        moonIcon.innerHTML = '<path d="M12 3a6.36 6.36 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+                        workContentDiv.appendChild(moonIcon);
+                    }
+                    workContentCell.appendChild(workContentDiv);
+                    row.appendChild(workContentCell);
+
+                    // 基本時間
+                    const baseTimeCell = document.createElement('td');
+                    baseTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
+                    baseTimeCell.textContent = rowData.baseTime;
+                    row.appendChild(baseTimeCell);
+
+                    // 報告時間
+                    const reportTimeCell = document.createElement('td');
+                    reportTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
+                    reportTimeCell.textContent = rowData.reportTime;
+                    row.appendChild(reportTimeCell);
+
+                    // ステータス - Modified to apply status-tag classes
+                    const statusCell = document.createElement('td');
+                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center'); 
+                    
+                    const statusTagSpan = document.createElement('span');
+                    statusTagSpan.classList.add('status-tag');
+                    statusTagSpan.textContent = rowData.status;
+
+                    if (rowData.status === '下番完了') {
+                        statusTagSpan.classList.add('status-tag-completed');
+                    } else if (rowData.status === '報告待ち') {
+                        statusTagSpan.classList.add('status-tag-pending');
+                    }
+                    
+                    statusCell.appendChild(statusTagSpan);
+                    row.appendChild(statusCell);
+
+                    // 備考
+                    const remarksCell = document.createElement('td');
+                    remarksCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    remarksCell.textContent = rowData.remarks;
+                    row.appendChild(remarksCell);
+
+                    // 受信時間
+                    const receptionTimeCell = document.createElement('td');
+                    receptionTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    receptionTimeCell.textContent = rowData.receptionTime;
+                    row.appendChild(receptionTimeCell);
+
+                    // メモ
+                    const memoCell = document.createElement('td');
+                    memoCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    memoCell.textContent = rowData.memo;
+                    row.appendChild(memoCell);
+
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Function to handle sorting
+            function sortTable(key) {
+                if (currentSortKey === key) {
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortKey = key;
+                    currentSortDirection = 'asc'; // Default to ascending when sorting a new column
+                }
+
+                // Sort the currently displayed data
+                displayedTableData.sort((a, b) => {
+                    let valA = a[key];
+                    let valB = b[key];
+
+                    // Handle specific data types for sorting if necessary
+                    if (key === 'no') { // Numerical sort for 'no'
+                        valA = Number(valA);
+                        valB = Number(valB);
+                        return (valA - valB) * (currentSortDirection === 'asc' ? 1 : -1);
+                    } else if (key === 'receptionTime') { // Time string comparison
+                        return valA.localeCompare(valB) * (currentSortDirection === 'asc' ? 1 : -1);
+                    } else {
+                        // Default to string comparison for other fields
+                        return String(valA).localeCompare(String(valB)) * (currentSortDirection === 'asc' ? 1 : -1);
+                    }
+                });
+
+                renderTable(); // Re-render the table with sorted data
+                updateSortIndicators(); // Update the visual sort indicators
+            }
+
+            // Function to update visual sort indicators
+            function updateSortIndicators() {
+                document.querySelectorAll('.sort-indicator').forEach(indicator => {
+                    indicator.classList.remove('active', 'asc', 'desc'); // Reset all indicators
+                });
+
+                if (currentSortKey) {
+                    const activeIndicator = document.querySelector(`th[data-sort-key="${currentSortKey}"] .sort-indicator`);
+                    if (activeIndicator) {
+                        activeIndicator.classList.add('active');
+                        if (currentSortDirection === 'asc') {
+                            activeIndicator.classList.add('asc');
+                        } else {
+                            activeIndicator.classList.add('desc');
+                        }
+                    }
+                }
+            }
+
+            // Add click event listeners to sortable headers
+            tableHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.dataset.sortKey;
+                    if (sortKey) { // Ensure data-sort-key exists
+                        sortTable(sortKey);
+                    }
+                });
+            });
+
+            // Initial render of the main table
+            renderTable();
+
+            // Function to format timestamp toYYYY/MM/DD HH:MM
+            function formatTimestamp(timestamp) {
+                const date = new Date(timestamp);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}/${month}/${day} ${hours}:${minutes}`;
+            }
+
+            // Sample notification history
+            let notificationHistory = [
+                // Unread notification (always dynamically timestamped)
+                { id: 1, message: 'No.2 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() }, 
+                // Past notifications (with fixed timestamp format)
+                { id: 2, message: 'システムリリース(ver1.0.0.0)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-01T10:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 3, message: 'システムリリース(ver1.0.0.1)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-02T11:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 4, message: 'システムリリース(ver1.0.0.2)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-03T12:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 5, message: 'システムリリース(ver1.0.0.3)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-04T13:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 6, message: 'システムリリース(ver1.0.0.4)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-05T14:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 7, message: 'システムリリース(ver1.0.0.5)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-06T15:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
+                { id: 8, message: 'システムリリース(ver1.0.0.6)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-07T16:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' }
+            ];
+
+            // Function to update notification badge
+            function updateNotificationBadge() {
+                const unreadCount = notificationHistory.filter(notif => !notif.isRead).length;
+                if (unreadCount > 0) {
+                    notificationBadge.textContent = unreadCount.toString(); // Display actual unread count
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.textContent = '';
+                    notificationBadge.classList.add('hidden');
+                }
+            }
+
+            // Function to render notifications
+            function renderNotifications() {
+                sideMenuContentArea.innerHTML = ''; // Clear existing content
+
+                if (notificationHistory.length === 0) {
+                    const noNotifMessage = document.createElement('div');
+                    noNotifMessage.classList.add('text-gray-500', 'text-center', 'py-4');
+                    noNotifMessage.textContent = '通知はありません。';
+                    sideMenuContentArea.appendChild(noNotifMessage);
+                    return;
+                }
+
+                // Sort notifications: unread first (newest to oldest), then read (oldest to newest)
+                notificationHistory.sort((a, b) => {
+                    // Primary sort: unread (false) comes before read (true)
+                    if (!a.isRead && b.isRead) {
+                        return -1; // 'a' (unread) comes before 'b' (read)
+                    }
+                    if (a.isRead && !b.isRead) {
+                        return 1; // 'b' (unread) comes before 'a' (read)
+                    }
+
+                    // Secondary sort: if read status is the same
+                    if (!a.isRead && !b.isRead) {
+                        // If both are unread, sort by timestamp (newest first)
+                        return b.timestamp - a.timestamp;
+                    } else {
+                        // If both are read (past notifications), sort by timestamp (oldest first)
+                        return a.timestamp - b.timestamp;
+                    }
+                });
+
+                notificationHistory.forEach(notif => {
+                    const notifElement = document.createElement('div');
+                    notifElement.classList.add('side-menu-item'); // New common style
+                    if (!notif.isRead) { // Unread messages
+                        notifElement.classList.add('font-semibold', 'text-gray-900'); // Bold and dark text
+                    } else { // Read messages
+                        notifElement.classList.add('text-gray-500'); // Lighter text
+                    }
+                    
+                    // Determine which timestamp to display
+                    const displayedTime = notif.isRead && notif.displayTimestamp 
+                                            ? notif.displayTimestamp 
+                                            : formatTimestamp(notif.timestamp);
+                    
+                    notifElement.innerHTML = `<div>${notif.message}</div><div class="text-xs text-gray-400 mt-1">${displayedTime}</div>`;
+                    sideMenuContentArea.appendChild(notifElement);
+
+                    // Mark as read when notification is clicked (example)
+                    notifElement.addEventListener('click', () => {
+                        notif.isRead = true;
+                        renderNotifications(); // Re-render to update color and re-sort
+                        updateNotificationBadge(); // Update badge
+                    });
+                });
+            }
+
+            // Function to render options menu
+            function renderOptionsMenu() {
+                sideMenuContentArea.innerHTML = ''; // Clear existing content
+                dynamicSideMenuTitle.textContent = ''; // Clear title as per user request
+                dynamicSideMenuTitle.classList.add('hidden'); // Hide the title for options menu
+
+                const lineNotifItem = document.createElement('div');
+                lineNotifItem.classList.add('side-menu-item');
+                lineNotifItem.textContent = 'LINE通知';
+                lineNotifItem.addEventListener('click', () => {
+                    sideMenuContainer.classList.remove('open'); // Close side menu
+                    lineNotificationSettingsModal.classList.add('open'); // Open LINE notification modal
+                    renderLineMemberTable(); // Render the LINE member table when modal opens
+                });
+                sideMenuContentArea.appendChild(lineNotifItem);
+
+                // New: Email change item
+                const emailChangeItem = document.createElement('div');
+                emailChangeItem.classList.add('side-menu-item');
+                emailChangeItem.textContent = 'メールアドレス変更';
+                emailChangeItem.addEventListener('click', () => {
+                    alert('メールアドレス変更画面へ遷移します。'); // Placeholder for email change
+                    sideMenuContainer.classList.remove('open');
+                });
+                sideMenuContentArea.appendChild(emailChangeItem);
+
+                // New: Password change item
+                const passwordChangeItem = document.createElement('div');
+                passwordChangeItem.classList.add('side-menu-item');
+                passwordChangeItem.textContent = 'パスワード変更';
+                passwordChangeItem.addEventListener('click', () => {
+                    alert('パスワード変更画面へ遷移します。'); // Placeholder for password change
+                    sideMenuContainer.classList.remove('open');
+                });
+                sideMenuContentArea.appendChild(passwordChangeItem);
+                
+                // Added: 利用規約 / プライバシーポリシー
+                const termsPrivacyItem = document.createElement('div');
+                termsPrivacyItem.classList.add('side-menu-item');
+                termsPrivacyItem.textContent = '利用規約 / プライバシーポリシー';
+                termsPrivacyItem.addEventListener('click', () => {
+                    alert('利用規約およびプライバシーポリシーのページへ遷移します。');
+                    sideMenuContainer.classList.remove('open');
+                });
+                sideMenuContentArea.appendChild(termsPrivacyItem);
+
+                // Add Logout item as per user request
+                const logoutItem = document.createElement('div');
+                logoutItem.classList.add('side-menu-item');
+                logoutItem.textContent = 'ログアウト';
+                logoutItem.addEventListener('click', () => {
+                    alert('ログアウトしました。'); // Example logout message
+                    sideMenuContainer.classList.remove('open'); // Close side menu after logout
+                });
+                sideMenuContentArea.appendChild(logoutItem);
+            }
+
+            // Function to render the LINE member table inside the modal
+            function renderLineMemberTable() {
+                const lineMemberTableBody = document.getElementById('line-member-table-body');
+                lineMemberTableBody.innerHTML = ''; // Clear existing rows
+
+                allTableData.forEach(rowData => {
+                    const row = document.createElement('tr');
+
+                    // NO/支店 Cell
+                    const noBranchCell = document.createElement('td');
+                    noBranchCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    noBranchCell.innerHTML = `
+                        <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(2, '0')}</span>
+                        <span>${rowData.branch}</span>
+                    `;
+                    row.appendChild(noBranchCell);
+
+                    // NO/隊員名 Cell
+                    const noTeamMemberCell = document.createElement('td');
+                    noTeamMemberCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    noTeamMemberCell.innerHTML = `
+                        <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(6, '0')}</span>
+                        <span>${rowData.teamMember}</span>
+                    `;
+                    row.appendChild(noTeamMemberCell);
+
+                    // LINE ID Cell (input field)
+                    const lineIdCell = document.createElement('td');
+                    lineIdCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    const lineIdInput = document.createElement('input');
+                    lineIdInput.type = 'text';
+                    lineIdInput.value = rowData.lineId;
+                    lineIdInput.classList.add('w-full', 'p-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'text-gray-900');
+                    lineIdCell.appendChild(lineIdInput);
+                    row.appendChild(lineIdCell);
+
+                    lineMemberTableBody.appendChild(row);
+                });
+            }
+
+
+            // Initial badge update on load
+            updateNotificationBadge();
+
+            // Notification button click handler
+            if (notificationButton) {
+                notificationButton.addEventListener('click', () => {
+                    dynamicSideMenuTitle.textContent = '通知'; // Set title
+                    dynamicSideMenuTitle.classList.remove('hidden'); // Ensure title is visible for notifications
+
+                    // Add new notification to history (as unread)
+                    const newNotificationMessage = 'No.2 山田 太郎さんの報告が来ておりません';
+                    // Check if the same unread notification already exists
+                    const existsUnread = notificationHistory.some(notif => notif.message === newNotificationMessage && !notif.isRead);
+
+                    if (!existsUnread) {
+                        notificationHistory.unshift({
+                            id: Date.now(),
+                            message: newNotificationMessage,
+                            isRead: false,
+                            timestamp: Date.now()
+                        });
+                    }
+
+                    renderNotifications(); // Render notification list
+                    updateNotificationBadge(); // Update badge
+                    sideMenuContainer.classList.add('open'); // Open side menu
+                });
+            }
+
+            // Options button click handler
+            if (optionsButton) {
+                optionsButton.addEventListener('click', () => {
+                    dynamicSideMenuTitle.textContent = ''; // Clear title as per user request
+                    dynamicSideMenuTitle.classList.add('hidden'); // Hide the title for options menu
+                    renderOptionsMenu(); // Render options menu
+                    sideMenuContainer.classList.add('open'); // Open side menu
+                });
+            }
+
+            // Side menu close button click handler
+            if (sideMenuCloseButton) {
+                sideMenuCloseButton.addEventListener('click', () => {
+                    sideMenuContainer.classList.remove('open'); // Hide side menu
+                });
+            }
+
+            // Close side menu when clicking on overlay
+            if (sideMenuContainer) {
+                sideMenuContainer.addEventListener('click', (event) => {
+                    // Do not close if side menu content itself is clicked
+                    if (event.target === sideMenuContainer) {
+                        sideMenuContainer.classList.remove('open');
+                    }
+                });
+            }
+
+            // Calendar button click handler
+            let currentCalendarDate = new Date(); // State for current month/year in calendar
+            if (calendarButton) {
+                calendarButton.addEventListener('click', () => {
+                    currentCalendarDate = new Date(); // Reset to current month when opening
+                    renderCalendar(currentCalendarDate);
+                    calendarModal.classList.add('open'); // Open calendar modal
+                });
+            }
+
+            // Calendar month navigation buttons
+            if (prevMonthButton) {
+                prevMonthButton.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                    renderCalendar(currentCalendarDate);
+                });
+            }
+
+            if (nextMonthButton) {
+                nextMonthButton.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                    renderCalendar(currentCalendarDate); 
+                });
+            }
+
+            // Calendar modal close button handler
+            if (calendarModalCloseButton) {
+                calendarModalCloseButton.addEventListener('click', () => {
+                    calendarModal.classList.remove('open'); // Close calendar modal
+                });
+            }
+
+            // Close calendar modal when clicking on overlay
+            if (calendarModal) {
+                calendarModal.addEventListener('click', (event) => {
+                    if (event.target === calendarModal) {
+                        calendarModal.classList.remove('open'); 
+                    }
+                });
+            }
+
+            // Function to render the calendar
+            function renderCalendar(date) {
+                const year = date.getFullYear();
+                const month = date.getMonth(); // 0-indexed
+
+                calendarMonthYear.textContent = `${year}年 ${month + 1}月`; // Display current month and year
+
+                // Clear previous days, keeping day labels
+                // Keep the first 7 children (day labels)
+                while (calendarGrid.children.length > 7) {
+                    calendarGrid.removeChild(calendarGrid.lastChild);
+                }
+
+                // Get first day of the month and number of days in month
+                const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 (Sunday) to 6 (Saturday)
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                // Add empty spans for days before the first day of the month
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptySpan = document.createElement('span');
+                    emptySpan.textContent = '';
+                    calendarGrid.appendChild(emptySpan);
+                }
+
+                // Add days of the month
+                const today = new Date(); // Get today's date for highlighting
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const daySpan = document.createElement('span');
+                    daySpan.textContent = day;
+                    daySpan.classList.add('current-month');
+                    
+                    // Determine the day of the week for the current day
+                    const currentDayOfWeek = new Date(year, month, day).getDay();
+
+                    // Apply styles for Sunday (0) and Saturday (6)
+                    if (currentDayOfWeek === 0) { // Sunday
+                        daySpan.classList.add('sunday');
+                    } else if (currentDayOfWeek === 6) { // Saturday
+                        daySpan.classList.add('saturday');
+                    }
+
+                    // Highlight today's date
+                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        daySpan.classList.add('today');
+                    }
+                    // Add click event for individual day (example: just close modal)
+                    daySpan.addEventListener('click', () => {
+                        console.log(`${year}年${month + 1}月${day}日が選択されました。`);
+                        calendarModal.classList.remove('open');
+                    });
+                    calendarGrid.appendChild(daySpan);
+                }
+            }
+
+
+            // Status dropdown change event listener - now triggers filter directly
+            if (statusSearchSelect) {
+                statusSearchSelect.addEventListener('change', () => {
+                    const selectedStatus = statusSearchSelect.value;
+                    applySearchFilterByStatus(selectedStatus);
+                });
+            }
+
+            // Function to apply search filter by status
+            function applySearchFilterByStatus(statusTerm) {
+                if (!statusTerm) {
+                    displayedTableData = [...allTableData]; // Reset to all data if no status selected
+                } else {
+                    displayedTableData = allTableData.filter(row => {
+                        return row.status === statusTerm;
+                    });
+                }
+                sortTable(currentSortKey); // Re-sort after filtering to maintain order
+                renderTable(); // Re-render table with filtered data
+            }
+
+            // LINE Notification Modal Close button handler
+            if (lineNotificationModalCloseButton) {
+                lineNotificationModalCloseButton.addEventListener('click', () => {
+                    lineNotificationSettingsModal.classList.remove('open'); // Hide modal
+                });
+            }
+
+            // Close LINE Notification Modal when clicking on overlay
+            if (lineNotificationSettingsModal) {
+                lineNotificationSettingsModal.addEventListener('click', (event) => {
+                    if (event.target === lineNotificationSettingsModal) {
+                        lineNotificationSettingsModal.classList.remove('open');
+                    }
+                });
+            }
+
+            // Save button click handler for LINE settings
+            if (saveLineSettingsButton) {
+                saveLineSettingsButton.addEventListener('click', () => {
+                    const departureTime = document.getElementById('departure-time').value;
+                    const startReportTime = document.getElementById('start-report-time').value;
+                    const endReportTime = document.getElementById('end-report-time').value;
+                    
+                    // Get all LINE ID input values
+                    const lineIdInputs = lineNotificationSettingsModal.querySelectorAll('#line-member-table-body input[type="text"]');
+                    let lineIds = [];
+                    lineIdInputs.forEach((input, index) => {
+                        // Assuming the order matches allTableData
+                        allTableData[index].lineId = input.value; // Update the lineId in allTableData
+                        lineIds.push(input.value);
+                    });
+
+                    alert(`LINE通知設定を保存しました:\n自宅出発: ${departureTime}分前\n上番報告: ${startReportTime}分前\n下番報告: ${endReportTime}分後\nLINE IDs: ${lineIds.join(', ')}`);
+                    lineNotificationSettingsModal.classList.remove('open'); // Close modal after saving
+                });
+            }
+
+            // Cancel button click handler for LINE settings
+            if (cancelLineSettingsButton) {
+                cancelLineSettingsButton.addEventListener('click', () => {
+                    alert('LINE通知設定の変更を取消しました。');
+                    lineNotificationSettingsModal.classList.remove('open'); // Close modal without saving
+                });
+            }
+
+            // Phone Call Modal Functions
+            function openPhoneCallModal(teamMemberName, phoneNumber) {
+                phoneCallModalTitle.textContent = `${teamMemberName}に電話`;
+                phoneCallModalNumber.textContent = phoneNumber;
+                phoneCallModal.classList.add('open');
+                // Store the phone number on the call button for easy access
+                callButton.dataset.phoneNumber = phoneNumber;
+            }
+
+            function closePhoneCallModal() {
+                phoneCallModal.classList.remove('open');
+            }
+
+            // Phone Call Modal Event Listeners
+            if (phoneCallModalCloseButton) {
+                phoneCallModalCloseButton.addEventListener('click', closePhoneCallModal);
+            }
+
+            if (phoneCallModal) {
+                phoneCallModal.addEventListener('click', (event) => {
+                    if (event.target === phoneCallModal) {
+                        closePhoneCallModal();
+                    }
+                });
+            }
+
+            if (callButton) {
+                callButton.addEventListener('click', () => {
+                    const phoneNumber = callButton.dataset.phoneNumber;
+                    if (phoneNumber) {
+                        // Use window.location.href for 'tel:' protocol to initiate call on mobile devices
+                        window.location.href = `tel:${phoneNumber}`;
+                        closePhoneCallModal();
+                    }
+                });
+            }
+
+            if (cancelCallButton) {
+                cancelCallButton.addEventListener('click', closePhoneCallModal);
+            }
+        });
+    </script>
+</body>
+</html>
