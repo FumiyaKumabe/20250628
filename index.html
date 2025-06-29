@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管制ProCloud(仮称)</title>
+    <title>管制Proクラウド(仮称)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -301,17 +301,267 @@
         .text-xxs {
             font-size: 0.625rem; /* 10px */
         }
+
+        /* Account Settings Modal Styles */
+        .account-settings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1040; /* Higher than other modals */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .account-settings-modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .account-settings-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 95%;
+            width: 450px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .account-settings-modal-close-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .account-settings-modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .account-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+            font-size: 1.125rem;
+        }
+        .account-list-item:last-child {
+            border-bottom: none;
+        }
+        .account-list-item .settings-icon {
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s ease-in-out;
+            font-size: 1.25rem; /* Larger font size for emoji */
+        }
+        .account-list-item .settings-icon:hover {
+            color: #1f2937;
+        }
+
+        /* Individual Account Settings Modal Styles */
+        .individual-account-settings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050; /* Higher than Account Settings Modal */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .individual-account-settings-modal-overlay.open {
+            visibility: visible;
+            opacity: 1;
+        }
+        .individual-account-settings-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            max-width: 95%;
+            width: 500px; /* Similar width to LINE settings */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* More spacing */
+            overflow-y: auto; /* Enable scrolling for content */
+            max-height: 90vh; /* Max height to fit on screen */
+        }
+        .individual-account-settings-modal-close-button {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        .individual-account-settings-modal-title {
+            font-size: 1.75rem; /* Larger title */
+            font-weight: bold;
+            color: #1f2937;
+            text-align: center;
+            margin-bottom: 1rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .section-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+        .device-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e5e7eb; /* Dashed border for devices */
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+        .device-list-item:last-child {
+            border-bottom: none;
+        }
+        .device-action-button {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .device-action-button:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+        .add-device-button {
+            background-color: #22c55e; /* green-500 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            margin-top: 1rem;
+        }
+        .add-device-button:hover {
+            background-color: #16a34a; /* green-600 */
+        }
+
+        /* Login Screen Styles */
+        .login-screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000; /* Highest z-index */
+            flex-direction: column;
+            gap: 24px;
+        }
+        .login-card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .login-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb; /* blue-700 */
+            color: white;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .login-button:hover {
+            background-color: #1d4ed8; /* blue-800 */
+        }
+        .forgot-password-link {
+            display: block;
+            margin-top: 16px;
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .forgot-password-link:hover {
+            text-decoration: underline;
+        }
+        .login-error-message {
+            color: #dc2626; /* red-600 */
+            font-size: 0.9rem;
+            margin-top: 10px;
+            visibility: hidden; /* Hidden by default */
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
-    <!-- Main container: Centered on screen, max width -->
-    <div class="w-full max-w-screen-xl">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen-overlay">
+        <div class="login-card">
+            <h2 class="login-title">ログイン</h2>
+            <input type="text" id="login-id" class="login-input" placeholder="ログインID">
+            <input type="password" id="login-password" class="login-input" placeholder="パスワード">
+            <button id="login-button-submit" class="login-button">ログイン</button>
+            <p id="login-error" class="login-error-message">ログインIDまたはパスワードが間違っています。</p>
+            <a href="#" id="forgot-password-link" class="forgot-password-link">パスワードを忘れた方はこちら</a>
+        </div>
+    </div>
+
+    <!-- Main Application Content - Initially Hidden -->
+    <div id="main-app-content" class="w-full max-w-screen-xl hidden">
         <!-- Top section: Modified to use justify-between for left and right alignment -->
         <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
             <!-- Date and navigation buttons block - aligned to the left -->
             <div class="flex items-center flex-wrap gap-2">
                 <!-- Previous day button - smaller -->
-                <button class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                <button id="prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
@@ -321,7 +571,7 @@
                     <span id="system-date"></span>
                 </div>
                 <!-- Next day button - smaller -->
-                <button class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                <button id="next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
@@ -559,16 +809,126 @@
         </div>
     </div>
 
+    <!-- Account Settings Modal -->
+    <div id="account-settings-modal" class="account-settings-modal-overlay">
+        <div class="account-settings-modal-content">
+            <button id="account-settings-modal-close-button" class="account-settings-modal-close-button">&times;</button>
+            <h3 class="account-settings-modal-title">アカウント設定</h3>
+            <div id="account-list-area" class="flex-grow overflow-y-auto space-y-2">
+                <!-- Account list items will be dynamically generated here -->
+            </div>
+            <button id="add-account-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors">アカウント追加</button>
+        </div>
+    </div>
+
+    <!-- Individual Account Settings Modal -->
+    <div id="individual-account-settings-modal" class="individual-account-settings-modal-overlay">
+        <div class="individual-account-settings-modal-content">
+            <button id="individual-account-settings-modal-close-button" class="individual-account-settings-modal-close-button">&times;</button>
+            <h3 id="individual-account-settings-title" class="individual-account-settings-modal-title"></h3>
+
+            <!-- 通知設定 (Notification Settings) -->
+            <div class="space-y-4">
+                <h4 class="section-title">通知設定</h4>
+                <div class="flex items-center space-x-2">
+                    <label for="individual-departure-time" class="text-gray-700 whitespace-nowrap">自宅出発：勤務開始の</label>
+                    <input type="number" id="individual-departure-time" value="60" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分前</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="individual-start-report-time" class="text-gray-700 whitespace-nowrap">上番報告：勤務開始の</label>
+                    <input type="number" id="individual-start-report-time" value="10" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分前</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label for="individual-end-report-time" class="text-gray-700 whitespace-nowrap">下番報告：勤務終了の</label>
+                    <input type="number" id="individual-end-report-time" value="10" class="w-20 p-2 border border-gray-300 rounded-md text-center">
+                    <span class="text-gray-700">分後</span>
+                </div>
+
+                <!-- 通知支店 (Notification Branches) -->
+                <div class="mt-4">
+                    <h5 class="text-base font-semibold text-gray-800 mb-2">通知支店</h5>
+                    <div id="notification-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
+                        <!-- Checkboxes will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知端末の設定/追加 (Notification Device Settings/Addition) -->
+            <div>
+                <h4 class="section-title">通知端末の設定/追加</h4>
+                <div id="notification-device-list" class="space-y-2">
+                    <!-- Devices will be listed here -->
+                </div>
+                <button id="add-notification-device-button" class="add-device-button">通知端末追加</button>
+            </div>
+
+            <!-- 勤怠表示支店 (Attendance Display Branches) -->
+            <div>
+                <h4 class="section-title">勤怠表示支店</h4>
+                <div id="attendance-display-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
+                    <!-- Checkboxes will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- パスワードの変更 (Password Change) -->
+            <div>
+                <h4 class="section-title">パスワードの変更</h4>
+                <button id="change-password-button" class="w-full px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">パスワードを変更</button>
+            </div>
+
+            <!-- アカウントの削除 (Account Deletion) -->
+            <div>
+                <h4 class="section-title">アカウントの削除</h4>
+                <button id="delete-account-button" class="w-full px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors">アカウントを削除</button>
+            </div>
+
+            <div class="flex justify-end space-x-4 mt-6">
+                <button id="save-individual-account-settings" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">保存</button>
+                <button id="cancel-individual-account-settings" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // System date dynamically configured
+        let currentSystemDate = new Date(); // Make system date globally accessible for modification
+
         document.addEventListener('DOMContentLoaded', () => {
             const dateElement = document.getElementById('system-date');
+            // Get references for day navigation buttons
+            const prevDayButton = document.getElementById('prev-day-button');
+            const nextDayButton = document.getElementById('next-day-button');
+
+            // Function to update the displayed system date
+            function updateSystemDateDisplay() {
+                const year = currentSystemDate.getFullYear();
+                const month = String(currentSystemDate.getMonth() + 1).padStart(2, '0'); // Month starts from 0, so add 1
+                const day = String(currentSystemDate.getDate()).padStart(2, '0');
+                const dayOfWeek = currentSystemDate.getDay(); // 0 for Sunday, 6 for Saturday
+                const daysOfWeekJapanese = ['日', '月', '火', '水', '木', '金', '土'];
+                const dayOfWeekAbbreviation = daysOfWeekJapanese[dayOfWeek];
+
+                // Clear previous color classes
+                dateElement.classList.remove('text-red-600', 'text-blue-700');
+
+                // Apply color based on day of week
+                if (dayOfWeek === 0) { // Sunday
+                    dateElement.classList.add('text-red-600');
+                } else if (dayOfWeek === 6) { // Saturday
+                    dateElement.classList.add('text-blue-700');
+                }
+
+                dateElement.textContent = `${year}/${month}/${day}/(${dayOfWeekAbbreviation})`;
+                // Optionally re-render table data if it depends on the date
+                // renderTable(); // Uncomment if table content changes with date
+            }
+
+            // Initial display of the system date
             if (dateElement) {
-                const today = new Date();
-                const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0'); // Month starts from 0, so add 1
-                const day = String(today.getDate()).padStart(2, '0');
-                dateElement.textContent = `${year}/${month}/${day}`;
+                updateSystemDateDisplay();
             }
 
             // Get elements
@@ -604,6 +964,40 @@
             const phoneCallModalNumber = document.getElementById('phone-call-modal-number');
             const callButton = document.getElementById('call-button');
             const cancelCallButton = document.getElementById('cancel-call-button');
+
+            // Account Settings Modal elements
+            const accountSettingsModal = document.getElementById('account-settings-modal');
+            const accountSettingsModalCloseButton = document.getElementById('account-settings-modal-close-button');
+            const accountListArea = document.getElementById('account-list-area');
+            const addAccountButton = document.getElementById('add-account-button');
+
+            // Individual Account Settings Modal elements
+            const individualAccountSettingsModal = document.getElementById('individual-account-settings-modal');
+            const individualAccountSettingsModalCloseButton = document.getElementById('individual-account-settings-modal-close-button');
+            const individualAccountSettingsTitle = document.getElementById('individual-account-settings-title');
+            const individualDepartureTime = document.getElementById('individual-departure-time');
+            const individualStartReportTime = document.getElementById('individual-start-report-time');
+            const individualEndReportTime = document.getElementById('individual-end-report-time');
+            const notificationDeviceList = document.getElementById('notification-device-list');
+            const addNotificationDeviceButton = document.getElementById('add-notification-device-button');
+            const changePasswordButton = document.getElementById('change-password-button');
+            const deleteAccountButton = document.getElementById('delete-account-button');
+            const saveIndividualAccountSettingsButton = document.getElementById('save-individual-account-settings');
+            const cancelIndividualAccountSettingsButton = document.getElementById('cancel-individual-account-settings');
+
+            // New elements for notification and attendanceDisplay branches
+            const notificationBranchesCheckboxes = document.getElementById('notification-branches-checkboxes');
+            const attendanceDisplayBranchesCheckboxes = document.getElementById('attendance-display-branches-checkboxes'); // Renamed from displayBranchesCheckboxes
+
+            // Login Screen elements
+            const loginScreen = document.getElementById('login-screen');
+            const loginIdInput = document.getElementById('login-id');
+            const loginPasswordInput = document.getElementById('login-password');
+            const loginButtonSubmit = document.getElementById('login-button-submit');
+            const loginError = document.getElementById('login-error');
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            const mainAppContent = document.getElementById('main-app-content');
+
 
             // Table data (initial state) - Added phoneNumber
             let allTableData = [ // Original full data
@@ -656,6 +1050,29 @@
                     lineId: 'hanako.sato' // Added LINE ID
                 }
             ];
+
+            // Sample account data for the Account Settings modal
+            let accounts = [
+                {
+                    id: 1,
+                    name: '隈部 文哉',
+                    email: 'kumabe@jbca.co.jp',
+                    notificationSettings: { departure: 60, start: 10, end: 10 },
+                    devices: ['iPhone', 'PC (Chrome)'],
+                    notificationBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店'],
+                    attendanceDisplayBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店']
+                },
+                {
+                    id: 2,
+                    name: '佐藤 花子',
+                    email: 'hanako.s@example.com',
+                    notificationSettings: { departure: 30, start: 5, end: 15 },
+                    devices: ['Android Phone'],
+                    notificationBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店'],
+                    attendanceDisplayBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店']
+                }
+            ];
+
 
             let displayedTableData = [...allTableData]; // Data currently displayed and subject to sorting/filtering
 
@@ -901,6 +1318,28 @@
                 { id: 8, message: 'システムリリース(ver1.0.0.6)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-07T16:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' }
             ];
 
+            // Find and update the specific notification
+            const targetMessage = 'No.2 山田 太郎さんの報告が来ておりません';
+            const fixedDate = new Date('2025-06-28T21:00:00'); // Set to 2025/06/28 21:00
+            const fixedTimestamp = fixedDate.getTime();
+            const fixedDisplayTimestamp = '2025/06/28 21:00';
+
+            const notificationToUpdate = notificationHistory.find(notif => notif.message === targetMessage);
+            if (notificationToUpdate) {
+                notificationToUpdate.timestamp = fixedTimestamp;
+                notificationToUpdate.displayTimestamp = fixedDisplayTimestamp;
+            } else {
+                // If the notification doesn't exist, add it
+                notificationHistory.unshift({
+                    id: Date.now(), // Use a new ID if it's a new entry
+                    message: targetMessage,
+                    isRead: false,
+                    timestamp: fixedTimestamp,
+                    displayTimestamp: fixedDisplayTimestamp
+                });
+            }
+
+
             // Function to update notification badge
             function updateNotificationBadge() {
                 const unreadCount = notificationHistory.filter(notif => !notif.isRead).length;
@@ -987,25 +1426,15 @@
                 });
                 sideMenuContentArea.appendChild(lineNotifItem);
 
-                // New: Email change item
-                const emailChangeItem = document.createElement('div');
-                emailChangeItem.classList.add('side-menu-item');
-                emailChangeItem.textContent = 'メールアドレス変更';
-                emailChangeItem.addEventListener('click', () => {
-                    alert('メールアドレス変更画面へ遷移します。'); // Placeholder for email change
-                    sideMenuContainer.classList.remove('open');
+                // New: Account Settings item
+                const accountSettingsItem = document.createElement('div');
+                accountSettingsItem.classList.add('side-menu-item');
+                accountSettingsItem.textContent = 'アカウント設定';
+                accountSettingsItem.addEventListener('click', () => {
+                    sideMenuContainer.classList.remove('open'); // Close side menu
+                    openAccountSettingsModal(); // Open the new account settings modal
                 });
-                sideMenuContentArea.appendChild(emailChangeItem);
-
-                // New: Password change item
-                const passwordChangeItem = document.createElement('div');
-                passwordChangeItem.classList.add('side-menu-item');
-                passwordChangeItem.textContent = 'パスワード変更';
-                passwordChangeItem.addEventListener('click', () => {
-                    alert('パスワード変更画面へ遷移します。'); // Placeholder for password change
-                    sideMenuContainer.classList.remove('open');
-                });
-                sideMenuContentArea.appendChild(passwordChangeItem);
+                sideMenuContentArea.appendChild(accountSettingsItem);
                 
                 // Added: 利用規約 / プライバシーポリシー
                 const termsPrivacyItem = document.createElement('div');
@@ -1022,8 +1451,13 @@
                 logoutItem.classList.add('side-menu-item');
                 logoutItem.textContent = 'ログアウト';
                 logoutItem.addEventListener('click', () => {
-                    alert('ログアウトしました。'); // Example logout message
+                    // alert('ログアウトしました。'); // Example logout message
                     sideMenuContainer.classList.remove('open'); // Close side menu after logout
+                    mainAppContent.classList.add('hidden'); // Hide main app content
+                    loginScreen.style.display = 'flex'; // Show login screen
+                    loginIdInput.value = ''; // Clear username
+                    loginPasswordInput.value = ''; // Clear password
+                    loginError.style.visibility = 'hidden'; // Hide error message
                 });
                 sideMenuContentArea.appendChild(logoutItem);
             }
@@ -1083,13 +1517,27 @@
                     // Check if the same unread notification already exists
                     const existsUnread = notificationHistory.some(notif => notif.message === newNotificationMessage && !notif.isRead);
 
-                    if (!existsUnread) {
-                        notificationHistory.unshift({
-                            id: Date.now(),
-                            message: newNotificationMessage,
-                            isRead: false,
-                            timestamp: Date.now()
-                        });
+                    // If the specific notification (山田 太郎さんの報告が来ておりません) is already in the list
+                    // and its timestamp is not the fixed one, or if it doesn't exist, update/add it.
+                    const existingFixedNotification = notificationHistory.find(notif => 
+                        notif.message === targetMessage && notif.timestamp === fixedTimestamp
+                    );
+
+                    if (!existingFixedNotification) {
+                        const index = notificationHistory.findIndex(notif => notif.message === targetMessage);
+                        if (index !== -1) {
+                            notificationHistory[index].timestamp = fixedTimestamp;
+                            notificationHistory[index].displayTimestamp = fixedDisplayTimestamp;
+                            notificationHistory[index].isRead = false; // Ensure it's unread when updated this way
+                        } else {
+                            notificationHistory.unshift({
+                                id: Date.now(), // Use a new ID if it's a new entry
+                                message: targetMessage,
+                                isRead: false,
+                                timestamp: fixedTimestamp,
+                                displayTimestamp: fixedDisplayTimestamp
+                            });
+                        }
                     }
 
                     renderNotifications(); // Render notification list
@@ -1125,11 +1573,28 @@
                 });
             }
 
+            // --- Date Navigation and Calendar Selection ---
+            // Function to navigate days
+            function navigateDay(days) {
+                currentSystemDate.setDate(currentSystemDate.getDate() + days);
+                updateSystemDateDisplay();
+                // If table data depends on the date, re-render it here.
+                // renderTable(); 
+            }
+
+            // Event listeners for Previous and Next Day buttons
+            if (prevDayButton) {
+                prevDayButton.addEventListener('click', () => navigateDay(-1));
+            }
+            if (nextDayButton) {
+                nextDayButton.addEventListener('click', () => navigateDay(1));
+            }
+
             // Calendar button click handler
             let currentCalendarDate = new Date(); // State for current month/year in calendar
             if (calendarButton) {
                 calendarButton.addEventListener('click', () => {
-                    currentCalendarDate = new Date(); // Reset to current month when opening
+                    currentCalendarDate = new Date(currentSystemDate); // Initialize calendar with current system date
                     renderCalendar(currentCalendarDate);
                     calendarModal.classList.add('open'); // Open calendar modal
                 });
@@ -1211,10 +1676,14 @@
                     if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                         daySpan.classList.add('today');
                     }
-                    // Add click event for individual day (example: just close modal)
-                    daySpan.addEventListener('click', () => {
-                        console.log(`${year}年${month + 1}月${day}日が選択されました。`);
-                        calendarModal.classList.remove('open');
+                    // Add click event for individual day
+                    daySpan.addEventListener('click', (event) => {
+                        const selectedDay = parseInt(event.target.textContent);
+                        currentSystemDate = new Date(year, month, selectedDay); // Update global system date
+                        updateSystemDateDisplay(); // Update displayed date
+                        calendarModal.classList.remove('open'); // Close calendar modal
+                        // If table data depends on the date, re-render it here.
+                        // renderTable(); 
                     });
                     calendarGrid.appendChild(daySpan);
                 }
@@ -1279,7 +1748,6 @@
                 });
             }
 
-            // Cancel button click handler for LINE settings
             if (cancelLineSettingsButton) {
                 cancelLineSettingsButton.addEventListener('click', () => {
                     alert('LINE通知設定の変更を取消しました。');
@@ -1327,6 +1795,240 @@
             if (cancelCallButton) {
                 cancelCallButton.addEventListener('click', closePhoneCallModal);
             }
+
+            // Account Settings Modal Functions
+            function openAccountSettingsModal() {
+                renderAccountList(); // Render the account list before opening
+                accountSettingsModal.classList.add('open');
+            }
+
+            function closeAccountSettingsModal() {
+                accountSettingsModal.classList.remove('open');
+            }
+
+            function renderAccountList() {
+                accountListArea.innerHTML = ''; // Clear existing list items
+                accounts.forEach(account => {
+                    const accountItem = document.createElement('div');
+                    accountItem.classList.add('account-list-item');
+                    accountItem.innerHTML = `
+                        <span>${account.name} (${account.email})</span>
+                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> <!-- Added data-account-id -->
+                    `;
+                    // Add event listener to the gear icon
+                    accountItem.querySelector('.settings-icon').addEventListener('click', (event) => {
+                        const accountId = parseInt(event.currentTarget.dataset.accountId);
+                        const selectedAccount = accounts.find(acc => acc.id === accountId);
+                        if (selectedAccount) {
+                            openIndividualAccountSettingsModal(selectedAccount);
+                        }
+                    });
+                    accountListArea.appendChild(accountItem);
+                });
+
+                if (accounts.length === 0) {
+                    const noAccountsMessage = document.createElement('div');
+                    noAccountsMessage.classList.add('text-gray-500', 'text-center', 'py-4');
+                    noAccountsMessage.textContent = 'アカウントは登録されていません。';
+                    accountListArea.appendChild(noAccountsMessage);
+                }
+            }
+
+            // Account Settings Modal Event Listeners
+            if (accountSettingsModalCloseButton) {
+                accountSettingsModalCloseButton.addEventListener('click', closeAccountSettingsModal);
+            }
+
+            if (accountSettingsModal) {
+                accountSettingsModal.addEventListener('click', (event) => {
+                    if (event.target === accountSettingsModal) {
+                        closeAccountSettingsModal();
+                    }
+                });
+            }
+
+            if (addAccountButton) {
+                addAccountButton.addEventListener('click', () => {
+                    alert('新しいアカウントを追加します。');
+                    // In a real application, you would open a form to add a new account here
+                });
+            }
+
+            // Individual Account Settings Modal Functions
+            function openIndividualAccountSettingsModal(account) {
+                // Close the main account settings modal first
+                closeAccountSettingsModal(); 
+
+                individualAccountSettingsTitle.textContent = `アカウント設定: ${account.name}`;
+                
+                // Populate Notification Settings
+                individualDepartureTime.value = account.notificationSettings.departure;
+                individualStartReportTime.value = account.notificationSettings.start;
+                individualEndReportTime.value = account.notificationSettings.end;
+
+                const allBranches = ['東京支店', '神奈川支店', '大阪支店', '福岡支店'];
+
+                // Populate Notification Branches
+                notificationBranchesCheckboxes.innerHTML = '';
+                allBranches.forEach(branch => {
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2'); // Adjusted width for layout
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = branch;
+                    checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
+                    checkbox.checked = account.notificationBranches.includes(branch);
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
+                    notificationBranchesCheckboxes.appendChild(checkboxContainer);
+                });
+                
+                // Populate Notification Device List
+                notificationDeviceList.innerHTML = '';
+                if (account.devices && account.devices.length > 0) {
+                    account.devices.forEach(device => {
+                        const deviceItem = document.createElement('div');
+                        deviceItem.classList.add('device-list-item');
+                        deviceItem.innerHTML = `
+                            <span>${device} (登録済み)</span>
+                            <button class="device-action-button">削除</button>
+                        `;
+                        deviceItem.querySelector('.device-action-button').addEventListener('click', () => {
+                            alert(`${device} を削除します。`);
+                            // In a real app, you'd remove the device from the account.devices array and re-render.
+                        });
+                        notificationDeviceList.appendChild(deviceItem);
+                    });
+                } else {
+                    const noDevicesMessage = document.createElement('div');
+                    noDevicesMessage.classList.add('text-gray-500', 'text-center', 'py-2');
+                    noDevicesMessage.textContent = '登録された通知端末はありません。';
+                    notificationDeviceList.appendChild(noDevicesMessage);
+                }
+
+                // Populate Attendance Display Branches (Renamed from Display Branches)
+                attendanceDisplayBranchesCheckboxes.innerHTML = '';
+                allBranches.forEach(branch => {
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2'); // Adjusted width for layout
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = branch;
+                    checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
+                    checkbox.checked = account.attendanceDisplayBranches.includes(branch); // Use new property name
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
+                    attendanceDisplayBranchesCheckboxes.appendChild(checkboxContainer);
+                });
+
+
+                individualAccountSettingsModal.classList.add('open');
+            }
+
+            function closeIndividualAccountSettingsModal() {
+                individualAccountSettingsModal.classList.remove('open');
+            }
+
+            // Individual Account Settings Modal Event Listeners
+            if (individualAccountSettingsModalCloseButton) {
+                individualAccountSettingsModalCloseButton.addEventListener('click', closeIndividualAccountSettingsModal);
+            }
+
+            if (individualAccountSettingsModal) {
+                individualAccountSettingsModal.addEventListener('click', (event) => {
+                    if (event.target === individualAccountSettingsModal) {
+                        closeIndividualAccountSettingsModal();
+                    }
+                });
+            }
+
+            // Functionality for buttons within Individual Account Settings Modal
+            if (addNotificationDeviceButton) {
+                addNotificationDeviceButton.addEventListener('click', () => {
+                    alert('新しい通知端末を追加します。');
+                });
+            }
+
+            if (changePasswordButton) {
+                changePasswordButton.addEventListener('click', () => {
+                    alert('パスワード変更画面へ遷移します。');
+                });
+            }
+
+            if (deleteAccountButton) {
+                deleteAccountButton.addEventListener('click', () => {
+                    alert('このアカウントを削除します。');
+                });
+            }
+
+            if (saveIndividualAccountSettingsButton) {
+                saveIndividualAccountSettingsButton.addEventListener('click', () => {
+                    const departure = individualDepartureTime.value;
+                    const start = individualStartReportTime.value;
+                    const end = individualEndReportTime.value;
+
+                    // Get selected notification branches
+                    const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
+                                                            .map(cb => cb.value);
+
+                    // Get selected attendance display branches
+                    const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
+                                                       .map(cb => cb.value);
+
+                    alert(`アカウント設定を保存しました:\n` +
+                          `自宅出発: ${departure}分前\n` +
+                          `上番報告: ${start}分前\n` +
+                          `下番報告: ${end}分後\n` +
+                          `通知支店: ${selectedNotificationBranches.join(', ')}\n` +
+                          `勤怠表示支店: ${selectedAttendanceDisplayBranches.join(', ')}`); // Updated alert message
+                    closeIndividualAccountSettingsModal();
+                });
+            }
+
+            if (cancelIndividualAccountSettingsButton) {
+                cancelIndividualAccountSettingsButton.addEventListener('click', () => {
+                    alert('アカウント設定の変更を取消しました。');
+                    closeIndividualAccountSettingsModal();
+                });
+            }
+
+            // Login Logic
+            loginButtonSubmit.addEventListener('click', () => {
+                const username = loginIdInput.value;
+                const password = loginPasswordInput.value;
+
+                if (username === 'admin' && password === 'jbca') {
+                    loginScreen.style.display = 'none'; // Hide login screen
+                    mainAppContent.classList.remove('hidden'); // Show main app content
+                    loginError.style.visibility = 'hidden'; // Hide any previous error
+                } else {
+                    loginError.style.visibility = 'visible'; // Show error message
+                }
+            });
+
+            // Enter key handling for login inputs
+            loginIdInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default form submission
+                    loginPasswordInput.focus(); // Move focus to password input
+                }
+            });
+
+            loginPasswordInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default form submission
+                    loginButtonSubmit.click(); // Trigger login button click
+                }
+            });
+
+            forgotPasswordLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default link behavior
+                alert('パスワード再設定のページへ遷移します。'); // Placeholder for password reset
+            });
+
+            // Initial state: show login screen, hide main app content
+            loginScreen.style.display = 'flex';
+            mainAppContent.classList.add('hidden');
         });
     </script>
 </body>
