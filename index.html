@@ -919,17 +919,25 @@
                 const daysOfWeekJapanese = ['日', '月', '火', '水', '木', '金', '土'];
                 const dayOfWeekAbbreviation = daysOfWeekJapanese[dayOfWeek];
 
-                // Clear previous color classes
-                dateElement.classList.remove('text-red-600', 'text-blue-700');
+                // Construct the full date string with a separate span for the day of the week
+                const dateStringWithoutDay = `${year}/${month}/${day}/(`;
+                const dayOfWeekSpanId = 'day-of-week-span';
+                
+                dateElement.innerHTML = `${dateStringWithoutDay}<span id="${dayOfWeekSpanId}">${dayOfWeekAbbreviation}</span>)`;
 
-                // Apply color based on day of week
-                if (dayOfWeek === 0) { // Sunday
-                    dateElement.classList.add('text-red-600');
-                } else if (dayOfWeek === 6) { // Saturday
-                    dateElement.classList.add('text-blue-700');
+                const dayOfWeekSpan = document.getElementById(dayOfWeekSpanId);
+                if (dayOfWeekSpan) {
+                    // Clear previous color classes from the span before applying new ones
+                    dayOfWeekSpan.classList.remove('text-red-600', 'text-blue-700');
+
+                    // Apply color based on day of week to the dayOfWeekSpan
+                    if (dayOfWeek === 0) { // Sunday
+                        dayOfWeekSpan.classList.add('text-red-600');
+                    } else if (dayOfWeek === 6) { // Saturday
+                        dayOfWeekSpan.classList.add('text-blue-700');
+                    }
                 }
 
-                dateElement.textContent = `${year}/${month}/${day}/(${dayOfWeekAbbreviation})`;
                 // Optionally re-render table data if it depends on the date
                 // renderTable(); // Uncomment if table content changes with date
             }
@@ -1403,8 +1411,8 @@
                     
                     // Determine which timestamp to display
                     const displayedTime = notif.isRead && notif.displayTimestamp 
-                                            ? notif.displayTimestamp 
-                                            : formatTimestamp(notif.timestamp);
+                                        ? notif.displayTimestamp 
+                                        : formatTimestamp(notif.timestamp);
                     
                     notifElement.innerHTML = `<div>${notif.message}</div><div class="text-xs text-gray-400 mt-1">${displayedTime}</div>`;
                     sideMenuContentArea.appendChild(notifElement);
@@ -1449,7 +1457,8 @@
                 termsPrivacyItem.classList.add('side-menu-item');
                 termsPrivacyItem.textContent = '利用規約 / プライバシーポリシー';
                 termsPrivacyItem.addEventListener('click', () => {
-                    alert('利用規約およびプライバシーポリシーのページへ遷移します。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('利用規約およびプライバシーポリシーのページへ遷移します。');
                     sideMenuContainer.classList.remove('open');
                 });
                 sideMenuContentArea.appendChild(termsPrivacyItem);
@@ -1459,7 +1468,8 @@
                 logoutItem.classList.add('side-menu-item');
                 logoutItem.textContent = 'ログアウト';
                 logoutItem.addEventListener('click', () => {
-                    // alert('ログアウトしました。'); // Example logout message
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('ログアウトしました。'); // Example logout message
                     sideMenuContainer.classList.remove('open'); // Close side menu after logout
                     mainAppContent.classList.add('hidden'); // Hide main app content
                     loginScreen.style.display = 'flex'; // Show login screen
@@ -1490,6 +1500,7 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(2, '0')}</span>
                         <span>${rowData.branch}</span>
                     `;
+                    noBranchCell.setAttribute('data-label', 'NO/支店'); // For accessibility/debugging
                     row.appendChild(noBranchCell);
 
                     // NO/隊員名 Cell
@@ -1499,6 +1510,7 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(6, '0')}</span>
                         <span>${rowData.teamMember}</span>
                     `;
+                    noTeamMemberCell.setAttribute('data-label', 'NO/隊員名'); // For accessibility/debugging
                     row.appendChild(noTeamMemberCell);
 
                     // LINE ID Cell (input field)
@@ -1508,7 +1520,9 @@
                     lineIdInput.type = 'text';
                     lineIdInput.value = rowData.lineId;
                     lineIdInput.classList.add('w-full', 'p-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'text-gray-900');
+                    lineIdInput.setAttribute('aria-label', `LINE ID for ${rowData.teamMember}`); // For accessibility
                     lineIdCell.appendChild(lineIdInput);
+                    lineIdCell.setAttribute('data-label', 'LINE ID'); // For accessibility/debugging
                     row.appendChild(lineIdCell);
 
                     lineMemberTableBody.appendChild(row);
@@ -1756,14 +1770,16 @@
                         lineIds.push(input.value);
                     });
 
-                    alert(`LINE通知設定を保存しました:\n自宅出発: ${departureTime}分前\n上番報告: ${startReportTime}分前\n下番報告: ${endReportTime}分後\nLINE IDs: ${lineIds.join(', ')}`);
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log(`LINE通知設定を保存しました:\n自宅出発: ${departureTime}分前\n上番報告: ${startReportTime}分前\n下番報告: ${endReportTime}分後\nLINE IDs: ${lineIds.join(', ')}`);
                     lineNotificationSettingsModal.classList.remove('open'); // Close modal after saving
                 });
             }
 
             if (cancelLineSettingsButton) {
                 cancelLineSettingsButton.addEventListener('click', () => {
-                    alert('LINE通知設定の変更を取消しました。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('LINE通知設定の変更を取消しました。');
                     lineNotificationSettingsModal.classList.remove('open'); // Close modal without saving
                 });
             }
@@ -1862,7 +1878,8 @@
 
             if (addAccountButton) {
                 addAccountButton.addEventListener('click', () => {
-                    alert('新しいアカウントを追加します。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('新しいアカウントを追加します。');
                     // In a real application, you would open a form to add a new account here
                 });
             }
@@ -1891,6 +1908,7 @@
                     checkbox.value = branch;
                     checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
                     checkbox.checked = account.notificationBranches.includes(branch);
+                    checkbox.setAttribute('aria-label', `通知支店: ${branch}`); // For accessibility
                     checkboxContainer.appendChild(checkbox);
                     checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
                     notificationBranchesCheckboxes.appendChild(checkboxContainer);
@@ -1907,7 +1925,8 @@
                             <button class="device-action-button">削除</button>
                         `;
                         deviceItem.querySelector('.device-action-button').addEventListener('click', () => {
-                            alert(`${device} を削除します。`);
+                            // Replaced alert with console.log as alerts are not allowed.
+                            console.log(`${device} を削除します。`);
                             // In a real app, you'd remove the device from the account.devices array and re-render.
                         });
                         notificationDeviceList.appendChild(deviceItem);
@@ -1929,6 +1948,7 @@
                     checkbox.value = branch;
                     checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
                     checkbox.checked = account.attendanceDisplayBranches.includes(branch); // Use new property name
+                    checkbox.setAttribute('aria-label', `勤怠表示支店: ${branch}`); // For accessibility
                     checkboxContainer.appendChild(checkbox);
                     checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
                     attendanceDisplayBranchesCheckboxes.appendChild(checkboxContainer);
@@ -1958,19 +1978,22 @@
             // Functionality for buttons within Individual Account Settings Modal
             if (addNotificationDeviceButton) {
                 addNotificationDeviceButton.addEventListener('click', () => {
-                    alert('新しい通知端末を追加します。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('新しい通知端末を追加します。');
                 });
             }
 
             if (changePasswordButton) {
                 changePasswordButton.addEventListener('click', () => {
-                    alert('パスワード変更画面へ遷移します。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('パスワード変更画面へ遷移します。');
                 });
             }
 
             if (deleteAccountButton) {
                 deleteAccountButton.addEventListener('click', () => {
-                    alert('このアカウントを削除します。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('このアカウントを削除します。');
                 });
             }
 
@@ -1982,25 +2005,27 @@
 
                     // Get selected notification branches
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                            .map(cb => cb.value);
+                                                             .map(cb => cb.value);
 
                     // Get selected attendance display branches
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                       .map(cb => cb.value);
+                                                           .map(cb => cb.value);
 
-                    alert(`アカウント設定を保存しました:\n` +
-                          `自宅出発: ${departure}分前\n` +
-                          `上番報告: ${start}分前\n` +
-                          `下番報告: ${end}分後\n` +
-                          `通知支店: ${selectedNotificationBranches.join(', ')}\n` +
-                          `勤怠表示支店: ${selectedAttendanceDisplayBranches.join(', ')}`); // Updated alert message
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log(`アカウント設定を保存しました:\n` +
+                                `自宅出発: ${departure}分前\n` +
+                                `上番報告: ${start}分前\n` +
+                                `下番報告: ${end}分後\n` +
+                                `通知支店: ${selectedNotificationBranches.join(', ')}\n` +
+                                `勤怠表示支店: ${selectedAttendanceDisplayBranches.join(', ')}`); // Updated alert message
                     closeIndividualAccountSettingsModal();
                 });
             }
 
             if (cancelIndividualAccountSettingsButton) {
                 cancelIndividualAccountSettingsButton.addEventListener('click', () => {
-                    alert('アカウント設定の変更を取消しました。');
+                    // Replaced alert with console.log as alerts are not allowed.
+                    console.log('アカウント設定の変更を取消しました。');
                     closeIndividualAccountSettingsModal();
                 });
             }
@@ -2056,7 +2081,8 @@
 
             forgotPasswordLink.addEventListener('click', (event) => {
                 event.preventDefault(); // Prevent default link behavior
-                alert('パスワード再設定のページへ遷移します。'); // Placeholder for password reset
+                // Replaced alert with console.log as alerts are not allowed.
+                console.log('パスワード再設定のページへ遷移します。'); // Placeholder for password reset
             });
 
             // Initial state: show login screen, hide main app content
