@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管制Proクラウド(仮称)</title>
+    <title>WEBシステム</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -548,6 +548,12 @@
             <h2 class="login-title">ログイン</h2>
             <input type="text" id="login-id" class="login-input" placeholder="ログインID">
             <input type="password" id="login-password" class="login-input" placeholder="パスワード">
+            <div class="flex items-center justify-between mb-4">
+                <label for="remember-me" class="flex items-center text-gray-700 text-sm cursor-pointer">
+                    <input type="checkbox" id="remember-me" class="form-checkbox h-4 w-4 text-blue-600 rounded">
+                    <span class="ml-2">ログイン情報を保存</span>
+                </label>
+            </div>
             <button id="login-button-submit" class="login-button">ログイン</button>
             <p id="login-error" class="login-error-message">ログインIDまたはパスワードが間違っています。</p>
             <a href="#" id="forgot-password-link" class="forgot-password-link">パスワードを忘れた方はこちら</a>
@@ -901,6 +907,8 @@
             // Get references for day navigation buttons
             const prevDayButton = document.getElementById('prev-day-button');
             const nextDayButton = document.getElementById('next-day-button');
+            // Get remember me checkbox
+            const rememberMeCheckbox = document.getElementById('remember-me');
 
             // Function to update the displayed system date
             function updateSystemDateDisplay() {
@@ -1458,6 +1466,11 @@
                     loginIdInput.value = ''; // Clear username
                     loginPasswordInput.value = ''; // Clear password
                     loginError.style.visibility = 'hidden'; // Hide error message
+                    if (rememberMeCheckbox) {
+                        rememberMeCheckbox.checked = false; // Uncheck "Remember me" on logout
+                        localStorage.removeItem('savedLoginId');
+                        localStorage.removeItem('savedPassword');
+                    }
                 });
                 sideMenuContentArea.appendChild(logoutItem);
             }
@@ -2001,10 +2014,30 @@
                     loginScreen.style.display = 'none'; // Hide login screen
                     mainAppContent.classList.remove('hidden'); // Show main app content
                     loginError.style.visibility = 'hidden'; // Hide any previous error
+
+                    // Save credentials if "Remember me" is checked
+                    if (rememberMeCheckbox.checked) {
+                        localStorage.setItem('savedLoginId', username);
+                        localStorage.setItem('savedPassword', password);
+                    } else {
+                        // Clear credentials if "Remember me" is unchecked
+                        localStorage.removeItem('savedLoginId');
+                        localStorage.removeItem('savedPassword');
+                    }
                 } else {
                     loginError.style.visibility = 'visible'; // Show error message
                 }
             });
+
+            // Pre-fill login fields if credentials are saved
+            const savedLoginId = localStorage.getItem('savedLoginId');
+            const savedPassword = localStorage.getItem('savedPassword');
+
+            if (savedLoginId && savedPassword) {
+                loginIdInput.value = savedLoginId;
+                loginPasswordInput.value = savedPassword;
+                rememberMeCheckbox.checked = true;
+            }
 
             // Enter key handling for login inputs
             loginIdInput.addEventListener('keydown', (event) => {
