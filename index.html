@@ -972,7 +972,7 @@
                     reportTime: '14:00～', // Changed
                     status: '勤務中', // Changed
                     remarks: '',
-                    receptionTime: '', // Updated as status is now '勤務中'
+                    receptionTime: '14:00', // Updated
                     memo: '',
                     phoneNumber: '07011223344',
                     lineId: 'hanako.sato' // Added LINE ID
@@ -1557,9 +1557,13 @@
             if (calendarModal) {
                 calendarModal.addEventListener('click', (event) => {
                     if (event.target === calendarModal) {
-                        calendarModal.classList.remove('open');  
+                        closeCalendarModal();  
                     }
                 });
+            }
+            // Function to close calendar modal, factoring in any child elements
+            function closeCalendarModal() {
+                calendarModal.classList.remove('open');
             }
 
             // Function to render the calendar
