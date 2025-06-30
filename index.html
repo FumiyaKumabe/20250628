@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管制Proクラウド(仮称)</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -296,6 +297,12 @@
             color: #991b1b; /* red-800 */
         }
 
+        /* New: Styles for '勤務中' status tag */
+        .status-tag-in-progress {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+        }
+
         /* Custom font size for small text */
         .text-xxs {
             font-size: 0.625rem; /* 10px */
@@ -468,28 +475,33 @@
         .add-device-button:hover {
             background-color: #16a34a; /* green-600 */
         }
-
-        /* Login Screen Styles - Removed */
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
 
+    <!-- Main Application Content - Now visible by default -->
     <div id="main-app-content" class="w-full max-w-screen-xl">
+        <!-- Top section: Modified to use justify-between for left and right alignment -->
         <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
+            <!-- Date and navigation buttons block - aligned to the left -->
             <div class="flex items-center flex-wrap gap-2">
+                <!-- Previous day button - smaller -->
                 <button id="prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
                 </button>
+                <!-- System date -->
                 <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
                     <span id="system-date"></span>
                 </div>
+                <!-- Next day button - smaller -->
                 <button id="next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
                 </button>
+                <!-- Calendar icon (button) -->
                 <button id="calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
                         <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
@@ -497,7 +509,9 @@
                 </button>
             </div>
 
+            <!-- Search dropdown and other operation buttons block - aligned to the right -->
             <div class="flex items-center flex-wrap gap-2 md:gap-3">
+                <!-- Status dropdown for search (always visible) -->
                 <select id="status-search-select" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
                     <option value="">全てのステータス</option>
                     <option value="報告待ち">報告待ち</option>
@@ -505,14 +519,19 @@
                     <option value="上番完了">上番完了</option>
                     <option value="下番待ち">下番待ち</option>
                     <option value="下番完了">下番完了</option>
+                    <option value="勤務中">勤務中</option> <!-- Added new status -->
                 </select>
+                <!-- Notification icon (button) - yellow with badge -->
                 <button id="notification-button" class="relative flex items-center justify-center p-2 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-bell">
                         <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                     </svg>
+                    <!-- Notification badge -->
                     <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                        </span>
+                        <!-- Notification count will be displayed here -->
+                    </span>
                 </button>
+                <!-- Options icon (button) -->
                 <button id="options-button" class="flex items-center justify-center p-2 bg-gray-300 text-gray-800 rounded-full shadow-md hover:bg-gray-400 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-horizontal">
                         <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
@@ -521,10 +540,12 @@
             </div>
         </div>
 
+        <!-- Item area - changed to table format -->
         <div class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
+                        <!-- Sortable Headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="no">
                             <div class="flex items-center justify-center">
                                 <span>NO</span>
@@ -561,8 +582,10 @@
                                 <span class="sort-indicator"></span>
                             </div>
                         </th>
+                        <!-- Non-sortable headers (text-left) -->
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">基本時間</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">報告時間</th>
+                        <!-- Sortable headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="status">
                             <div class="flex items-center justify-center">
                                 <span>ステータス</span>
@@ -590,25 +613,31 @@
                     </tr>
                 </thead>
                 <tbody id="table-body" class="bg-white divide-y divide-gray-200">
-                    </tbody>
+                    <!-- Table rows will be dynamically generated here by JavaScript -->
+                </tbody>
             </table>
         </div>
     </div>
 
+    <!-- Notification Side Menu -->
     <div id="side-menu-container" class="side-menu-overlay">
         <div class="side-menu-content rounded-l-xl">
             <button id="side-menu-close-button" class="side-menu-close-button">&times;</button>
             <h3 id="dynamic-side-menu-title" class="side-menu-title"></h3>
+            <!-- Container for notification messages or option items -->
             <div id="side-menu-content-area" class="space-y-3 text-left overflow-y-auto flex-grow">
-                </div>
+                <!-- Content will be dynamically added here -->
+            </div>
         </div>
     </div>
 
+    <!-- LINE Notification Settings Modal -->
     <div id="line-notification-settings-modal" class="line-notification-modal-overlay">
         <div class="line-notification-modal-content">
             <button id="line-notification-modal-close-button" class="line-notification-modal-close-button">&times;</button>
             <h3 class="line-notification-modal-title">LINE通知設定</h3>
 
+            <!-- Notification Settings Section -->
             <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">通知設定</h4>
                 <div class="flex items-center space-x-2">
@@ -628,27 +657,33 @@
                 </div>
             </div>
 
+            <!-- Table Section -->
             <div class="overflow-x-auto border border-gray-200 rounded-md mt-6">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2 px-4 pt-2">隊員情報</h4>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
+                            <!-- New column: NO/支店 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>支店</span>
                             </th>
+                            <!-- New column: NO/隊員名 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>隊員名</span>
                             </th>
+                            <!-- Original LINE ID column -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">LINE ID</th>
                         </tr>
                     </thead>
                     <tbody id="line-member-table-body" class="bg-white divide-y divide-gray-200">
-                        </tbody>
+                        <!-- Rows will be dynamically generated here by JavaScript -->
+                    </tbody>
                 </table>
             </div>
 
+            <!-- Save and Cancel Buttons -->
             <div class="flex justify-end space-x-4 mt-6">
                 <button id="save-line-settings" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">保存</button>
                 <button id="cancel-line-settings" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
@@ -656,6 +691,7 @@
         </div>
     </div>
 
+    <!-- Calendar Modal -->
     <div id="calendar-modal" class="calendar-modal-overlay">
         <div class="calendar-modal-content">
             <button id="calendar-modal-close-button" class="line-notification-modal-close-button">&times;</button>
@@ -673,6 +709,7 @@
                 </button>
             </div>
             <div class="calendar-grid" id="calendar-grid">
+                <!-- Days of the week -->
                 <span class="day-label">日</span>
                 <span class="day-label">月</span>
                 <span class="day-label">火</span>
@@ -680,10 +717,12 @@
                 <span class="day-label">木</span>
                 <span class="day-label">金</span>
                 <span class="day-label">土</span>
-                </div>
+                <!-- Calendar days will be rendered here -->
+            </div>
         </div>
     </div>
 
+    <!-- Phone Call Modal -->
     <div id="phone-call-modal" class="phone-call-modal-overlay">
         <div class="phone-call-modal-content">
             <button id="phone-call-modal-close-button" class="phone-call-modal-close-button">&times;</button>
@@ -696,21 +735,25 @@
         </div>
     </div>
 
+    <!-- Account Settings Modal -->
     <div id="account-settings-modal" class="account-settings-modal-overlay">
         <div class="account-settings-modal-content">
             <button id="account-settings-modal-close-button" class="account-settings-modal-close-button">&times;</button>
             <h3 class="account-settings-modal-title">アカウント設定</h3>
             <div id="account-list-area" class="flex-grow overflow-y-auto space-y-2">
-                </div>
+                <!-- Account list items will be dynamically generated here -->
+            </div>
             <button id="add-account-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors">アカウント追加</button>
         </div>
     </div>
 
+    <!-- Individual Account Settings Modal -->
     <div id="individual-account-settings-modal" class="individual-account-settings-modal-overlay">
         <div class="individual-account-settings-modal-content">
             <button id="individual-account-settings-modal-close-button" class="individual-account-settings-modal-close-button">&times;</button>
             <h3 id="individual-account-settings-title" class="individual-account-settings-modal-title"></h3>
 
+            <!-- 通知設定 (Notification Settings) -->
             <div class="space-y-4">
                 <h4 class="section-title">通知設定</h4>
                 <div class="flex items-center space-x-2">
@@ -729,31 +772,39 @@
                     <span class="text-gray-700">分後</span>
                 </div>
 
+                <!-- 通知支店 (Notification Branches) -->
                 <div class="mt-4">
                     <h5 class="text-base font-semibold text-gray-800 mb-2">通知支店</h5>
                     <div id="notification-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                        </div>
+                        <!-- Checkboxes will be dynamically added here -->
+                    </div>
                 </div>
             </div>
 
+            <!-- 通知端末の設定/追加 (Notification Device Settings/Addition) -->
             <div>
                 <h4 class="section-title">通知端末の設定/追加</h4>
                 <div id="notification-device-list" class="space-y-2">
-                    </div>
+                    <!-- Devices will be listed here -->
+                </div>
                 <button id="add-notification-device-button" class="add-device-button">通知端末追加</button>
             </div>
 
+            <!-- 勤怠表示支店 (Attendance Display Branches) -->
             <div>
                 <h4 class="section-title">勤怠表示支店</h4>
                 <div id="attendance-display-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                    </div>
+                    <!-- Checkboxes will be dynamically added here -->
+                </div>
             </div>
 
+            <!-- パスワードの変更 (Password Change) -->
             <div>
                 <h4 class="section-title">パスワードの変更</h4>
                 <button id="change-password-button" class="w-full px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">パスワードを変更</button>
             </div>
 
+            <!-- アカウントの削除 (Account Deletion) -->
             <div>
                 <h4 class="section-title">アカウントの削除</h4>
                 <button id="delete-account-button" class="w-full px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors">アカウントを削除</button>
@@ -917,11 +968,11 @@
                     client: '関西電鉄',
                     assignment: '梅田地下街警備',
                     workContent: '日勤',
-                    baseTime: '09:00～18:00',
-                    reportTime: '09:00～18:00',
-                    status: '下番完了',
+                    baseTime: '14:00～22:00', // Changed
+                    reportTime: '14:00～', // Changed
+                    status: '勤務中', // Changed
                     remarks: '',
-                    receptionTime: '18:10',
+                    receptionTime: '', // Updated as status is now '勤務中'
                     memo: '',
                     phoneNumber: '07011223344',
                     lineId: 'hanako.sato' // Added LINE ID
@@ -1080,6 +1131,8 @@
                         statusTagSpan.classList.add('status-tag-completed');
                     } else if (rowData.status === '報告待ち') {
                         statusTagSpan.classList.add('status-tag-pending');
+                    } else if (rowData.status === '勤務中') { // New status styling
+                        statusTagSpan.classList.add('status-tag-in-progress');
                     }
                     
                     statusCell.appendChild(statusTagSpan);
@@ -1351,8 +1404,8 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(2, '0')}</span>
                         <span>${rowData.branch}</span>
                     `;
-                    noBranchCell.setAttribute('data-label', 'NO/支店'); // For accessibility/debugging
-                    noBranchCell.appendChild(noBranchCell);
+                    // noBranchCell.setAttribute('data-label', 'NO/支店'); // For accessibility/debugging - removed duplicate appendChild
+                    row.appendChild(noBranchCell);
 
                     // NO/隊員名 Cell
                     const noTeamMemberCell = document.createElement('td');
@@ -1361,8 +1414,8 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(6, '0')}</span>
                         <span>${rowData.teamMember}</span>
                     `;
-                    noTeamMemberCell.setAttribute('data-label', 'NO/隊員名'); // For accessibility/debugging
-                    noTeamMemberCell.appendChild(noTeamMemberCell);
+                    // noTeamMemberCell.setAttribute('data-label', 'NO/隊員名'); // For accessibility/debugging - removed duplicate appendChild
+                    row.appendChild(noTeamMemberCell);
 
                     // LINE ID Cell (input field)
                     const lineIdCell = document.createElement('td');
@@ -1693,7 +1746,8 @@
                     accountItem.classList.add('account-list-item');
                     accountItem.innerHTML = `
                         <span>${account.name} (${account.email})</span>
-                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> `;
+                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> <!-- Added data-account-id -->
+                    `;
                     // Add event listener to the gear icon
                     accountItem.querySelector('.settings-icon').addEventListener('click', (event) => {
                         const accountId = parseInt(event.currentTarget.dataset.accountId);
@@ -1880,7 +1934,6 @@
                 });
             }
 
-            // The login screen related JavaScript is now removed as the login screen itself is removed.
             // The main application content is now visible by default.
             mainAppContent.classList.remove('hidden');
         });
