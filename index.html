@@ -297,10 +297,12 @@
             color: #991b1b; /* red-800 */
         }
 
-        /* New: Styles for '勤務中' status tag */
+        /* Styles for '勤務中' status tag, adjusted for full-width spacing */
         .status-tag-in-progress {
             background-color: #d1fae5; /* green-100 */
             color: #065f46; /* green-800 */
+            /* Using letter-spacing or word-spacing to maintain visual uniformity if needed,
+               but Tailwind's padding and flexbox on the parent should handle it well. */
         }
 
         /* Custom font size for small text */
@@ -970,7 +972,7 @@
                     workContent: '日勤',
                     baseTime: '14:00～22:00', // Changed
                     reportTime: '14:00～', // Changed
-                    status: '勤 務 中', // Changed
+                    status: '勤 務 中', // Reverted to '勤 務 中' with spaces
                     remarks: '',
                     receptionTime: '14:00', // Updated
                     memo: '',
@@ -1121,7 +1123,7 @@
 
                     // ステータス - Modified to apply status-tag classes
                     const statusCell = document.createElement('td');
-                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center');  
+                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center');    
                     
                     const statusTagSpan = document.createElement('span');
                     statusTagSpan.classList.add('status-tag');
@@ -1131,7 +1133,7 @@
                         statusTagSpan.classList.add('status-tag-completed');
                     } else if (rowData.status === '報告待ち') {
                         statusTagSpan.classList.add('status-tag-pending');
-                    } else if (rowData.status === '勤務中') { // New status styling
+                    } else if (rowData.status === '勤 務 中') { // Check for '勤 務 中' with spaces
                         statusTagSpan.classList.add('status-tag-in-progress');
                     }
                     
@@ -1913,11 +1915,11 @@
 
                     // Get selected notification branches
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                .map(cb => cb.value);
+                                                              .map(cb => cb.value);
 
                     // Get selected attendance display branches
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                .map(cb => cb.value);
+                                                              .map(cb => cb.value);
 
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log(`アカウント設定を保存しました:\n` +
