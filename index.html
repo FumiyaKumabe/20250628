@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管制Proクラウド(仮称)</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -470,119 +469,27 @@
             background-color: #16a34a; /* green-600 */
         }
 
-        /* Login Screen Styles */
-        .login-screen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #f3f4f6; /* Light gray background */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000; /* Highest z-index */
-            flex-direction: column;
-            gap: 24px;
-        }
-        .login-card {
-            background-color: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-        .login-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 24px;
-        }
-        .login-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 1rem;
-        }
-        .login-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #2563eb; /* blue-700 */
-            color: white;
-            border-radius: 8px;
-            font-size: 1.125rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-        .login-button:hover {
-            background-color: #1d4ed8; /* blue-800 */
-        }
-        .forgot-password-link {
-            display: block;
-            margin-top: 16px;
-            color: #2563eb;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .forgot-password-link:hover {
-            text-decoration: underline;
-        }
-        .login-error-message {
-            color: #dc2626; /* red-600 */
-            font-size: 0.9rem;
-            margin-top: 10px;
-            visibility: hidden; /* Hidden by default */
-        }
+        /* Login Screen Styles - Removed */
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
 
-    <!-- Login Screen -->
-    <div id="login-screen" class="login-screen-overlay">
-        <div class="login-card">
-            <h2 class="login-title">ログイン</h2>
-            <input type="text" id="login-id" class="login-input" placeholder="ログインID">
-            <input type="password" id="login-password" class="login-input" placeholder="パスワード">
-            <div class="flex items-center justify-between mb-4">
-                <label for="remember-me" class="flex items-center text-gray-700 text-sm cursor-pointer">
-                    <input type="checkbox" id="remember-me" class="form-checkbox h-4 w-4 text-blue-600 rounded">
-                    <span class="ml-2">ログイン情報を保存</span>
-                </label>
-            </div>
-            <button id="login-button-submit" class="login-button">ログイン</button>
-            <p id="login-error" class="login-error-message">ログインIDまたはパスワードが間違っています。</p>
-            <a href="#" id="forgot-password-link" class="forgot-password-link">パスワードを忘れた方はこちら</a>
-        </div>
-    </div>
-
-    <!-- Main Application Content - Initially Hidden -->
-    <div id="main-app-content" class="w-full max-w-screen-xl hidden">
-        <!-- Top section: Modified to use justify-between for left and right alignment -->
+    <div id="main-app-content" class="w-full max-w-screen-xl">
         <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
-            <!-- Date and navigation buttons block - aligned to the left -->
             <div class="flex items-center flex-wrap gap-2">
-                <!-- Previous day button - smaller -->
                 <button id="prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
                 </button>
-                <!-- System date -->
                 <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
                     <span id="system-date"></span>
                 </div>
-                <!-- Next day button - smaller -->
                 <button id="next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
                 </button>
-                <!-- Calendar icon (button) -->
                 <button id="calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
                         <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
@@ -590,9 +497,7 @@
                 </button>
             </div>
 
-            <!-- Search dropdown and other operation buttons block - aligned to the right -->
             <div class="flex items-center flex-wrap gap-2 md:gap-3">
-                <!-- Status dropdown for search (always visible) -->
                 <select id="status-search-select" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
                     <option value="">全てのステータス</option>
                     <option value="報告待ち">報告待ち</option>
@@ -601,17 +506,13 @@
                     <option value="下番待ち">下番待ち</option>
                     <option value="下番完了">下番完了</option>
                 </select>
-                <!-- Notification icon (button) - yellow with badge -->
                 <button id="notification-button" class="relative flex items-center justify-center p-2 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-bell">
                         <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                     </svg>
-                    <!-- Notification badge -->
                     <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                        <!-- Notification count will be displayed here -->
-                    </span>
+                        </span>
                 </button>
-                <!-- Options icon (button) -->
                 <button id="options-button" class="flex items-center justify-center p-2 bg-gray-300 text-gray-800 rounded-full shadow-md hover:bg-gray-400 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-horizontal">
                         <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
@@ -620,12 +521,10 @@
             </div>
         </div>
 
-        <!-- Item area - changed to table format -->
         <div class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <!-- Sortable Headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="no">
                             <div class="flex items-center justify-center">
                                 <span>NO</span>
@@ -662,10 +561,8 @@
                                 <span class="sort-indicator"></span>
                             </div>
                         </th>
-                        <!-- Non-sortable headers (text-left) -->
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">基本時間</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">報告時間</th>
-                        <!-- Sortable headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="status">
                             <div class="flex items-center justify-center">
                                 <span>ステータス</span>
@@ -693,31 +590,25 @@
                     </tr>
                 </thead>
                 <tbody id="table-body" class="bg-white divide-y divide-gray-200">
-                    <!-- Table rows will be dynamically generated here by JavaScript -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Notification Side Menu -->
     <div id="side-menu-container" class="side-menu-overlay">
         <div class="side-menu-content rounded-l-xl">
             <button id="side-menu-close-button" class="side-menu-close-button">&times;</button>
             <h3 id="dynamic-side-menu-title" class="side-menu-title"></h3>
-            <!-- Container for notification messages or option items -->
             <div id="side-menu-content-area" class="space-y-3 text-left overflow-y-auto flex-grow">
-                <!-- Content will be dynamically added here -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- LINE Notification Settings Modal -->
     <div id="line-notification-settings-modal" class="line-notification-modal-overlay">
         <div class="line-notification-modal-content">
             <button id="line-notification-modal-close-button" class="line-notification-modal-close-button">&times;</button>
             <h3 class="line-notification-modal-title">LINE通知設定</h3>
 
-            <!-- Notification Settings Section -->
             <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">通知設定</h4>
                 <div class="flex items-center space-x-2">
@@ -737,33 +628,27 @@
                 </div>
             </div>
 
-            <!-- Table Section -->
             <div class="overflow-x-auto border border-gray-200 rounded-md mt-6">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2 px-4 pt-2">隊員情報</h4>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <!-- New column: NO/支店 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>支店</span>
                             </th>
-                            <!-- New column: NO/隊員名 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>隊員名</span>
                             </th>
-                            <!-- Original LINE ID column -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">LINE ID</th>
                         </tr>
                     </thead>
                     <tbody id="line-member-table-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Rows will be dynamically generated here by JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
 
-            <!-- Save and Cancel Buttons -->
             <div class="flex justify-end space-x-4 mt-6">
                 <button id="save-line-settings" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">保存</button>
                 <button id="cancel-line-settings" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
@@ -771,7 +656,6 @@
         </div>
     </div>
 
-    <!-- Calendar Modal -->
     <div id="calendar-modal" class="calendar-modal-overlay">
         <div class="calendar-modal-content">
             <button id="calendar-modal-close-button" class="line-notification-modal-close-button">&times;</button>
@@ -789,7 +673,6 @@
                 </button>
             </div>
             <div class="calendar-grid" id="calendar-grid">
-                <!-- Days of the week -->
                 <span class="day-label">日</span>
                 <span class="day-label">月</span>
                 <span class="day-label">火</span>
@@ -797,12 +680,10 @@
                 <span class="day-label">木</span>
                 <span class="day-label">金</span>
                 <span class="day-label">土</span>
-                <!-- Calendar days will be rendered here -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Phone Call Modal -->
     <div id="phone-call-modal" class="phone-call-modal-overlay">
         <div class="phone-call-modal-content">
             <button id="phone-call-modal-close-button" class="phone-call-modal-close-button">&times;</button>
@@ -815,25 +696,21 @@
         </div>
     </div>
 
-    <!-- Account Settings Modal -->
     <div id="account-settings-modal" class="account-settings-modal-overlay">
         <div class="account-settings-modal-content">
             <button id="account-settings-modal-close-button" class="account-settings-modal-close-button">&times;</button>
             <h3 class="account-settings-modal-title">アカウント設定</h3>
             <div id="account-list-area" class="flex-grow overflow-y-auto space-y-2">
-                <!-- Account list items will be dynamically generated here -->
-            </div>
+                </div>
             <button id="add-account-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors">アカウント追加</button>
         </div>
     </div>
 
-    <!-- Individual Account Settings Modal -->
     <div id="individual-account-settings-modal" class="individual-account-settings-modal-overlay">
         <div class="individual-account-settings-modal-content">
             <button id="individual-account-settings-modal-close-button" class="individual-account-settings-modal-close-button">&times;</button>
             <h3 id="individual-account-settings-title" class="individual-account-settings-modal-title"></h3>
 
-            <!-- 通知設定 (Notification Settings) -->
             <div class="space-y-4">
                 <h4 class="section-title">通知設定</h4>
                 <div class="flex items-center space-x-2">
@@ -852,39 +729,31 @@
                     <span class="text-gray-700">分後</span>
                 </div>
 
-                <!-- 通知支店 (Notification Branches) -->
                 <div class="mt-4">
                     <h5 class="text-base font-semibold text-gray-800 mb-2">通知支店</h5>
                     <div id="notification-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                        <!-- Checkboxes will be dynamically added here -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
-            <!-- 通知端末の設定/追加 (Notification Device Settings/Addition) -->
             <div>
                 <h4 class="section-title">通知端末の設定/追加</h4>
                 <div id="notification-device-list" class="space-y-2">
-                    <!-- Devices will be listed here -->
-                </div>
+                    </div>
                 <button id="add-notification-device-button" class="add-device-button">通知端末追加</button>
             </div>
 
-            <!-- 勤怠表示支店 (Attendance Display Branches) -->
             <div>
                 <h4 class="section-title">勤怠表示支店</h4>
                 <div id="attendance-display-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                    <!-- Checkboxes will be dynamically added here -->
-                </div>
+                    </div>
             </div>
 
-            <!-- パスワードの変更 (Password Change) -->
             <div>
                 <h4 class="section-title">パスワードの変更</h4>
                 <button id="change-password-button" class="w-full px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">パスワードを変更</button>
             </div>
 
-            <!-- アカウントの削除 (Account Deletion) -->
             <div>
                 <h4 class="section-title">アカウントの削除</h4>
                 <button id="delete-account-button" class="w-full px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors">アカウントを削除</button>
@@ -907,8 +776,6 @@
             // Get references for day navigation buttons
             const prevDayButton = document.getElementById('prev-day-button');
             const nextDayButton = document.getElementById('next-day-button');
-            // Get remember me checkbox
-            const rememberMeCheckbox = document.getElementById('remember-me');
 
             // Function to update the displayed system date
             function updateSystemDateDisplay() {
@@ -1005,13 +872,7 @@
             const notificationBranchesCheckboxes = document.getElementById('notification-branches-checkboxes');
             const attendanceDisplayBranchesCheckboxes = document.getElementById('attendance-display-branches-checkboxes'); // Renamed from displayBranchesCheckboxes
 
-            // Login Screen elements
-            const loginScreen = document.getElementById('login-screen');
-            const loginIdInput = document.getElementById('login-id');
-            const loginPasswordInput = document.getElementById('login-password');
-            const loginButtonSubmit = document.getElementById('login-button-submit');
-            const loginError = document.getElementById('login-error');
-            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            // Main Application Content
             const mainAppContent = document.getElementById('main-app-content');
 
 
@@ -1209,7 +1070,7 @@
 
                     // ステータス - Modified to apply status-tag classes
                     const statusCell = document.createElement('td');
-                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center'); 
+                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center');  
                     
                     const statusTagSpan = document.createElement('span');
                     statusTagSpan.classList.add('status-tag');
@@ -1323,7 +1184,7 @@
             // Sample notification history
             let notificationHistory = [
                 // Unread notification (always dynamically timestamped)
-                { id: 1, message: 'No.2 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() }, 
+                { id: 1, message: 'No.2 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() },  
                 // Past notifications (with fixed timestamp format)
                 { id: 2, message: 'システムリリース(ver1.0.0.0)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-01T10:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 3, message: 'システムリリース(ver1.0.0.1)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-02T11:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
@@ -1410,9 +1271,9 @@
                     }
                     
                     // Determine which timestamp to display
-                    const displayedTime = notif.isRead && notif.displayTimestamp 
-                                        ? notif.displayTimestamp 
-                                        : formatTimestamp(notif.timestamp);
+                    const displayedTime = notif.isRead && notif.displayTimestamp  
+                                            ? notif.displayTimestamp  
+                                            : formatTimestamp(notif.timestamp);
                     
                     notifElement.innerHTML = `<div>${notif.message}</div><div class="text-xs text-gray-400 mt-1">${displayedTime}</div>`;
                     sideMenuContentArea.appendChild(notifElement);
@@ -1471,16 +1332,6 @@
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log('ログアウトしました。'); // Example logout message
                     sideMenuContainer.classList.remove('open'); // Close side menu after logout
-                    mainAppContent.classList.add('hidden'); // Hide main app content
-                    loginScreen.style.display = 'flex'; // Show login screen
-                    loginIdInput.value = ''; // Clear username
-                    loginPasswordInput.value = ''; // Clear password
-                    loginError.style.visibility = 'hidden'; // Hide error message
-                    if (rememberMeCheckbox) {
-                        rememberMeCheckbox.checked = false; // Uncheck "Remember me" on logout
-                        localStorage.removeItem('savedLoginId');
-                        localStorage.removeItem('savedPassword');
-                    }
                 });
                 sideMenuContentArea.appendChild(logoutItem);
             }
@@ -1501,7 +1352,7 @@
                         <span>${rowData.branch}</span>
                     `;
                     noBranchCell.setAttribute('data-label', 'NO/支店'); // For accessibility/debugging
-                    row.appendChild(noBranchCell);
+                    noBranchCell.appendChild(noBranchCell);
 
                     // NO/隊員名 Cell
                     const noTeamMemberCell = document.createElement('td');
@@ -1511,7 +1362,7 @@
                         <span>${rowData.teamMember}</span>
                     `;
                     noTeamMemberCell.setAttribute('data-label', 'NO/隊員名'); // For accessibility/debugging
-                    row.appendChild(noTeamMemberCell);
+                    noTeamMemberCell.appendChild(noTeamMemberCell);
 
                     // LINE ID Cell (input field)
                     const lineIdCell = document.createElement('td');
@@ -1606,7 +1457,7 @@
                 currentSystemDate.setDate(currentSystemDate.getDate() + days);
                 updateSystemDateDisplay();
                 // If table data depends on the date, re-render it here.
-                // renderTable(); 
+                // renderTable();  
             }
 
             // Event listeners for Previous and Next Day buttons
@@ -1638,7 +1489,7 @@
             if (nextMonthButton) {
                 nextMonthButton.addEventListener('click', () => {
                     currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-                    renderCalendar(currentCalendarDate); 
+                    renderCalendar(currentCalendarDate);  
                 });
             }
 
@@ -1653,7 +1504,7 @@
             if (calendarModal) {
                 calendarModal.addEventListener('click', (event) => {
                     if (event.target === calendarModal) {
-                        calendarModal.classList.remove('open'); 
+                        calendarModal.classList.remove('open');  
                     }
                 });
             }
@@ -1710,7 +1561,7 @@
                         updateSystemDateDisplay(); // Update displayed date
                         calendarModal.classList.remove('open'); // Close calendar modal
                         // If table data depends on the date, re-render it here.
-                        // renderTable(); 
+                        // renderTable();  
                     });
                     calendarGrid.appendChild(daySpan);
                 }
@@ -1842,8 +1693,7 @@
                     accountItem.classList.add('account-list-item');
                     accountItem.innerHTML = `
                         <span>${account.name} (${account.email})</span>
-                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> <!-- Added data-account-id -->
-                    `;
+                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> `;
                     // Add event listener to the gear icon
                     accountItem.querySelector('.settings-icon').addEventListener('click', (event) => {
                         const accountId = parseInt(event.currentTarget.dataset.accountId);
@@ -1887,7 +1737,7 @@
             // Individual Account Settings Modal Functions
             function openIndividualAccountSettingsModal(account) {
                 // Close the main account settings modal first
-                closeAccountSettingsModal(); 
+                closeAccountSettingsModal();  
 
                 individualAccountSettingsTitle.textContent = `アカウント設定: ${account.name}`;
                 
@@ -2005,11 +1855,11 @@
 
                     // Get selected notification branches
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                             .map(cb => cb.value);
+                                                                .map(cb => cb.value);
 
                     // Get selected attendance display branches
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                           .map(cb => cb.value);
+                                                                .map(cb => cb.value);
 
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log(`アカウント設定を保存しました:\n` +
@@ -2030,64 +1880,9 @@
                 });
             }
 
-            // Login Logic
-            loginButtonSubmit.addEventListener('click', () => {
-                const username = loginIdInput.value;
-                const password = loginPasswordInput.value;
-
-                if (username === 'admin' && password === 'jbca') {
-                    loginScreen.style.display = 'none'; // Hide login screen
-                    mainAppContent.classList.remove('hidden'); // Show main app content
-                    loginError.style.visibility = 'hidden'; // Hide any previous error
-
-                    // Save credentials if "Remember me" is checked
-                    if (rememberMeCheckbox.checked) {
-                        localStorage.setItem('savedLoginId', username);
-                        localStorage.setItem('savedPassword', password);
-                    } else {
-                        // Clear credentials if "Remember me" is unchecked
-                        localStorage.removeItem('savedLoginId');
-                        localStorage.removeItem('savedPassword');
-                    }
-                } else {
-                    loginError.style.visibility = 'visible'; // Show error message
-                }
-            });
-
-            // Pre-fill login fields if credentials are saved
-            const savedLoginId = localStorage.getItem('savedLoginId');
-            const savedPassword = localStorage.getItem('savedPassword');
-
-            if (savedLoginId && savedPassword) {
-                loginIdInput.value = savedLoginId;
-                loginPasswordInput.value = savedPassword;
-                rememberMeCheckbox.checked = true;
-            }
-
-            // Enter key handling for login inputs
-            loginIdInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent default form submission
-                    loginPasswordInput.focus(); // Move focus to password input
-                }
-            });
-
-            loginPasswordInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent default form submission
-                    loginButtonSubmit.click(); // Trigger login button click
-                }
-            });
-
-            forgotPasswordLink.addEventListener('click', (event) => {
-                event.preventDefault(); // Prevent default link behavior
-                // Replaced alert with console.log as alerts are not allowed.
-                console.log('パスワード再設定のページへ遷移します。'); // Placeholder for password reset
-            });
-
-            // Initial state: show login screen, hide main app content
-            loginScreen.style.display = 'flex';
-            mainAppContent.classList.add('hidden');
+            // The login screen related JavaScript is now removed as the login screen itself is removed.
+            // The main application content is now visible by default.
+            mainAppContent.classList.remove('hidden');
         });
     </script>
 </body>
