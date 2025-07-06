@@ -6,12 +6,14 @@
     <title>管制Proクラウド(仮称)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Inter font application */
         body {
             font-family: 'Inter', sans-serif;
         }
+
         /* Side menu styles */
         .side-menu-overlay {
             position: fixed;
@@ -302,7 +304,7 @@
             background-color: #d1fae5; /* green-100 */
             color: #065f46; /* green-800 */
             /* Using letter-spacing or word-spacing to maintain visual uniformity if needed,
-               but Tailwind's padding and flexbox on the parent should handle it well. */
+                but Tailwind's padding and flexbox on the parent should handle it well. */
         }
 
         /* Custom font size for small text */
@@ -477,11 +479,120 @@
         .add-device-button:hover {
             background-color: #16a34a; /* green-600 */
         }
+
+        /* Styles for assignment summary cards */
+        .assignment-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .assignment-card-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* gray-800 */
+            margin-bottom: 0.5rem;
+        }
+        .assignment-card-detail {
+            font-size: 0.95rem;
+            color: #4b5563; /* gray-700 */
+        }
+        .assignment-card-counts {
+            display: flex;
+            justify-content: space-around;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .assignment-card-count-item {
+            flex: 1; /* Distribute space evenly */
+            min-width: 100px; /* Minimum width for each item */
+            text-align: center;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 0.5rem 0.25rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            position: relative; /* For tooltip positioning */
+        }
+        .assignment-card-count-item:hover {
+            background-color: #e5e7eb; /* gray-200 */
+            transform: translateY(-2px);
+        }
+        .assignment-card-count-label {
+            font-size: 0.75rem; /* text-xs */
+            color: #6b7280; /* gray-500 */
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .assignment-card-count-number {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #3b82f6; /* blue-600 */
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            z-index: 1060;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+            pointer-events: none; /* Allows clicks on elements underneath */
+            transform: translateX(-50%); /* Center horizontally */
+            left: 50%;
+            top: calc(100% + 10px); /* Position below the element */
+            bottom: auto; /* Ensure bottom is not set */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -5px; /* Position at the top of the tooltip */
+            bottom: auto; /* Ensure bottom is not set */
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            /* Ensure the triangle is above the tooltip content */
+            z-index: -1; /* Place behind tooltip content */
+        }
+        .tooltip-content {
+            text-align: left;
+            max-height: 150px; /* Limit height for scroll */
+            overflow-y: auto; /* Enable scrolling */
+        }
+        .tooltip-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .tooltip-content li {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tooltip-content li:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
 
-    <!-- Main Application Content - Now visible by default -->
+    <!-- Main Application Content -->
     <div id="main-app-content" class="w-full max-w-screen-xl">
         <!-- Top section: Modified to use justify-between for left and right alignment -->
         <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
@@ -513,6 +624,13 @@
 
             <!-- Search dropdown and other operation buttons block - aligned to the right -->
             <div class="flex items-center flex-wrap gap-2 md:gap-3">
+                <!-- Screen Switch Button - Modified as per user request -->
+                <button id="screen-switch-button" class="flex items-center justify-center p-2 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                    <!-- New icon: layout-grid for summary view -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid">
+                        <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+                    </svg>
+                </button>
                 <!-- Status dropdown for search (always visible) -->
                 <select id="status-search-select" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
                     <option value="">全てのステータス</option>
@@ -543,7 +661,7 @@
         </div>
 
         <!-- Item area - changed to table format -->
-        <div class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
+        <div id="table-container" class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
@@ -619,6 +737,24 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Switched Screen Content (Assignment Summary) -->
+    <div id="switched-screen-content" class="w-full max-w-screen-xl hidden">
+        <div class="bg-white p-4 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">配置先別サマリー</h2>
+            <div id="assignment-summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Assignment summary cards will be dynamically generated here -->
+            </div>
+            <div class="flex justify-center mt-6">
+                <button id="back-to-main-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">メイン画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip for details on hover -->
+    <div id="detail-tooltip" class="tooltip">
+        <div class="tooltip-content"></div>
     </div>
 
     <!-- Notification Side Menu -->
@@ -819,7 +955,6 @@
         </div>
     </div>
 
-
     <script>
         // System date dynamically configured
         let currentSystemDate = new Date(); // Make system date globally accessible for modification
@@ -925,8 +1060,16 @@
             const notificationBranchesCheckboxes = document.getElementById('notification-branches-checkboxes');
             const attendanceDisplayBranchesCheckboxes = document.getElementById('attendance-display-branches-checkboxes'); // Renamed from displayBranchesCheckboxes
 
-            // Main Application Content
+            // Main Application Content and Switched Screen Content
             const mainAppContent = document.getElementById('main-app-content');
+            const switchedScreenContent = document.getElementById('switched-screen-content');
+            const screenSwitchButton = document.getElementById('screen-switch-button');
+            const backToMainButton = document.getElementById('back-to-main-button');
+            const assignmentSummaryContainer = document.getElementById('assignment-summary-container');
+
+            // Tooltip elements
+            const detailTooltip = document.getElementById('detail-tooltip');
+            const tooltipContent = detailTooltip.querySelector('.tooltip-content');
 
 
             // Table data (initial state) - Added phoneNumber
@@ -948,7 +1091,7 @@
                     lineId: 'fumiya.kumabe' // Added LINE ID
                 },
                 {
-                    no: 2,
+                    no: 4,
                     teamMember: '山田 太郎',
                     branch: '東京支店',
                     client: '中央開発',
@@ -964,22 +1107,67 @@
                     lineId: 'taro.yamada' // Added LINE ID
                 },
                 {
-                    no: 3,
+                    no: 5,
                     teamMember: '佐藤 花子',
                     branch: '大阪支店',
                     client: '関西電鉄',
                     assignment: '梅田地下街警備',
                     workContent: '日勤',
                     baseTime: '14:00～22:00', // Changed
-                    reportTime: '14:00～', // Changed
-                    status: '勤 務 中', // Reverted to '勤 務 中' with spaces
+                    reportTime: '14:00～22:00', // Changed
+                    status: '下番完了', // Reverted to '勤務中' (without spaces for internal logic, spaces for display)
                     remarks: '',
-                    receptionTime: '14:00', // Updated
+                    receptionTime: '22:04', // Updated
                     memo: '',
                     phoneNumber: '07011223344',
                     lineId: 'hanako.sato' // Added LINE ID
+                },
+                {
+                    no: 6,
+                    teamMember: '高橋 悟',
+                    branch: '東京支店',
+                    client: '中央開発',
+                    assignment: '新宿駅東口再開発',
+                    workContent: '夜勤',
+                    baseTime: '22:00～07:00',
+                    reportTime: '22:00～',
+                    status: '勤務中',
+                    remarks: '',
+                    receptionTime: '',
+                    memo: '',
+                    phoneNumber: '08012345670',
+                    lineId: 'satoru.takahashi'
+                },
+                // Removed entry with no: 7 as requested
+                {
+                    no: 8,
+                    teamMember: '中村 健一',
+                    branch: '大阪支店',
+                    client: '関西電鉄',
+                    assignment: '梅田地下街警備',
+                    workContent: '日勤',
+                    baseTime: '14:00～22:00',
+                    reportTime: '14:00～22:00',
+                    status: '下番完了',
+                    remarks: '',
+                    receptionTime: '22:05',
+                    memo: '',
+                    phoneNumber: '07055554444',
+                    lineId: 'kenichi.nakamura'
                 }
             ];
+
+            // Duplicate NO.1 entry twice with new team members
+            const originalEntryNo1 = allTableData.find(item => item.no === 1);
+            if (originalEntryNo1) {
+                const newEntry1 = { ...originalEntryNo1, no: 2, teamMember: '田中 健太', lineId: 'kenta.tanaka', status: '下番完了' };
+                const newEntry2 = { ...originalEntryNo1, no: 3, teamMember: '鈴木 美咲', lineId: 'misaki.suzuki', status: '下番完了' };
+                allTableData.push(newEntry1, newEntry2);
+            }
+
+            // NO順にソート
+            allTableData.sort((a, b) => a.no - b.no);
+
 
             // Sample account data for the Account Settings modal
             let accounts = [
@@ -1013,6 +1201,13 @@
             // Function to render the main table body based on displayedTableData
             function renderTable() {
                 tableBody.innerHTML = ''; // Clear existing rows
+
+                if (displayedTableData.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `<td colspan="11" class="px-6 py-4 text-sm text-gray-500 text-center">表示するデータがありません。</td>`;
+                    tableBody.appendChild(noDataRow);
+                    return;
+                }
 
                 displayedTableData.forEach(rowData => {
                     const row = document.createElement('tr');
@@ -1127,13 +1322,14 @@
                     
                     const statusTagSpan = document.createElement('span');
                     statusTagSpan.classList.add('status-tag');
-                    statusTagSpan.textContent = rowData.status;
+                    // Display '勤務中' with spaces, but use '勤務中' for internal logic
+                    statusTagSpan.textContent = rowData.status === '勤務中' ? '勤 務 中' : rowData.status;
 
                     if (rowData.status === '下番完了') {
                         statusTagSpan.classList.add('status-tag-completed');
                     } else if (rowData.status === '報告待ち') {
                         statusTagSpan.classList.add('status-tag-pending');
-                    } else if (rowData.status === '勤 務 中') { // Check for '勤 務 中' with spaces
+                    } else if (rowData.status === '勤務中') { // Check for '勤務中' (internal value)
                         statusTagSpan.classList.add('status-tag-in-progress');
                     }
                     
@@ -1239,19 +1435,18 @@
             // Sample notification history
             let notificationHistory = [
                 // Unread notification (always dynamically timestamped)
-                { id: 1, message: 'No.2 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() },  
+                { id: 1, message: 'No.4 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() }, 
                 // Past notifications (with fixed timestamp format)
                 { id: 2, message: 'システムリリース(ver1.0.0.0)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-01T10:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 3, message: 'システムリリース(ver1.0.0.1)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-02T11:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 4, message: 'システムリリース(ver1.0.0.2)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-03T12:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 5, message: 'システムリリース(ver1.0.0.3)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-04T13:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 6, message: 'システムリリース(ver1.0.0.4)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-05T14:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
-                { id: 7, message: 'システムリリース(ver1.0.0.5)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-06T15:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 8, message: 'システムリリース(ver1.0.0.6)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-07T16:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' }
             ];
 
             // Find and update the specific notification
-            const targetMessage = 'No.2 山田 太郎さんの報告が来ておりません';
+            const targetMessage = 'No.4 山田 太郎さんの報告が来ておりません';
             const fixedDate = new Date('2025-06-28T21:00:00'); // Set to 2025/06/28 21:00
             const fixedTimestamp = fixedDate.getTime();
             const fixedDisplayTimestamp = '2025/06/28 21:00';
@@ -1326,8 +1521,8 @@
                     }
                     
                     // Determine which timestamp to display
-                    const displayedTime = notif.isRead && notif.displayTimestamp  
-                                            ? notif.displayTimestamp  
+                    const displayedTime = notif.isRead && notif.displayTimestamp 
+                                            ? notif.displayTimestamp 
                                             : formatTimestamp(notif.timestamp);
                     
                     notifElement.innerHTML = `<div>${notif.message}</div><div class="text-xs text-gray-400 mt-1">${displayedTime}</div>`;
@@ -1406,7 +1601,7 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(2, '0')}</span>
                         <span>${rowData.branch}</span>
                     `;
-                    // noBranchCell.setAttribute('data-label', 'NO/支店'); // For accessibility/debugging - removed duplicate appendChild
+                    noBranchCell.setAttribute('aria-label', `NO ${rowData.no}, Branch ${rowData.branch}`); // For accessibility
                     row.appendChild(noBranchCell);
 
                     // NO/隊員名 Cell
@@ -1416,7 +1611,7 @@
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(6, '0')}</span>
                         <span>${rowData.teamMember}</span>
                     `;
-                    // noTeamMemberCell.setAttribute('data-label', 'NO/隊員名'); // For accessibility/debugging - removed duplicate appendChild
+                    noTeamMemberCell.setAttribute('aria-label', `NO ${rowData.no}, Team Member ${rowData.teamMember}`); // For accessibility
                     row.appendChild(noTeamMemberCell);
 
                     // LINE ID Cell (input field)
@@ -1428,7 +1623,6 @@
                     lineIdInput.classList.add('w-full', 'p-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'text-gray-900');
                     lineIdInput.setAttribute('aria-label', `LINE ID for ${rowData.teamMember}`); // For accessibility
                     lineIdCell.appendChild(lineIdInput);
-                    lineIdCell.setAttribute('data-label', 'LINE ID'); // For accessibility/debugging
                     row.appendChild(lineIdCell);
 
                     lineMemberTableBody.appendChild(row);
@@ -1446,12 +1640,17 @@
                     dynamicSideMenuTitle.classList.remove('hidden'); // Ensure title is visible for notifications
 
                     // Add new notification to history (as unread)
-                    const newNotificationMessage = 'No.2 山田 太郎さんの報告が来ておりません';
+                    const newNotificationMessage = 'No.4 山田 太郎さんの報告が来ておりません';
                     // Check if the same unread notification already exists
                     const existsUnread = notificationHistory.some(notif => notif.message === newNotificationMessage && !notif.isRead);
 
                     // If the specific notification (山田 太郎さんの報告が来ておりません) is already in the list
                     // and its timestamp is not the fixed one, or if it doesn't exist, update/add it.
+                    const targetMessage = 'No.4 山田 太郎さんの報告が来ておりません'; // Redefine for scope
+                    const fixedDate = new Date('2025-06-28T21:00:00'); // Redefine for scope
+                    const fixedTimestamp = fixedDate.getTime();
+                    const fixedDisplayTimestamp = '2025/06/28 21:00';
+
                     const existingFixedNotification = notificationHistory.find(notif => 
                         notif.message === targetMessage && notif.timestamp === fixedTimestamp
                     );
@@ -1790,14 +1989,13 @@
                 addAccountButton.addEventListener('click', () => {
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log('新しいアカウントを追加します。');
-                    // In a real application, you would open a form to add a new account here
                 });
             }
 
             // Individual Account Settings Modal Functions
             function openIndividualAccountSettingsModal(account) {
                 // Close the main account settings modal first
-                closeAccountSettingsModal();  
+                closeAccountSettingsModal();    
 
                 individualAccountSettingsTitle.textContent = `アカウント設定: ${account.name}`;
                 
@@ -1915,11 +2113,11 @@
 
                     // Get selected notification branches
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                              .map(cb => cb.value);
+                                                                .map(cb => cb.value);
 
                     // Get selected attendance display branches
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                              .map(cb => cb.value);
+                                                                    .map(cb => cb.value);
 
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log(`アカウント設定を保存しました:\n` +
@@ -1937,6 +2135,166 @@
                     // Replaced alert with console.log as alerts are not allowed.
                     console.log('アカウント設定の変更を取消しました。');
                     closeIndividualAccountSettingsModal();
+                });
+            }
+
+            // Function to render the assignment summary cards
+            function renderAssignmentSummary() {
+                assignmentSummaryContainer.innerHTML = ''; // Clear existing content
+
+                const groupedAssignments = {};
+
+                allTableData.forEach(item => {
+                    const assignment = item.assignment;
+                    if (!groupedAssignments[assignment]) {
+                        groupedAssignments[assignment] = {
+                            client: item.client,
+                            workContent: item.workContent,
+                            baseTime: item.baseTime,
+                            totalAssignedMembers: [],
+                            inProgressMembers: [],
+                            pendingReportMembers: []
+                        };
+                    }
+                    groupedAssignments[assignment].totalAssignedMembers.push(item.teamMember);
+                    if (item.status === '勤務中') {
+                        groupedAssignments[assignment].inProgressMembers.push(item.teamMember);
+                    } else if (item.status === '報告待ち') {
+                        groupedAssignments[assignment].pendingReportMembers.push(item.teamMember);
+                    }
+                });
+
+                // Convert to array for easier iteration and sorting if needed
+                const sortedAssignments = Object.keys(groupedAssignments).sort().map(key => ({
+                    assignment: key,
+                    ...groupedAssignments[key]
+                }));
+
+                if (sortedAssignments.length === 0) {
+                    const noAssignmentsMessage = document.createElement('div');
+                    noAssignmentsMessage.classList.add('text-gray-500', 'text-center', 'py-4', 'col-span-full');
+                    noAssignmentsMessage.textContent = '表示する配置先情報はありません。';
+                    assignmentSummaryContainer.appendChild(noAssignmentsMessage);
+                    return;
+                }
+
+                sortedAssignments.forEach(group => {
+                    const card = document.createElement('div');
+                    card.classList.add('assignment-card');
+                    
+                    // Construct work content with icons
+                    let workContentHtml = `<strong>業務内容:</strong> ${group.workContent}`;
+                    if (group.workContent === '日勤') {
+                        workContentHtml += ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun inline-block text-orange-500 align-middle">
+                            <circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="2" y2="4"/><line x1="12" x2="12" y1="20" y2="22"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="2" x2="4" y1="12" y2="12"/><line x1="20" x2="22" y1="12" y2="12"/><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>
+                        </svg>`;
+                    } else if (group.workContent === '夜勤') {
+                        workContentHtml += ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon inline-block text-blue-500 align-middle">
+                            <path d="M12 3a6.36 6.36 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                        </svg>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="assignment-card-title">${group.assignment}</div>
+                        <div class="assignment-card-detail"><strong>得意先:</strong> ${group.client}</div>
+                        <div class="assignment-card-detail">${workContentHtml}</div>
+                        <div class="assignment-card-detail"><strong>基本時間:</strong> ${group.baseTime}</div>
+                        <div class="assignment-card-counts">
+                            <div class="assignment-card-count-item" data-type="totalAssigned" data-assignment="${group.assignment}" data-members="${group.totalAssignedMembers.join(',')}">
+                                <span class="assignment-card-count-label">受注</span>
+                                <span class="assignment-card-count-number">${group.totalAssignedMembers.length}名</span>
+                            </div>
+                            <div class="assignment-card-count-item" data-type="inProgress" data-assignment="${group.assignment}" data-members="${group.inProgressMembers.join(',')}" data-status="勤務中">
+                                <span class="assignment-card-count-label">勤務中</span>
+                                <span class="assignment-card-count-number">${group.inProgressMembers.length}名</span>
+                            </div>
+                            <div class="assignment-card-count-item" data-type="pendingReport" data-assignment="${group.assignment}" data-members="${group.pendingReportMembers.join(',')}" data-status="報告待ち">
+                                <span class="assignment-card-count-label">報告待ち</span>
+                                <span class="assignment-card-count-number ${group.pendingReportMembers.length > 0 ? 'text-red-600' : ''}">${group.pendingReportMembers.length}名</span>
+                            </div>
+                        </div>
+                    `;
+                    assignmentSummaryContainer.appendChild(card);
+                });
+
+                // Add event listeners for hover and click on count items
+                document.querySelectorAll('.assignment-card-count-item').forEach(item => {
+                    item.addEventListener('mouseover', showTooltip);
+                    item.addEventListener('mouseout', hideTooltip);
+                    item.addEventListener('click', handleCountClick);
+                });
+            }
+
+            function showTooltip(event) {
+                const members = event.currentTarget.dataset.members;
+                if (members) {
+                    const memberList = members.split(',').map(name => `<li>${name}</li>`).join('');
+                    tooltipContent.innerHTML = `<ul>${memberList}</ul>`;
+                    detailTooltip.classList.add('visible');
+
+                    // Position the tooltip
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    detailTooltip.style.left = `${rect.left + rect.width / 2}px`;
+                    detailTooltip.style.top = `${rect.top + rect.height + 10}px`; // 10px below the element
+                }
+            }
+
+            function hideTooltip() {
+                detailTooltip.classList.remove('visible');
+            }
+
+            function handleCountClick(event) {
+                const assignment = event.currentTarget.dataset.assignment;
+                const status = event.currentTarget.dataset.status; // Will be undefined for "totalAssigned"
+
+                // Switch back to the main table view
+                mainAppContent.classList.remove('hidden');
+                switchedScreenContent.classList.add('hidden');
+                isMainScreen = true;
+
+                // Filter the main table data
+                if (status) { // If a specific status count was clicked
+                    displayedTableData = allTableData.filter(row => 
+                        row.assignment === assignment && row.status === status
+                    );
+                    // Update the status dropdown to reflect the filter
+                    statusSearchSelect.value = status;
+                } else { // If total assigned count was clicked
+                    displayedTableData = allTableData.filter(row => 
+                        row.assignment === assignment
+                    );
+                    // Reset status dropdown if filtering by assignment only
+                    statusSearchSelect.value = '';
+                }
+                
+                renderTable(); // Re-render the main table with filtered data
+            }
+
+
+            // Screen Switch Button Logic
+            let isMainScreen = true; // Track current screen state
+
+            if (screenSwitchButton) {
+                screenSwitchButton.addEventListener('click', () => {
+                    if (isMainScreen) {
+                        mainAppContent.classList.add('hidden');
+                        switchedScreenContent.classList.remove('hidden');
+                        renderAssignmentSummary(); // Render summary when switching to this screen
+                    } else {
+                        mainAppContent.classList.remove('hidden');
+                        switchedScreenContent.classList.add('hidden');
+                        assignmentSummaryContainer.innerHTML = ''; // Clear summary when leaving
+                    }
+                    isMainScreen = !isMainScreen; // Toggle screen state
+                });
+            }
+
+            if (backToMainButton) {
+                backToMainButton.addEventListener('click', () => {
+                    mainAppContent.classList.remove('hidden');
+                    switchedScreenContent.classList.add('hidden');
+                    assignmentSummaryContainer.innerHTML = ''; // Clear summary when returning to main
+                    isMainScreen = true; // Ensure state is correct
                 });
             }
 
