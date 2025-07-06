@@ -474,7 +474,7 @@
             font-size: 0.9rem;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out;
-            margin-top: 1rem;
+            margin-top: 4rem;
         }
         .add-device-button:hover {
             background-color: #16a34a; /* green-600 */
@@ -532,6 +532,10 @@
             font-size: 1.25rem; /* text-xl */
             font-weight: 700; /* font-bold */
             color: #3b82f6; /* blue-600 */
+        }
+        /* New: Gray color for zero counts */
+        .assignment-card-count-number.zero-count {
+            color: #9ca3af; /* gray-400 */
         }
 
         /* Tooltip styles */
@@ -625,7 +629,7 @@
             <!-- Search dropdown and other operation buttons block - aligned to the right -->
             <div class="flex items-center flex-wrap gap-2 md:gap-3">
                 <!-- Screen Switch Button - Modified as per user request -->
-                <button id="screen-switch-button" class="flex items-center justify-center p-2 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                <button id="screen-switch-button" title="配置先別サマリー" class="flex items-center justify-center p-2 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <!-- New icon: layout-grid for summary view -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid">
                         <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
@@ -741,8 +745,29 @@
 
     <!-- Switched Screen Content (Assignment Summary) -->
     <div id="switched-screen-content" class="w-full max-w-screen-xl hidden">
-        <div class="bg-white p-4 rounded-xl shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">配置先別サマリー</h2>
+        <div class="bg-white p-4 rounded-xl shadow-md relative">
+            <!-- Close button for summary screen -->
+            <button id="summary-close-button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <!-- Added mt-4 to push the title down -->
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center mt-4">配置先別サマリー</h2>
+
+            <!-- Filters for Assignment Summary - Aligned to the right -->
+            <div class="flex flex-wrap items-center justify-end gap-4 mb-6">
+                <!-- Branch Filter Dropdown -->
+                <div class="flex items-center gap-2">
+                    <label for="summary-branch-filter" class="text-gray-700">支店:</label>
+                    <select id="summary-branch-filter" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+                        <option value="">全ての支店</option>
+                        <!-- Options will be dynamically populated -->
+                    </select>
+                </div>
+
+                <!-- Pending Report Button -->
+                <button id="summary-pending-filter" class="px-4 py-2 bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-colors">
+                    報告待ちのみ表示
+                </button>
+            </div>
+
             <div id="assignment-summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <!-- Assignment summary cards will be dynamically generated here -->
             </div>
@@ -975,7 +1000,8 @@
                 const dayOfWeekAbbreviation = daysOfWeekJapanese[dayOfWeek];
 
                 // Construct the full date string with a separate span for the day of the week
-                const dateStringWithoutDay = `${year}/${month}/${day}/(`;
+                // Modified: Changed '/(' to ' (' to prevent potential regex misinterpretation
+                const dateStringWithoutDay = `${year}/${month}/${day} (`;
                 const dayOfWeekSpanId = 'day-of-week-span';
                 
                 dateElement.innerHTML = `${dateStringWithoutDay}<span id="${dayOfWeekSpanId}">${dayOfWeekAbbreviation}</span>)`;
@@ -1066,6 +1092,12 @@
             const screenSwitchButton = document.getElementById('screen-switch-button');
             const backToMainButton = document.getElementById('back-to-main-button');
             const assignmentSummaryContainer = document.getElementById('assignment-summary-container');
+            const summaryCloseButton = document.getElementById('summary-close-button'); // New close button for summary
+
+            // Summary Screen Filters
+            const summaryBranchFilter = document.getElementById('summary-branch-filter');
+            const summaryPendingFilter = document.getElementById('summary-pending-filter');
+
 
             // Tooltip elements
             const detailTooltip = document.getElementById('detail-tooltip');
@@ -1138,7 +1170,6 @@
                     phoneNumber: '08012345670',
                     lineId: 'satoru.takahashi'
                 },
-                // Removed entry with no: 7 as requested
                 {
                     no: 7,
                     teamMember: '中村 健一',
@@ -1197,6 +1228,11 @@
             // Global state for sorting
             let currentSortKey = null;
             let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+            // Global state for summary screen filters
+            let currentSummaryFilterBranch = '';
+            let showOnlyPending = false;
+
 
             // Function to render the main table body based on displayedTableData
             function renderTable() {
@@ -2139,12 +2175,12 @@
             }
 
             // Function to render the assignment summary cards
-            function renderAssignmentSummary() {
+            function renderAssignmentSummary(dataToRender) {
                 assignmentSummaryContainer.innerHTML = ''; // Clear existing content
 
                 const groupedAssignments = {};
 
-                allTableData.forEach(item => {
+                dataToRender.forEach(item => {
                     const assignment = item.assignment;
                     if (!groupedAssignments[assignment]) {
                         groupedAssignments[assignment] = {
@@ -2165,10 +2201,17 @@
                 });
 
                 // Convert to array for easier iteration and sorting if needed
-                const sortedAssignments = Object.keys(groupedAssignments).sort().map(key => ({
+                let sortedAssignments = Object.keys(groupedAssignments).map(key => ({
                     assignment: key,
                     ...groupedAssignments[key]
                 }));
+
+                // Custom sort: "新宿駅東口再開発" first, then alphabetical
+                sortedAssignments.sort((a, b) => {
+                    if (a.assignment === '新宿駅東口再開発') return -1;
+                    if (b.assignment === '新宿駅東口再開発') return 1;
+                    return a.assignment.localeCompare(b.assignment);
+                });
 
                 if (sortedAssignments.length === 0) {
                     const noAssignmentsMessage = document.createElement('div');
@@ -2186,13 +2229,19 @@
                     let workContentHtml = `<strong>業務内容:</strong> ${group.workContent}`;
                     if (group.workContent === '日勤') {
                         workContentHtml += ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun inline-block text-orange-500 align-middle">
-                            <circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="2" y2="4"/><line x1="12" x2="12" y1="20" y2="22"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="2" x2="4" y1="12" y2="12"/><line x1="20" x2="22" y1="12" y2="12"/><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>
-                        </svg>`;
+                                <circle cx="12" cy="12" r="8"/><line x1="12" x2="12" y1="2" y2="4"/><line x1="12" x2="12" y1="20" y2="22"/><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"/><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"/><line x1="2" x2="4" y1="12" y2="12"/><line x1="20" x2="22" y1="12" y2="12"/><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"/><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"/>`;
+                        workContentHtml += `</svg>`;
                     } else if (group.workContent === '夜勤') {
                         workContentHtml += ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon inline-block text-blue-500 align-middle">
-                            <path d="M12 3a6.36 6.36 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-                        </svg>`;
+                                <path d="M12 3a6.36 6.36 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                            </svg>`;
                     }
+
+                    // Determine class for '勤務中' count
+                    const inProgressCountClass = group.inProgressMembers.length === 0 ? 'zero-count' : '';
+                    // Determine class for '報告待ち' count
+                    const pendingReportCountClass = group.pendingReportMembers.length === 0 ? 'zero-count' : 'text-red-600';
+
 
                     card.innerHTML = `
                         <div class="assignment-card-title">${group.assignment}</div>
@@ -2206,11 +2255,11 @@
                             </div>
                             <div class="assignment-card-count-item" data-type="inProgress" data-assignment="${group.assignment}" data-members="${group.inProgressMembers.join(',')}" data-status="勤務中">
                                 <span class="assignment-card-count-label">勤務中</span>
-                                <span class="assignment-card-count-number">${group.inProgressMembers.length}名</span>
+                                <span class="assignment-card-count-number ${inProgressCountClass}">${group.inProgressMembers.length}名</span>
                             </div>
                             <div class="assignment-card-count-item" data-type="pendingReport" data-assignment="${group.assignment}" data-members="${group.pendingReportMembers.join(',')}" data-status="報告待ち">
                                 <span class="assignment-card-count-label">報告待ち</span>
-                                <span class="assignment-card-count-number ${group.pendingReportMembers.length > 0 ? 'text-red-600' : ''}">${group.pendingReportMembers.length}名</span>
+                                <span class="assignment-card-count-number ${pendingReportCountClass}">${group.pendingReportMembers.length}名</span>
                             </div>
                         </div>
                     `;
@@ -2274,12 +2323,46 @@
             // Screen Switch Button Logic
             let isMainScreen = true; // Track current screen state
 
+            // Function to populate branch filter dropdown for summary screen
+            function populateBranchFilter() {
+                const branches = [...new Set(allTableData.map(item => item.branch))].sort();
+                summaryBranchFilter.innerHTML = '<option value="">全ての支店</option>'; // Add default option
+                branches.forEach(branch => {
+                    const option = document.createElement('option');
+                    option.value = branch;
+                    option.textContent = branch;
+                    summaryBranchFilter.appendChild(option);
+                });
+            }
+
+            // Function to apply filters and render the summary
+            function filterAndRenderSummary() {
+                let dataForSummary = [...allTableData];
+
+                // Apply branch filter
+                if (currentSummaryFilterBranch) {
+                    dataForSummary = dataForSummary.filter(item => item.branch === currentSummaryFilterBranch);
+                }
+
+                // Apply pending report filter
+                if (showOnlyPending) {
+                    dataForSummary = dataForSummary.filter(item => item.status === '報告待ち');
+                }
+
+                renderAssignmentSummary(dataForSummary);
+            }
+
             if (screenSwitchButton) {
                 screenSwitchButton.addEventListener('click', () => {
                     if (isMainScreen) {
                         mainAppContent.classList.add('hidden');
                         switchedScreenContent.classList.remove('hidden');
-                        renderAssignmentSummary(); // Render summary when switching to this screen
+                        populateBranchFilter(); // Populate branches when switching to summary
+                        // Reset summary filters when entering the summary screen
+                        currentSummaryFilterBranch = '';
+                        showOnlyPending = false;
+                        summaryBranchFilter.value = ''; // Reset dropdown
+                        filterAndRenderSummary(); // Render summary with initial filters
                     } else {
                         mainAppContent.classList.remove('hidden');
                         switchedScreenContent.classList.add('hidden');
@@ -2295,6 +2378,36 @@
                     switchedScreenContent.classList.add('hidden');
                     assignmentSummaryContainer.innerHTML = ''; // Clear summary when returning to main
                     isMainScreen = true; // Ensure state is correct
+                });
+            }
+
+            if (summaryCloseButton) {
+                summaryCloseButton.addEventListener('click', () => {
+                    mainAppContent.classList.remove('hidden');
+                    switchedScreenContent.classList.add('hidden');
+                    assignmentSummaryContainer.innerHTML = ''; // Clear summary when returning to main
+                    isMainScreen = true; // Ensure state is correct
+                });
+            }
+
+            // Event listener for summary branch filter
+            if (summaryBranchFilter) {
+                summaryBranchFilter.addEventListener('change', (event) => {
+                    currentSummaryFilterBranch = event.target.value;
+                    filterAndRenderSummary();
+                });
+            }
+
+            // Event listener for summary pending filter button
+            if (summaryPendingFilter) {
+                summaryPendingFilter.addEventListener('click', () => {
+                    showOnlyPending = !showOnlyPending; // Toggle the state
+                    if (showOnlyPending) {
+                        summaryPendingFilter.classList.add('bg-yellow-600'); // Indicate active state
+                    } else {
+                        summaryPendingFilter.classList.remove('bg-yellow-600'); // Indicate inactive state
+                    }
+                    filterAndRenderSummary();
                 });
             }
 
