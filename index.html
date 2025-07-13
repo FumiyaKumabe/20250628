@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管制Proクラウド(仮称)</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Inter font application */
         body {
             font-family: 'Inter', sans-serif;
         }
 
-        /* Side menu styles */
         .side-menu-overlay {
             position: fixed;
             top: 0;
@@ -23,10 +19,10 @@
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
             display: flex;
-            justify-content: flex-end; /* Position menu to the right */
+            justify-content: flex-end;
             z-index: 1000;
-            visibility: hidden; /* Hidden by default */
-            opacity: 0; /* Transparent by default */
+            visibility: hidden;
+            opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
         }
         .side-menu-overlay.open {
@@ -36,10 +32,10 @@
         .side-menu-content {
             background-color: white;
             width: 100%;
-            max-width: 320px; /* Max width of side menu */
+            max-width: 320px;
             height: 100%;
             box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
-            transform: translateX(100%); /* Initially off-screen to the right */
+            transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
             padding: 24px;
             position: relative;
@@ -47,7 +43,7 @@
             flex-direction: column;
         }
         .side-menu-overlay.open .side-menu-content {
-            transform: translateX(0); /* Slide in when open */
+            transform: translateX(0);
         }
         .side-menu-close-button {
             position: absolute;
@@ -55,32 +51,31 @@
             right: 8px;
             background: none;
             border: none;
-            font-size: 1.8rem; /* Slightly larger */
+            font-size: 1.8rem;
             cursor: pointer;
-            color: #6b7280; /* gray-500 */
+            color: #6b7280;
         }
         .side-menu-title {
-            font-size: 1.5rem; /* text-xl */
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 1rem; /* mb-4 */
-            color: #1f2937; /* gray-800 */
+            margin-bottom: 1rem;
+            color: #1f2937;
         }
         .side-menu-item {
-            padding: 0.75rem 0; /* py-3 */
-            border-bottom: 1px solid #e5e7eb; /* gray-200 */
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
             cursor: pointer;
-            font-size: 1.125rem; /* text-lg */
-            color: #374151; /* gray-700 */
+            font-size: 1.125rem;
+            color: #374151;
         }
         .side-menu-item:last-child {
-            border-bottom: none; /* No bottom border for the last item */
+            border-bottom: none;
         }
         .side-menu-item:hover {
-            background-color: #f3f4f6; /* gray-100 */
+            background-color: #f3f4f6;
             border-radius: 4px;
         }
 
-        /* LINE Notification Modal Styles */
         .line-notification-modal-overlay {
             position: fixed;
             top: 0;
@@ -91,7 +86,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1010; /* Higher than side menu */
+            z-index: 1010;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -106,7 +101,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             max-width: 95%;
-            width: 500px; /* Increased width for better table display */
+            width: 500px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -120,7 +115,7 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #6b7280; /* gray-500 */
+            color: #6b7280;
         }
         .line-notification-modal-title {
             font-size: 1.5rem;
@@ -130,18 +125,17 @@
             margin-bottom: 1rem;
         }
 
-        /* Sort indicator styles */
         .sort-indicator {
             display: inline-block;
             width: 0;
             height: 0;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
-            border-top: 4px solid #9ca3af; /* gray-400 */
+            border-top: 4px solid #9ca3af;
             margin-left: 4px;
             vertical-align: middle;
             transition: transform 0.2s ease-in-out;
-            opacity: 0; /* Hidden by default */
+            opacity: 0;
         }
         .sort-indicator.active {
             opacity: 1;
@@ -153,7 +147,6 @@
             transform: rotate(180deg);
         }
 
-        /* Calendar Modal Styles */
         .calendar-modal-overlay {
             position: fixed;
             top: 0;
@@ -164,7 +157,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1020; /* Higher than other modals */
+            z-index: 1020;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -205,30 +198,28 @@
         }
         .calendar-grid span.day-label {
             font-weight: bold;
-            color: #4b5563; /* gray-700 */
+            color: #4b5563;
         }
         .calendar-grid span.current-month {
-            color: #1f2937; /* gray-800 */
+            color: #1f2937;
         }
         .calendar-grid span.other-month {
-            color: #9ca3af; /* gray-400 */
+            color: #9ca3af;
         }
         .calendar-grid span.today {
-            background-color: #bfdbfe; /* blue-200 */
+            background-color: #bfdbfe;
             font-weight: bold;
         }
-        /* New styles for Saturday and Sunday */
         .calendar-grid span.saturday {
-            color: #2563eb; /* blue-700 */
+            color: #2563eb;
         }
         .calendar-grid span.sunday {
-            color: #dc2626; /* red-600 */
+            color: #dc2626;
         }
         .calendar-grid span:not(.day-label):hover {
-            background-color: #e5e7eb; /* gray-200 */
+            background-color: #e5e7eb;
         }
 
-        /* Phone Call Modal Styles */
         .phone-call-modal-overlay {
             position: fixed;
             top: 0;
@@ -239,7 +230,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1030; /* Higher than other modals */
+            z-index: 1030;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -269,7 +260,7 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #6b7280; /* gray-500 */
+            color: #6b7280;
         }
         .phone-call-modal-title {
             font-size: 1.5rem;
@@ -278,41 +269,35 @@
             margin-bottom: 1rem;
         }
 
-        /* Styles for Status Tags */
         .status-tag {
             display: inline-block;
-            padding: 0.25rem 0.75rem; /* py-1 px-3 */
-            border-radius: 9999px; /* rounded-full */
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 600; /* font-semibold */
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
             text-align: center;
             white-space: nowrap;
         }
 
         .status-tag-completed {
-            background-color: #dbeafe; /* blue-100 */
-            color: #1e40af; /* blue-800 */
+            background-color: #dbeafe;
+            color: #1e40af;
         }
 
         .status-tag-pending {
-            background-color: #fee2e2; /* red-100 */
-            color: #991b1b; /* red-800 */
+            background-color: #fee2e2;
+            color: #991b1b;
         }
 
-        /* Styles for '勤務中' status tag, adjusted for full-width spacing */
         .status-tag-in-progress {
-            background-color: #d1fae5; /* green-100 */
-            color: #065f46; /* green-800 */
-            /* Using letter-spacing or word-spacing to maintain visual uniformity if needed,
-                but Tailwind's padding and flexbox on the parent should handle it well. */
+            background-color: #d1fae5;
+            color: #065f46;
         }
 
-        /* Custom font size for small text */
         .text-xxs {
-            font-size: 0.625rem; /* 10px */
+            font-size: 0.625rem;
         }
 
-        /* Account Settings Modal Styles */
         .account-settings-modal-overlay {
             position: fixed;
             top: 0;
@@ -323,7 +308,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1040; /* Higher than other modals */
+            z-index: 1040;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -377,24 +362,23 @@
             cursor: pointer;
             color: #6b7280;
             transition: color 0.2s ease-in-out;
-            font-size: 1.25rem; /* Larger font size for emoji */
+            font-size: 1.25rem;
         }
         .account-list-item .settings-icon:hover {
             color: #1f2937;
         }
 
-        /* Individual Account Settings Modal Styles */
         .individual-account-settings-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1050; /* Higher than Account Settings Modal */
+            z-index: 1050;
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -407,15 +391,15 @@
             background-color: white;
             padding: 24px;
             border-radius: 8px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
             max-width: 95%;
-            width: 500px; /* Similar width to LINE settings */
+            width: 500px;
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 20px; /* More spacing */
-            overflow-y: auto; /* Enable scrolling for content */
-            max-height: 90vh; /* Max height to fit on screen */
+            gap: 20px;
+            overflow-y: auto;
+            max-height: 90vh;
         }
         .individual-account-settings-modal-close-button {
             position: absolute;
@@ -428,7 +412,7 @@
             color: #6b7280;
         }
         .individual-account-settings-modal-title {
-            font-size: 1.75rem; /* Larger title */
+            font-size: 1.75rem;
             font-weight: bold;
             color: #1f2937;
             text-align: center;
@@ -437,8 +421,8 @@
             border-bottom: 1px solid #e5e7eb;
         }
         .section-title {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600; /* font-semibold */
+            font-size: 1.25rem;
+            font-weight: 600;
             color: #374151;
             margin-bottom: 0.75rem;
         }
@@ -447,7 +431,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.5rem 0;
-            border-bottom: 1px dashed #e5e7eb; /* Dashed border for devices */
+            border-bottom: 1px dashed #e5e7eb;
             font-size: 0.95rem;
             color: #4b5563;
         }
@@ -455,19 +439,19 @@
             border-bottom: none;
         }
         .device-action-button {
-            background-color: #ef4444; /* red-500 */
+            background-color: #ef4444;
             color: white;
             padding: 0.3rem 0.6rem;
-            border-radius: 0.375rem; /* rounded-md */
+            border-radius: 0.375rem;
             font-size: 0.8rem;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out;
         }
         .device-action-button:hover {
-            background-color: #dc2626; /* red-600 */
+            background-color: #dc2626;
         }
         .add-device-button {
-            background-color: #22c55e; /* green-500 */
+            background-color: #22c55e;
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
@@ -477,10 +461,9 @@
             margin-top: 1rem;
         }
         .add-device-button:hover {
-            background-color: #16a34a; /* green-600 */
+            background-color: #16a34a;
         }
 
-        /* Styles for assignment summary cards */
         .assignment-card {
             background-color: white;
             padding: 1.5rem;
@@ -491,54 +474,52 @@
             gap: 0.5rem;
         }
         .assignment-card-title {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 700; /* font-bold */
-            color: #1f2937; /* gray-800 */
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
             margin-bottom: 0.5rem;
         }
         .assignment-card-detail {
             font-size: 0.95rem;
-            color: #4b5563; /* gray-700 */
+            color: #4b5563;
         }
         .assignment-card-counts {
             display: flex;
             justify-content: space-around;
             gap: 0.75rem;
             margin-top: 0.75rem;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
         }
         .assignment-card-count-item {
-            flex: 1; /* Distribute space evenly */
-            min-width: 100px; /* Minimum width for each item */
+            flex: 1;
+            min-width: 100px;
             text-align: center;
-            background-color: #f3f4f6; /* gray-100 */
+            background-color: #f3f4f6;
             padding: 0.5rem 0.25rem;
             border-radius: 0.375rem;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
-            position: relative; /* For tooltip positioning */
+            position: relative;
         }
         .assignment-card-count-item:hover {
-            background-color: #e5e7eb; /* gray-200 */
+            background-color: #e5e7eb;
             transform: translateY(-2px);
         }
         .assignment-card-count-label {
-            font-size: 0.75rem; /* text-xs */
-            color: #6b7280; /* gray-500 */
+            font-size: 0.75rem;
+            color: #6b7280;
             display: block;
             margin-bottom: 0.25rem;
         }
         .assignment-card-count-number {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 700; /* font-bold */
-            color: #3b82f6; /* blue-600 */
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #3b82f6;
         }
-        /* New: Gray color for zero counts */
         .assignment-card-count-number.zero-count {
-            color: #9ca3af; /* gray-400 */
+            color: #9ca3af;
         }
 
-        /* Tooltip styles */
         .tooltip {
             position: absolute;
             background-color: #333;
@@ -551,11 +532,11 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-            pointer-events: none; /* Allows clicks on elements underneath */
-            transform: translateX(-50%); /* Center horizontally */
+            pointer-events: none;
+            transform: translateX(-50%);
             left: 50%;
-            top: calc(100% + 10px); /* Position below the element */
-            bottom: auto; /* Ensure bottom is not set */
+            top: calc(100% + 10px);
+            bottom: auto;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         .tooltip.visible {
@@ -566,19 +547,18 @@
             content: '';
             position: absolute;
             left: 50%;
-            top: -5px; /* Position at the top of the tooltip */
-            bottom: auto; /* Ensure bottom is not set */
+            top: -5px;
+            bottom: auto;
             transform: translateX(-50%) rotate(45deg);
             width: 10px;
             height: 10px;
             background-color: #333;
-            /* Ensure the triangle is above the tooltip content */
-            z-index: -1; /* Place behind tooltip content */
+            z-index: -1;
         }
         .tooltip-content {
             text-align: left;
-            max-height: 150px; /* Limit height for scroll */
-            overflow-y: auto; /* Enable scrolling */
+            max-height: 150px;
+            overflow-y: auto;
         }
         .tooltip-content ul {
             list-style: none;
@@ -592,33 +572,31 @@
         .tooltip-content li:last-child {
             border-bottom: none;
         }
+
+        .consecutive-work-red {
+            color: #dc2626;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
 
-    <!-- Main Application Content -->
     <div id="main-app-content" class="w-full max-w-screen-xl">
-        <!-- Top section: Modified to use justify-between for left and right alignment -->
         <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
-            <!-- Date and navigation buttons block - aligned to the left -->
             <div class="flex items-center flex-wrap gap-2">
-                <!-- Previous day button - smaller -->
                 <button id="prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
                 </button>
-                <!-- System date -->
                 <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
                     <span id="system-date"></span>
                 </div>
-                <!-- Next day button - smaller -->
                 <button id="next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
                 </button>
-                <!-- Calendar icon (button) -->
                 <button id="calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
                         <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
@@ -626,16 +604,17 @@
                 </button>
             </div>
 
-            <!-- Search dropdown and other operation buttons block - aligned to the right -->
             <div class="flex items-center flex-wrap gap-2 md:gap-3">
-                <!-- Screen Switch Button - Modified as per user request -->
+                <button id="unassigned-personnel-button" title="未配置者確認画面" class="flex items-center justify-center p-2 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user text-gray-700">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </button>
                 <button id="screen-switch-button" title="配置先別サマリー" class="flex items-center justify-center p-2 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
-                    <!-- New icon: layout-grid for summary view -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid">
                         <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
                     </svg>
                 </button>
-                <!-- Status dropdown for search (always visible) -->
                 <select id="status-search-select" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
                     <option value="">全てのステータス</option>
                     <option value="報告待ち">報告待ち</option>
@@ -643,19 +622,15 @@
                     <option value="上番完了">上番完了</option>
                     <option value="下番待ち">下番待ち</option>
                     <option value="下番完了">下番完了</option>
-                    <option value="勤務中">勤務中</option> <!-- Added new status -->
+                    <option value="勤務中">勤務中</option>
                 </select>
-                <!-- Notification icon (button) - yellow with badge -->
                 <button id="notification-button" class="relative flex items-center justify-center p-2 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-bell">
                         <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                     </svg>
-                    <!-- Notification badge -->
                     <span id="notification-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
-                        <!-- Notification count will be displayed here -->
                     </span>
                 </button>
-                <!-- Options icon (button) -->
                 <button id="options-button" class="flex items-center justify-center p-2 bg-gray-300 text-gray-800 rounded-full shadow-md hover:bg-gray-400 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-more-horizontal">
                         <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
@@ -664,12 +639,10 @@
             </div>
         </div>
 
-        <!-- Item area - changed to table format -->
         <div id="table-container" class="bg-white p-4 rounded-xl shadow-md overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <!-- Sortable Headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="no">
                             <div class="flex items-center justify-center">
                                 <span>NO</span>
@@ -706,10 +679,8 @@
                                 <span class="sort-indicator"></span>
                             </div>
                         </th>
-                        <!-- Non-sortable headers (text-left) -->
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">基本時間</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">報告時間</th>
-                        <!-- Sortable headers -->
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="status">
                             <div class="flex items-center justify-center">
                                 <span>ステータス</span>
@@ -728,47 +699,52 @@
                                 <span class="sort-indicator"></span>
                             </div>
                         </th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="memo">
-                            <div class="flex items-center justify-center">
-                                <span>メモ</span>
-                                <span class="sort-indicator"></span>
-                            </div>
-                        </th>
                     </tr>
                 </thead>
                 <tbody id="table-body" class="bg-white divide-y divide-gray-200">
-                    <!-- Table rows will be dynamically generated here by JavaScript -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Switched Screen Content (Assignment Summary) -->
     <div id="switched-screen-content" class="w-full max-w-screen-xl hidden">
         <div class="bg-white p-4 rounded-xl shadow-md relative">
-            <!-- Close button for summary screen -->
             <button id="summary-close-button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
-            <!-- Added mt-4 to push the title down -->
             <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center mt-8">配置先別サマリー</h2>
 
-            <!-- Filters for Assignment Summary - Aligned to the right -->
-            <div class="flex flex-wrap items-center justify-end gap-4 mb-6">
-                <!-- Branch Filter Dropdown -->
-                <div class="flex items-center gap-2">
-                    <select id="summary-branch-filter" class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700">
-                        <option value="">全ての支店</option>
-                        <!-- Options will be dynamically populated -->
-                    </select>
+            <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
+                <div class="flex items-center flex-wrap gap-2">
+                    <button id="summary-prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
+                        <span id="summary-system-date"></span>
+                    </div>
+                    <button id="summary-next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
+                    <button id="summary-calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                            <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- Pending Report Button -->
-                <button id="summary-pending-filter" class="px-4 py-2 bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-colors">
-                    報告待ちのみ表示
-                </button>
+                <div class="flex flex-wrap items-center justify-end gap-4">
+                    <div class="flex flex-wrap gap-2" id="summary-branch-checkboxes-container">
+                    </div>
+
+                    <button id="summary-pending-filter" class="px-4 py-2 bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-colors">
+                        報告待ちのみ表示
+                    </button>
+                </div>
             </div>
 
             <div id="assignment-summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Assignment summary cards will be dynamically generated here -->
             </div>
             <div class="flex justify-center mt-6">
                 <button id="back-to-main-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">メイン画面に戻る</button>
@@ -776,30 +752,188 @@
         </div>
     </div>
 
-    <!-- Tooltip for details on hover -->
-    <div id="detail-tooltip" class="tooltip">
-        <div class="tooltip-content"></div>
-    </div>
+    <div id="unassigned-personnel-screen" class="w-full max-w-screen-xl hidden">
+        <div class="bg-white p-4 rounded-xl shadow-md relative">
+            <button id="unassigned-close-button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center mt-8">未配置者確認画面</h2>
 
-    <!-- Notification Side Menu -->
-    <div id="side-menu-container" class="side-menu-overlay">
-        <div class="side-menu-content rounded-l-xl">
-            <button id="side-menu-close-button" class="side-menu-close-button">&times;</button>
-            <h3 id="dynamic-side-menu-title" class="side-menu-title"></h3>
-            <!-- Container for notification messages or option items -->
-            <div id="side-menu-content-area" class="space-y-3 text-left overflow-y-auto flex-grow">
-                <!-- Content will be dynamically added here -->
+            <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
+                <div class="flex items-center flex-wrap gap-2">
+                    <button id="unassigned-prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
+                        <span id="unassigned-system-date"></span>
+                    </div>
+                    <button id="unassigned-next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
+                    <button id="unassigned-calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                            <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-4">
+                    <div class="flex flex-wrap gap-2" id="unassigned-branch-checkboxes-container">
+                    </div>
+                    <input type="text" id="unassigned-search-input" placeholder="隊員名、状況で検索..." class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-200 rounded-md">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="branch">
+                                <div class="flex items-center">
+                                    <span>支店</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="teamMember">
+                                <div class="flex items-center">
+                                    <span>隊員名</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="consecutiveWorkStatus">
+                                <div class="flex items-center">
+                                    <span>連勤状況</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="holidayStatus">
+                                <div class="flex items-center">
+                                    <span>休日状況</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="unassigned-personnel-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-center mt-6">
+                <button id="unassigned-back-to-main-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">メイン画面に戻る</button>
             </div>
         </div>
     </div>
 
-    <!-- LINE Notification Settings Modal -->
+    <div id="work-history-screen" class="w-full max-w-screen-xl hidden">
+        <div class="bg-white p-4 rounded-xl shadow-md relative">
+            <button id="work-history-close-button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <h2 id="work-history-title" class="text-2xl font-bold text-gray-800 mb-4 text-center mt-8">勤務履歴確認画面</h2>
+
+            <div class="flex flex-wrap items-center justify-between bg-white p-3 md:p-4 rounded-xl shadow-md mb-6 gap-3">
+                <div class="flex items-center flex-wrap gap-2">
+                    <button id="work-history-prev-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="text-lg md:text-xl font-semibold text-gray-800 whitespace-nowrap">
+                        <span id="work-history-system-date"></span>
+                    </div>
+                    <button id="work-history-next-day-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-6 h-6 md:w-7 md:h-7 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </button>
+                    <button id="work-history-calendar-button" class="flex items-center justify-center p-1 bg-transparent text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar">
+                            <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-4">
+                    <div class="flex flex-wrap gap-2" id="work-history-branch-checkboxes-container">
+                    </div>
+                    <input type="text" id="work-history-search-input" placeholder="隊員名、状況で検索..." class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
+                    <button id="work-history-unassigned-filter" class="px-4 py-2 bg-yellow-500 text-white rounded-md shadow-md hover:bg-yellow-600 transition-colors">
+                        未配置者のみ表示
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto border border-gray-200 rounded-md">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="branch">
+                                <div class="flex items-center">
+                                    <span>支店</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="teamMember">
+                                <div class="flex items-center">
+                                    <span>隊員名</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="consecutiveWorkStatus">
+                                <div class="flex items-center">
+                                    <span>連勤状況</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="holidayStatus">
+                                <div class="flex items-center">
+                                    <span>休日状況</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="assignmentStatus">
+                                <div class="flex items-center">
+                                    <span>配置状況</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="lastWorkDate">
+                                <div class="flex items-center">
+                                    <span>最終勤務日</span>
+                                    <span class="sort-indicator"></span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="work-history-table-body" class="bg-white divide-y divide-gray-200">
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-center mt-6">
+                <button id="work-history-back-to-main-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">メイン画面に戻る</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="detail-tooltip" class="tooltip">
+        <div class="tooltip-content"></div>
+    </div>
+
+    <div id="side-menu-container" class="side-menu-overlay">
+        <div class="side-menu-content rounded-l-xl">
+            <button id="side-menu-close-button" class="side-menu-close-button">&times;</button>
+            <h3 id="dynamic-side-menu-title" class="side-menu-title"></h3>
+            <div id="side-menu-content-area" class="space-y-3 text-left overflow-y-auto flex-grow">
+            </div>
+        </div>
+    </div>
+
     <div id="line-notification-settings-modal" class="line-notification-modal-overlay">
         <div class="line-notification-modal-content">
             <button id="line-notification-modal-close-button" class="line-notification-modal-close-button">&times;</button>
             <h3 class="line-notification-modal-title">LINE通知設定</h3>
 
-            <!-- Notification Settings Section -->
             <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">通知設定</h4>
                 <div class="flex items-center space-x-2">
@@ -819,33 +953,27 @@
                 </div>
             </div>
 
-            <!-- Table Section -->
             <div class="overflow-x-auto border border-gray-200 rounded-md mt-6">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2 px-4 pt-2">隊員情報</h4>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <!-- New column: NO/支店 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>支店</span>
                             </th>
-                            <!-- New column: NO/隊員名 -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                                 <span class="text-gray-400 text-xxs font-normal block">NO</span>
                                 <span>隊員名</span>
                             </th>
-                            <!-- Original LINE ID column -->
                             <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">LINE ID</th>
                         </tr>
                     </thead>
                     <tbody id="line-member-table-body" class="bg-white divide-y divide-gray-200">
-                        <!-- Rows will be dynamically generated here by JavaScript -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Save and Cancel Buttons -->
             <div class="flex justify-end space-x-4 mt-6">
                 <button id="save-line-settings" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">保存</button>
                 <button id="cancel-line-settings" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-md shadow-md hover:bg-gray-400 transition-colors">取消</button>
@@ -853,7 +981,6 @@
         </div>
     </div>
 
-    <!-- Calendar Modal -->
     <div id="calendar-modal" class="calendar-modal-overlay">
         <div class="calendar-modal-content">
             <button id="calendar-modal-close-button" class="line-notification-modal-close-button">&times;</button>
@@ -871,7 +998,6 @@
                 </button>
             </div>
             <div class="calendar-grid" id="calendar-grid">
-                <!-- Days of the week -->
                 <span class="day-label">日</span>
                 <span class="day-label">月</span>
                 <span class="day-label">火</span>
@@ -879,12 +1005,10 @@
                 <span class="day-label">木</span>
                 <span class="day-label">金</span>
                 <span class="day-label">土</span>
-                <!-- Calendar days will be rendered here -->
             </div>
         </div>
     </div>
 
-    <!-- Phone Call Modal -->
     <div id="phone-call-modal" class="phone-call-modal-overlay">
         <div class="phone-call-modal-content">
             <button id="phone-call-modal-close-button" class="phone-call-modal-close-button">&times;</button>
@@ -897,26 +1021,22 @@
         </div>
     </div>
 
-    <!-- Account Settings Modal -->
     <div id="account-settings-modal" class="account-settings-modal-overlay">
         <div class="account-settings-modal-content">
             <button id="account-settings-modal-close-button" class="account-settings-modal-close-button">&times;</button>
             <h3 class="account-settings-modal-title">アカウント設定</h3>
             <div id="account-list-area" class="flex-grow overflow-y-auto space-y-2">
-                <!-- Account list items will be dynamically generated here -->
             </div>
             <button id="add-account-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors">アカウント追加</button>
         </div>
     </div>
 
-    <!-- Individual Account Settings Modal -->
     <div id="individual-account-settings-modal" class="individual-account-settings-modal-overlay">
         <div class="individual-account-settings-modal-content">
             <button id="individual-account-settings-modal-close-button" class="individual-account-settings-modal-close-button">&times;</button>
             <h3 id="individual-account-settings-title" class="individual-account-settings-modal-title"></h3>
 
-            <!-- 通知設定 (Notification Settings) -->
-            <div class="space-y-4">
+            <div>
                 <h4 class="section-title">通知設定</h4>
                 <div class="flex items-center space-x-2">
                     <label for="individual-departure-time" class="text-gray-700 whitespace-nowrap">自宅出発：勤務開始の</label>
@@ -934,39 +1054,31 @@
                     <span class="text-gray-700">分後</span>
                 </div>
 
-                <!-- 通知支店 (Notification Branches) -->
                 <div class="mt-4">
                     <h5 class="text-base font-semibold text-gray-800 mb-2">通知支店</h5>
                     <div id="notification-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                        <!-- Checkboxes will be dynamically added here -->
                     </div>
                 </div>
             </div>
 
-            <!-- 通知端末の設定/追加 (Notification Device Settings/Addition) -->
             <div>
                 <h4 class="section-title">通知端末の設定/追加</h4>
                 <div id="notification-device-list" class="space-y-2">
-                    <!-- Devices will be listed here -->
                 </div>
                 <button id="add-notification-device-button" class="add-device-button">通知端末追加</button>
             </div>
 
-            <!-- 勤怠表示支店 (Attendance Display Branches) -->
             <div>
                 <h4 class="section-title">勤怠表示支店</h4>
                 <div id="attendance-display-branches-checkboxes" class="grid grid-cols-2 gap-2 text-gray-700">
-                    <!-- Checkboxes will be dynamically added here -->
                 </div>
             </div>
 
-            <!-- パスワードの変更 (Password Change) -->
             <div>
                 <h4 class="section-title">パスワードの変更</h4>
                 <button id="change-password-button" class="w-full px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">パスワードを変更</button>
             </div>
 
-            <!-- アカウントの削除 (Account Deletion) -->
             <div>
                 <h4 class="section-title">アカウントの削除</h4>
                 <button id="delete-account-button" class="w-full px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors">アカウントを削除</button>
@@ -980,54 +1092,60 @@
     </div>
 
     <script>
-        // System date dynamically configured
-        let currentSystemDate = new Date(); // Make system date globally accessible for modification
+        let currentSystemDate = new Date();
 
         document.addEventListener('DOMContentLoaded', () => {
-            const dateElement = document.getElementById('system-date');
-            // Get references for day navigation buttons
-            const prevDayButton = document.getElementById('prev-day-button');
-            const nextDayButton = document.getElementById('next-day-button');
+            const mainDateElement = document.getElementById('system-date');
+            const mainPrevDayButton = document.getElementById('prev-day-button');
+            const mainNextDayButton = document.getElementById('next-day-button');
+            const mainCalendarButton = document.getElementById('calendar-button');
 
-            // Function to update the displayed system date
-            function updateSystemDateDisplay() {
-                const year = currentSystemDate.getFullYear();
-                const month = String(currentSystemDate.getMonth() + 1).padStart(2, '0'); // Month starts from 0, so add 1
-                const day = String(currentSystemDate.getDate()).padStart(2, '0');
-                const dayOfWeek = currentSystemDate.getDay(); // 0 for Sunday, 6 for Saturday
+            const summaryDateElement = document.getElementById('summary-system-date');
+            const summaryPrevDayButton = document.getElementById('summary-prev-day-button');
+            const summaryNextDayButton = document.getElementById('summary-next-day-button');
+            const summaryCalendarButton = document.getElementById('summary-calendar-button');
+
+            const unassignedDateElement = document.getElementById('unassigned-system-date');
+            const unassignedPrevDayButton = document.getElementById('unassigned-prev-day-button');
+            const unassignedNextDayButton = document.getElementById('unassigned-next-day-button');
+            const unassignedCalendarButton = document.getElementById('unassigned-calendar-button');
+
+            const workHistoryDateElement = document.getElementById('work-history-system-date');
+            const workHistoryPrevDayButton = document.getElementById('work-history-prev-day-button');
+            const workHistoryNextDayButton = document.getElementById('work-history-next-day-button');
+            const workHistoryCalendarButton = document.getElementById('work-history-calendar-button');
+
+
+            function updateDateDisplay(date, dateElementId, dayOfWeekSpanId) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const dayOfWeek = date.getDay();
                 const daysOfWeekJapanese = ['日', '月', '火', '水', '木', '金', '土'];
                 const dayOfWeekAbbreviation = daysOfWeekJapanese[dayOfWeek];
 
-                // Construct the full date string with a separate span for the day of the week
-                // Modified: Changed '/(' to ' (' to prevent potential regex misinterpretation
                 const dateStringWithoutDay = `${year}/${month}/${day} (`;
-                const dayOfWeekSpanId = 'day-of-week-span';
                 
-                dateElement.innerHTML = `${dateStringWithoutDay}<span id="${dayOfWeekSpanId}">${dayOfWeekAbbreviation}</span>)`;
-
-                const dayOfWeekSpan = document.getElementById(dayOfWeekSpanId);
-                if (dayOfWeekSpan) {
-                    // Clear previous color classes from the span before applying new ones
-                    dayOfWeekSpan.classList.remove('text-red-600', 'text-blue-700');
-
-                    // Apply color based on day of week to the dayOfWeekSpan
-                    if (dayOfWeek === 0) { // Sunday
-                        dayOfWeekSpan.classList.add('text-red-600');
-                    } else if (dayOfWeek === 6) { // Saturday
-                        dayOfWeekSpan.classList.add('text-blue-700');
+                const targetElement = document.getElementById(dateElementId);
+                if (targetElement) {
+                    targetElement.innerHTML = `${dateStringWithoutDay}<span id="${dayOfWeekSpanId}">${dayOfWeekAbbreviation}</span>)`;
+                    const dayOfWeekSpan = document.getElementById(dayOfWeekSpanId);
+                    if (dayOfWeekSpan) {
+                        dayOfWeekSpan.classList.remove('text-red-600', 'text-blue-700');
+                        if (dayOfWeek === 0) { dayOfWeekSpan.classList.add('text-red-600'); } else if (dayOfWeek === 6) { dayOfWeekSpan.classList.add('text-blue-700'); }
                     }
                 }
-
-                // Optionally re-render table data if it depends on the date
-                // renderTable(); // Uncomment if table content changes with date
             }
 
-            // Initial display of the system date
-            if (dateElement) {
-                updateSystemDateDisplay();
+            function updateAllDateDisplays() {
+                updateDateDisplay(currentSystemDate, 'system-date', 'day-of-week-span');
+                updateDateDisplay(currentSystemDate, 'summary-system-date', 'summary-day-of-week-span');
+                updateDateDisplay(currentSystemDate, 'unassigned-system-date', 'unassigned-day-of-week-span');
+                updateDateDisplay(currentSystemDate, 'work-history-system-date', 'work-history-day-of-week-span');
             }
 
-            // Get elements
+            updateAllDateDisplays();
+
             const notificationButton = document.getElementById('notification-button');
             const notificationBadge = document.getElementById('notification-badge');
             const optionsButton = document.getElementById('options-button');
@@ -1036,24 +1154,21 @@
             const sideMenuContentArea = document.getElementById('side-menu-content-area');
             const sideMenuCloseButton = document.getElementById('side-menu-close-button');
             const tableBody = document.getElementById('table-body');
-            const tableHeaders = document.querySelectorAll('th[data-sort-key]'); // Sortable headers
 
-            const statusSearchSelect = document.getElementById('status-search-select'); // Changed to select dropdown
+            const statusSearchSelect = document.getElementById('status-search-select');
 
-            const calendarButton = document.getElementById('calendar-button');
             const calendarModal = document.getElementById('calendar-modal');
             const calendarModalCloseButton = document.getElementById('calendar-modal-close-button');
             const calendarMonthYear = document.getElementById('calendar-month-year');
             const calendarGrid = document.getElementById('calendar-grid');
-            const prevMonthButton = document.getElementById('prev-month-button'); // New
-            const nextMonthButton = document.getElementById('next-month-button'); // New
+            const prevMonthButton = document.getElementById('prev-month-button');
+            const nextMonthButton = document.getElementById('next-month-button');
 
             const lineNotificationSettingsModal = document.getElementById('line-notification-settings-modal');
             const lineNotificationModalCloseButton = document.getElementById('line-notification-modal-close-button');
             const saveLineSettingsButton = document.getElementById('save-line-settings');
             const cancelLineSettingsButton = document.getElementById('cancel-line-settings');
 
-            // Phone Call Modal elements
             const phoneCallModal = document.getElementById('phone-call-modal');
             const phoneCallModalCloseButton = document.getElementById('phone-call-modal-close-button');
             const phoneCallModalTitle = document.getElementById('phone-call-modal-title');
@@ -1061,13 +1176,11 @@
             const callButton = document.getElementById('call-button');
             const cancelCallButton = document.getElementById('cancel-call-button');
 
-            // Account Settings Modal elements
             const accountSettingsModal = document.getElementById('account-settings-modal');
             const accountSettingsModalCloseButton = document.getElementById('account-settings-modal-close-button');
             const accountListArea = document.getElementById('account-list-area');
             const addAccountButton = document.getElementById('add-account-button');
 
-            // Individual Account Settings Modal elements
             const individualAccountSettingsModal = document.getElementById('individual-account-settings-modal');
             const individualAccountSettingsModalCloseButton = document.getElementById('individual-account-settings-modal-close-button');
             const individualAccountSettingsTitle = document.getElementById('individual-account-settings-title');
@@ -1081,184 +1194,252 @@
             const saveIndividualAccountSettingsButton = document.getElementById('save-individual-account-settings');
             const cancelIndividualAccountSettingsButton = document.getElementById('cancel-individual-account-settings');
 
-            // New elements for notification and attendanceDisplay branches
             const notificationBranchesCheckboxes = document.getElementById('notification-branches-checkboxes');
-            const attendanceDisplayBranchesCheckboxes = document.getElementById('attendance-display-branches-checkboxes'); // Renamed from displayBranchesCheckboxes
+            const attendanceDisplayBranchesCheckboxes = document.getElementById('attendance-display-branches-checkboxes');
 
-            // Main Application Content and Switched Screen Content
             const mainAppContent = document.getElementById('main-app-content');
             const switchedScreenContent = document.getElementById('switched-screen-content');
+            const unassignedPersonnelScreen = document.getElementById('unassigned-personnel-screen');
+            const workHistoryScreen = document.getElementById('work-history-screen');
+            const workHistoryTableBody = document.getElementById('work-history-table-body');
+            const workHistoryCloseButton = document.getElementById('work-history-close-button');
+            const workHistoryBackToMainButton = document.getElementById('work-history-back-to-main-button');
+            const workHistoryTitle = document.getElementById('work-history-title');
+            const workHistoryBranchCheckboxesContainer = document.getElementById('work-history-branch-checkboxes-container');
+            const workHistorySearchInput = document.getElementById('work-history-search-input');
+            const workHistoryUnassignedFilterButton = document.getElementById('work-history-unassigned-filter');
+
+
+            const unassignedPersonnelButton = document.getElementById('unassigned-personnel-button');
+            const unassignedPersonnelTableBody = document.getElementById('unassigned-personnel-table-body');
+            const unassignedCloseButton = document.getElementById('unassigned-close-button');
+            const unassignedBackToMainButton = document.getElementById('unassigned-back-to-main-button');
+            const unassignedBranchCheckboxesContainer = document.getElementById('unassigned-branch-checkboxes-container');
+            const unassignedSearchInput = document.getElementById('unassigned-search-input');
+
             const screenSwitchButton = document.getElementById('screen-switch-button');
             const backToMainButton = document.getElementById('back-to-main-button');
             const assignmentSummaryContainer = document.getElementById('assignment-summary-container');
-            const summaryCloseButton = document.getElementById('summary-close-button'); // New close button for summary
+            const summaryCloseButton = document.getElementById('summary-close-button');
 
-            // Summary Screen Filters
-            const summaryBranchFilter = document.getElementById('summary-branch-filter');
+            const summaryBranchCheckboxesContainer = document.getElementById('summary-branch-checkboxes-container');
             const summaryPendingFilter = document.getElementById('summary-pending-filter');
 
-
-            // Tooltip elements
             const detailTooltip = document.getElementById('detail-tooltip');
             const tooltipContent = detailTooltip.querySelector('.tooltip-content');
 
 
-            // Table data (initial state) - Added phoneNumber
-            let allTableData = [ // Original full data
+            let allTableData = [
                 {
-                    no: 1,
-                    teamMember: '隈部 文哉',
-                    branch: '福岡支店',
-                    client: 'ビジコン建設',
-                    assignment: '博多駅筑紫口前工事',
-                    workContent: '日勤',
-                    baseTime: '08:00～17:00',
-                    reportTime: '08:00～17:00',
-                    status: '下番完了',
-                    remarks: '',
-                    receptionTime: '17:15',
-                    memo: '',
-                    phoneNumber: '09012345678',
-                    lineId: 'fumiya.kumabe' // Added LINE ID
+                    no: 1, teamMember: '隈部 文哉', branch: '福岡支店', client: 'ビジコン建設', assignment: '博多駅筑紫口前工事',
+                    workContent: '日勤', baseTime: '08:00～17:00', reportTime: '08:00～17:00', status: '下番完了',
+                    remarks: '', receptionTime: '17:15', phoneNumber: '09012345678', lineId: 'fumiya.kumabe',
+                    lastWorkDate: '2025/06/27',
+                    assignmentStatus: '配置済み',
+                    consecutiveWorkStatus: '3連勤中',
+                    holidayStatus: ''
                 },
                 {
-                    no: 4,
-                    teamMember: '山田 太郎',
-                    branch: '東京支店',
-                    client: '中央開発',
-                    assignment: '新宿駅東口再開発',
-                    workContent: '夜勤',
-                    baseTime: '22:00～07:00',
-                    reportTime: '',
-                    status: '報告待ち',
-                    remarks: '',
-                    receptionTime: '',
-                    memo: '',
-                    phoneNumber: '08098765432',
-                    lineId: 'taro.yamada' // Added LINE ID
+                    no: 4, teamMember: '山田 太郎', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
+                    workContent: '夜勤', baseTime: '22:00～07:00', reportTime: '', status: '報告待ち',
+                    remarks: '', receptionTime: '', phoneNumber: '08098765432', lineId: 'taro.yamada',
+                    lastWorkDate: '2025/06/28',
+                    assignmentStatus: '配置済み',
+                    consecutiveWorkStatus: '3連勤中',
+                    holidayStatus: ''
                 },
                 {
-                    no: 5,
-                    teamMember: '佐藤 花子',
-                    branch: '大阪支店',
-                    client: '関西電鉄',
-                    assignment: '梅田地下街警備',
-                    workContent: '日勤',
-                    baseTime: '14:00～22:00', // Changed
-                    reportTime: '14:00～22:00', // Changed
-                    status: '下番完了', // Reverted to '勤務中' (without spaces for internal logic, spaces for display)
-                    remarks: '',
-                    receptionTime: '22:04', // Updated
-                    memo: '',
-                    phoneNumber: '07011223344',
-                    lineId: 'hanako.sato' // Added LINE ID
+                    no: 5, teamMember: '佐藤 花子', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
+                    workContent: '日勤', baseTime: '14:00～22:00', reportTime: '14:00～22:00', status: '下番完了',
+                    remarks: '', receptionTime: '22:04', phoneNumber: '07011223344', lineId: 'hanako.sato',
+                    lastWorkDate: '2025/06/27',
+                    assignmentStatus: '配置済み',
+                    consecutiveWorkStatus: '3連勤中',
+                    holidayStatus: ''
                 },
                 {
-                    no: 6,
-                    teamMember: '高橋 悟',
-                    branch: '東京支店',
-                    client: '中央開発',
-                    assignment: '新宿駅東口再開発',
-                    workContent: '夜勤',
-                    baseTime: '22:00～07:00',
-                    reportTime: '22:00～',
-                    status: '勤務中',
-                    remarks: '',
-                    receptionTime: '',
-                    memo: '',
-                    phoneNumber: '08012345670',
-                    lineId: 'satoru.takahashi'
+                    no: 6, teamMember: '高橋 悟', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
+                    workContent: '夜勤', baseTime: '22:00～07:00', reportTime: '22:00～', status: '勤務中',
+                    remarks: '', receptionTime: '', phoneNumber: '08012345670', lineId: 'satoru.takahashi',
+                    lastWorkDate: '2025/06/28',
+                    assignmentStatus: '配置済み',
+                    consecutiveWorkStatus: '3連勤中',
+                    holidayStatus: ''
                 },
                 {
-                    no: 7,
-                    teamMember: '中村 健一',
-                    branch: '大阪支店',
-                    client: '関西電鉄',
-                    assignment: '梅田地下街警備',
-                    workContent: '日勤',
-                    baseTime: '14:00～22:00',
-                    reportTime: '14:00～22:00',
-                    status: '下番完了',
-                    remarks: '',
-                    receptionTime: '22:05',
-                    memo: '',
-                    phoneNumber: '07055554444',
-                    lineId: 'kenichi.nakamura'
+                    no: 7, teamMember: '中村 健一', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
+                    workContent: '日勤', baseTime: '14:00～22:00', reportTime: '14:00～22:00', status: '下番完了',
+                    remarks: '', receptionTime: '22:05', phoneNumber: '07055554444', lineId: 'kenichi.nakamura',
+                    lastWorkDate: '2025/06/27',
+                    assignmentStatus: '配置済み',
+                    consecutiveWorkStatus: '3連勤中',
+                    holidayStatus: ''
                 }
             ];
 
-            // Duplicate NO.1 entry twice with new team members
             const originalEntryNo1 = allTableData.find(item => item.no === 1);
             if (originalEntryNo1) {
-                const newEntry1 = { ...originalEntryNo1, no: 2, teamMember: '田中 健太', lineId: 'kenta.tanaka', status: '下番完了' };
-                const newEntry2 = { ...originalEntryNo1, no: 3, teamMember: '鈴木 美咲', lineId: 'misaki.suzuki', status: '下番完了' };
+                const newEntry1 = { ...originalEntryNo1, no: 2, teamMember: '田中 健太', lineId: 'kenta.tanaka', status: '下番完了', lastWorkDate: '2025/06/26', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '' };
+                const newEntry2 = { ...originalEntryNo1, no: 3, teamMember: '鈴木 美咲', lineId: 'misaki.suzuki', status: '下番完了', lastWorkDate: '2025/06/25', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '' };
                 allTableData.push(newEntry1, newEntry2);
             }
 
-            // NO順にソート
+            const allBranches = [...new Set(allTableData.map(item => item.branch))].sort();
+
+            let newUnassignedEntries = [];
+            let nextNo = allTableData.length + 1;
+            const unassignedNames = [
+                '加藤 陽子', '林 拓也', '後藤 舞', '佐々木 亮', '松本 麗奈',
+                '井上 大輔', '斎藤 裕美', '木村 健太', '小林 沙織', '吉田 隼人',
+                '渡辺 健二', '伊藤 明美', '山本 浩司', '中野 恵子', '小川 隆'
+            ];
+            const unassignedConsecutiveStatuses = ['2連勤中', '3連勤中', '4連勤中', '5連勤中', '6連勤中'];
+            const unassignedHolidayStatuses = [''];
+
+            const uniqueAssignments = [...new Set(allTableData.map(item => item.assignment))];
+
+            for (let i = 0; i < 10; i++) {
+                const randomBranch = allBranches[Math.floor(Math.random() * allBranches.length)];
+                const randomAssignment = uniqueAssignments[Math.floor(Math.random() * uniqueAssignments.length)];
+                const randomConsecutiveStatus = unassignedConsecutiveStatuses[Math.floor(Math.random() * unassignedConsecutiveStatuses.length)];
+                
+                let holidayStatus = '';
+                if (unassignedNames[i % unassignedNames.length] === '松本 麗奈' ||
+                    unassignedNames[i % unassignedNames.length] === '後藤 舞' ||
+                    unassignedNames[i % unassignedNames.length] === '木村 健太') {
+                    holidayStatus = '休日';
+                }
+
+                newUnassignedEntries.push({
+                    no: nextNo++,
+                    teamMember: unassignedNames[i % unassignedNames.length],
+                    branch: randomBranch,
+                    client: '未配置先',
+                    assignment: randomAssignment,
+                    workContent: '未定',
+                    baseTime: '未定',
+                    reportTime: '',
+                    status: '未配置',
+                    remarks: '未配置',
+                    receptionTime: '',
+                    phoneNumber: `000000000${i}`,
+                    lineId: `unassigned.${i}`,
+                    lastWorkDate: `2025/06/${String(1 + i).padStart(2, '0')}`,
+                    assignmentStatus: '未配置',
+                    consecutiveWorkStatus: randomConsecutiveStatus,
+                    holidayStatus: holidayStatus
+                });
+            }
+
+            allTableData.push(...newUnassignedEntries);
             allTableData.sort((a, b) => a.no - b.no);
 
 
-            // Sample account data for the Account Settings modal
+            let unassignedPersonnelData = allTableData.filter(item => item.assignmentStatus === '未配置');
+
+
+            let displayedTableData = [...allTableData];
+
+            let currentSortKey = null;
+            let currentSortDirection = 'asc';
+
+            let selectedSummaryBranches = [...allBranches];
+            let showOnlyPending = false;
+
+            let unassignedSearchTerm = '';
+            let selectedUnassignedBranches = [...allBranches];
+            let unassignedCurrentSortKey = null;
+            let unassignedCurrentSortDirection = 'asc';
+
+            let workHistorySearchTerm = '';
+            let selectedWorkHistoryBranches = [...allBranches];
+            let workHistoryCurrentSortKey = null;
+            let workHistoryCurrentSortDirection = 'asc';
+            let currentWorkHistoryAssignment = '';
+            let showOnlyUnassignedInWorkHistory = false;
+
+
+            let currentView = 'main';
+
+            // Sample data for accounts - Added to fix the Account Settings Modal
             let accounts = [
                 {
                     id: 1,
-                    name: '隈部 文哉',
-                    email: 'kumabe@jbca.co.jp',
+                    name: '管理者A',
+                    email: 'admin.a@example.com',
                     notificationSettings: { departure: 60, start: 10, end: 10 },
-                    devices: ['iPhone', 'PC (Chrome)'],
-                    notificationBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店'],
-                    attendanceDisplayBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店']
+                    notificationBranches: ['福岡支店', '東京支店'],
+                    devices: ['PC (Chrome)', 'スマートフォン (Android)'],
+                    attendanceDisplayBranches: ['福岡支店', '東京支店', '大阪支店']
                 },
                 {
                     id: 2,
-                    name: '佐藤 花子',
-                    email: 'hanako.s@example.com',
+                    name: '管理者B',
+                    email: 'admin.b@example.com',
                     notificationSettings: { departure: 30, start: 5, end: 15 },
-                    devices: ['Android Phone'],
-                    notificationBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店'],
-                    attendanceDisplayBranches: ['東京支店', '神奈川支店', '大阪支店', '福岡支店']
+                    notificationBranches: ['大阪支店'],
+                    devices: ['タブレット (iPad)'],
+                    attendanceDisplayBranches: ['大阪支店']
                 }
             ];
 
 
-            let displayedTableData = [...allTableData]; // Data currently displayed and subject to sorting/filtering
+            function updateScreenVisibility() {
+                mainAppContent.classList.add('hidden');
+                switchedScreenContent.classList.add('hidden');
+                unassignedPersonnelScreen.classList.add('hidden');
+                workHistoryScreen.classList.add('hidden');
 
-            // Global state for sorting
-            let currentSortKey = null;
-            let currentSortDirection = 'asc'; // 'asc' or 'desc'
+                if (currentView === 'main') {
+                    mainAppContent.classList.remove('hidden');
+                    renderTable();
+                } else if (currentView === 'summary') {
+                    switchedScreenContent.classList.remove('hidden');
+                    populateBranchFilterCheckboxes();
+                    filterAndRenderSummary();
+                } else if (currentView === 'unassigned') {
+                    unassignedPersonnelScreen.classList.remove('hidden');
+                    selectedUnassignedBranches = [...allBranches];
+                    unassignedSearchInput.value = '';
+                    populateUnassignedBranchFilterCheckboxes();
+                    filterAndRenderUnassignedPersonnelTable();
+                } else if (currentView === 'work-history') {
+                    workHistoryScreen.classList.remove('hidden');
+                    selectedWorkHistoryBranches = [...allBranches];
+                    workHistorySearchInput.value = '';
+                    showOnlyUnassignedInWorkHistory = false;
+                    if (workHistoryUnassignedFilterButton) {
+                        workHistoryUnassignedFilterButton.classList.remove('bg-yellow-600');
+                    }
+                    populateWorkHistoryBranchFilterCheckboxes();
+                    filterAndRenderWorkHistoryTable();
+                }
+                updateAllDateDisplays();
+            }
 
-            // Global state for summary screen filters
-            let currentSummaryFilterBranch = '';
-            let showOnlyPending = false;
-
-
-            // Function to render the main table body based on displayedTableData
             function renderTable() {
-                tableBody.innerHTML = ''; // Clear existing rows
+                tableBody.innerHTML = '';
 
-                if (displayedTableData.length === 0) {
+                const mainTableFilteredData = displayedTableData.filter(item => item.status !== '未配置');
+
+                if (mainTableFilteredData.length === 0) {
                     const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="11" class="px-6 py-4 text-sm text-gray-500 text-center">表示するデータがありません。</td>`;
+                    noDataRow.innerHTML = `<td colspan="10" class="px-6 py-4 text-sm text-gray-500 text-center">表示するデータがありません。</td>`;
                     tableBody.appendChild(noDataRow);
                     return;
                 }
 
-                displayedTableData.forEach(rowData => {
+                mainTableFilteredData.forEach(rowData => {
                     const row = document.createElement('tr');
-                    // Apply special styling for "報告待ち" row
                     if (rowData.status === '報告待ち') {
                         row.classList.add('bg-yellow-50');
                     }
 
-                    // Dynamically create and append cells
-                    // 行NO
                     const noCell = document.createElement('td');
                     noCell.classList.add('px-6', 'py-4', 'text-sm', 'font-medium', 'text-gray-900', 'text-center');
                     noCell.textContent = rowData.no;
                     row.appendChild(noCell);
 
-                    // 隊員名
                     const teamMemberCell = document.createElement('td');
                     teamMemberCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'whitespace-nowrap', 'min-w-40');
                     const teamMemberDiv = document.createElement('div');
@@ -1267,14 +1448,13 @@
                     nameSpan.textContent = rowData.teamMember;
                     teamMemberDiv.appendChild(nameSpan);
                     
-                    // Phone SVG icon with click listener (Lucide Icons 'phone' - no call waves, filled)
                     const phoneIconSvg = `
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone cursor-pointer text-gray-500 hover:text-gray-700 transition-colors">
                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-3.67A19.79 19.79 0 0 1 2 5.18 2 2 0 0 1 4.11 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                         </svg>
                     `;
                     const phoneIconWrapper = document.createElement('span');
-                    phoneIconWrapper.classList.add('ml-2'); // Add margin to separate from name
+                    phoneIconWrapper.classList.add('ml-2');
                     phoneIconWrapper.innerHTML = phoneIconSvg;
                     phoneIconWrapper.addEventListener('click', () => {
                         openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
@@ -1283,25 +1463,28 @@
                     teamMemberCell.appendChild(teamMemberDiv);
                     row.appendChild(teamMemberCell);
 
-                    // 支店
                     const branchCell = document.createElement('td');
                     branchCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
                     branchCell.textContent = rowData.branch;
                     row.appendChild(branchCell);
 
-                    // 得意先
                     const clientCell = document.createElement('td');
                     clientCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
                     clientCell.textContent = rowData.client;
                     row.appendChild(clientCell);
 
-                    // 配置先
                     const assignmentCell = document.createElement('td');
-                    assignmentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
+                    assignmentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center', 'cursor-pointer');
                     assignmentCell.textContent = rowData.assignment;
+                    assignmentCell.addEventListener('click', () => {
+                        currentWorkHistoryAssignment = rowData.assignment;
+                        currentView = 'work-history';
+                        updateScreenVisibility();
+                    });
+                    assignmentCell.addEventListener('mouseover', (event) => showTooltip(event, '勤務履歴を確認'));
+                    assignmentCell.addEventListener('mouseout', hideTooltip);
                     row.appendChild(assignmentCell);
 
-                    // 業務内容
                     const workContentCell = document.createElement('td');
                     workContentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'whitespace-nowrap');
                     const workContentDiv = document.createElement('div');
@@ -1339,124 +1522,94 @@
                     workContentCell.appendChild(workContentDiv);
                     row.appendChild(workContentCell);
 
-                    // 基本時間
                     const baseTimeCell = document.createElement('td');
                     baseTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
                     baseTimeCell.textContent = rowData.baseTime;
                     row.appendChild(baseTimeCell);
 
-                    // 報告時間
                     const reportTimeCell = document.createElement('td');
                     reportTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900');
                     reportTimeCell.textContent = rowData.reportTime;
                     row.appendChild(reportTimeCell);
 
-                    // ステータス - Modified to apply status-tag classes
                     const statusCell = document.createElement('td');
-                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center');    
+                    statusCell.classList.add('px-6', 'py-4', 'text-sm', 'text-center');
                     
                     const statusTagSpan = document.createElement('span');
                     statusTagSpan.classList.add('status-tag');
-                    // Display '勤務中' with spaces, but use '勤務中' for internal logic
                     statusTagSpan.textContent = rowData.status === '勤務中' ? '勤 務 中' : rowData.status;
 
                     if (rowData.status === '下番完了') {
                         statusTagSpan.classList.add('status-tag-completed');
                     } else if (rowData.status === '報告待ち') {
                         statusTagSpan.classList.add('status-tag-pending');
-                    } else if (rowData.status === '勤務中') { // Check for '勤務中' (internal value)
+                    } else if (rowData.status === '勤務中') {
                         statusTagSpan.classList.add('status-tag-in-progress');
                     }
                     
                     statusCell.appendChild(statusTagSpan);
                     row.appendChild(statusCell);
 
-                    // 備考
                     const remarksCell = document.createElement('td');
                     remarksCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
                     remarksCell.textContent = rowData.remarks;
                     row.appendChild(remarksCell);
 
-                    // 受信時間
                     const receptionTimeCell = document.createElement('td');
                     receptionTimeCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
                     receptionTimeCell.textContent = rowData.receptionTime;
                     row.appendChild(receptionTimeCell);
 
-                    // メモ
-                    const memoCell = document.createElement('td');
-                    memoCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center');
-                    memoCell.textContent = rowData.memo;
-                    row.appendChild(memoCell);
-
                     tableBody.appendChild(row);
                 });
             }
 
-            // Function to handle sorting
-            function sortTable(key) {
-                if (currentSortKey === key) {
-                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-                } else {
-                    currentSortKey = key;
-                    currentSortDirection = 'asc'; // Default to ascending when sorting a new column
-                }
-
-                // Sort the currently displayed data
-                displayedTableData.sort((a, b) => {
+            function sortTableData(data, key, direction) {
+                return data.sort((a, b) => {
                     let valA = a[key];
                     let valB = b[key];
 
-                    // Handle specific data types for sorting if necessary
-                    if (key === 'no') { // Numerical sort for 'no'
+                    if (key === 'no') {
                         valA = Number(valA);
                         valB = Number(valB);
-                        return (valA - valB) * (currentSortDirection === 'asc' ? 1 : -1);
-                    } else if (key === 'receptionTime') { // Time string comparison
-                        return valA.localeCompare(valB) * (currentSortDirection === 'asc' ? 1 : -1);
+                        return (valA - valB) * (direction === 'asc' ? 1 : -1);
+                    } else if (key === 'receptionTime' || key === 'lastWorkDate') {
+                        return String(valA).localeCompare(String(valB)) * (direction === 'asc' ? 1 : -1);
                     } else {
-                        // Default to string comparison for other fields
-                        return String(valA).localeCompare(String(valB)) * (currentSortDirection === 'asc' ? 1 : -1);
+                        return String(valA).localeCompare(String(valB)) * (direction === 'asc' ? 1 : -1);
                     }
                 });
-
-                renderTable(); // Re-render the table with sorted data
-                updateSortIndicators(); // Update the visual sort indicators
             }
 
-            // Function to update visual sort indicators
-            function updateSortIndicators() {
-                document.querySelectorAll('.sort-indicator').forEach(indicator => {
-                    indicator.classList.remove('active', 'asc', 'desc'); // Reset all indicators
-                });
-
-                if (currentSortKey) {
-                    const activeIndicator = document.querySelector(`th[data-sort-key="${currentSortKey}"] .sort-indicator`);
-                    if (activeIndicator) {
-                        activeIndicator.classList.add('active');
-                        if (currentSortDirection === 'asc') {
-                            activeIndicator.classList.add('asc');
-                        } else {
-                            activeIndicator.classList.add('desc');
+            function updateGenericSortIndicators(headers, currentKey, currentDirection) {
+                headers.forEach(header => {
+                    const indicator = header.querySelector('.sort-indicator');
+                    if (indicator) {
+                        indicator.classList.remove('active', 'asc', 'desc');
+                        if (header.dataset.sortKey === currentKey) {
+                            indicator.classList.add('active');
+                            indicator.classList.add(currentDirection);
                         }
                     }
-                }
+                });
             }
 
-            // Add click event listeners to sortable headers
-            tableHeaders.forEach(header => {
+            document.querySelectorAll('#table-container th[data-sort-key]').forEach(header => {
                 header.addEventListener('click', () => {
                     const sortKey = header.dataset.sortKey;
-                    if (sortKey) { // Ensure data-sort-key exists
-                        sortTable(sortKey);
+                    if (sortKey) {
+                        if (currentSortKey === sortKey) {
+                            currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            currentSortKey = sortKey;
+                            currentSortDirection = 'asc';
+                        }
+                        applySearchFilterByStatus(statusSearchSelect.value);
+                        updateGenericSortIndicators(document.querySelectorAll('#table-container th[data-sort-key]'), currentSortKey, currentSortDirection);
                     }
                 });
             });
 
-            // Initial render of the main table
-            renderTable();
-
-            // Function to format timestamp toYYYY/MM/DD HH:MM
             function formatTimestamp(timestamp) {
                 const date = new Date(timestamp);
                 const year = date.getFullYear();
@@ -1467,11 +1620,8 @@
                 return `${year}/${month}/${day} ${hours}:${minutes}`;
             }
 
-            // Sample notification history
             let notificationHistory = [
-                // Unread notification (always dynamically timestamped)
-                { id: 1, message: 'No.4 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() }, 
-                // Past notifications (with fixed timestamp format)
+                { id: 1, message: 'No.4 山田 太郎さんの報告が来ておりません', isRead: false, timestamp: Date.now() },
                 { id: 2, message: 'システムリリース(ver1.0.0.0)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-01T10:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 3, message: 'システムリリース(ver1.0.0.1)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-02T11:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
                 { id: 4, message: 'システムリリース(ver1.0.0.2)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-03T12:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' },
@@ -1480,9 +1630,8 @@
                 { id: 8, message: 'システムリリース(ver1.0.0.6)に関するお知らせです。', isRead: true, timestamp: new Date('2025-01-07T16:00:00').getTime(), displayTimestamp: '2025/xx/xx xx:xx' }
             ];
 
-            // Find and update the specific notification
             const targetMessage = 'No.4 山田 太郎さんの報告が来ておりません';
-            const fixedDate = new Date('2025-06-28T21:00:00'); // Set to 2025/06/28 21:00
+            const fixedDate = new Date('2025-06-28T21:00:00');
             const fixedTimestamp = fixedDate.getTime();
             const fixedDisplayTimestamp = '2025/06/28 21:00';
 
@@ -1491,9 +1640,8 @@
                 notificationToUpdate.timestamp = fixedTimestamp;
                 notificationToUpdate.displayTimestamp = fixedDisplayTimestamp;
             } else {
-                // If the notification doesn't exist, add it
                 notificationHistory.unshift({
-                    id: Date.now(), // Use a new ID if it's a new entry
+                    id: Date.now(),
                     message: targetMessage,
                     isRead: false,
                     timestamp: fixedTimestamp,
@@ -1501,12 +1649,10 @@
                 });
             }
 
-
-            // Function to update notification badge
             function updateNotificationBadge() {
                 const unreadCount = notificationHistory.filter(notif => !notif.isRead).length;
                 if (unreadCount > 0) {
-                    notificationBadge.textContent = unreadCount.toString(); // Display actual unread count
+                    notificationBadge.textContent = unreadCount.toString();
                     notificationBadge.classList.remove('hidden');
                 } else {
                     notificationBadge.textContent = '';
@@ -1514,9 +1660,8 @@
                 }
             }
 
-            // Function to render notifications
             function renderNotifications() {
-                sideMenuContentArea.innerHTML = ''; // Clear existing content
+                sideMenuContentArea.innerHTML = '';
 
                 if (notificationHistory.length === 0) {
                     const noNotifMessage = document.createElement('div');
@@ -1526,137 +1671,114 @@
                     return;
                 }
 
-                // Sort notifications: unread first (newest to oldest), then read (oldest to newest)
                 notificationHistory.sort((a, b) => {
-                    // Primary sort: unread (false) comes before read (true)
-                    if (!a.isRead && b.isRead) {
-                        return -1; // 'a' (unread) comes before 'b' (read)
-                    }
-                    if (a.isRead && !b.isRead) {
-                        return 1; // 'b' (unread) comes before 'a' (read)
-                    }
-
-                    // Secondary sort: if read status is the same
-                    if (!a.isRead && !b.isRead) {
-                        // If both are unread, sort by timestamp (newest first)
-                        return b.timestamp - a.timestamp;
-                    } else {
-                        // If both are read (past notifications), sort by timestamp (oldest first)
-                        return a.timestamp - b.timestamp;
-                    }
+                    if (!a.isRead && b.isRead) { return -1; }
+                    if (a.isRead && !b.isRead) { return 1; }
+                    if (!a.isRead && !b.isRead) { return b.timestamp - a.timestamp; }
+                    else { return a.timestamp - b.timestamp; }
                 });
 
                 notificationHistory.forEach(notif => {
                     const notifElement = document.createElement('div');
-                    notifElement.classList.add('side-menu-item'); // New common style
-                    if (!notif.isRead) { // Unread messages
-                        notifElement.classList.add('font-semibold', 'text-gray-900'); // Bold and dark text
-                    } else { // Read messages
-                        notifElement.classList.add('text-gray-500'); // Lighter text
+                    notifElement.classList.add('side-menu-item');
+                    if (!notif.isRead) {
+                        notifElement.classList.add('font-semibold', 'text-gray-900');
+                    } else {
+                        notifElement.classList.add('text-gray-500');
                     }
                     
-                    // Determine which timestamp to display
-                    const displayedTime = notif.isRead && notif.displayTimestamp 
-                                            ? notif.displayTimestamp 
-                                            : formatTimestamp(notif.timestamp);
+                    const displayedTime = notif.isRead && notif.displayTimestamp ? notif.displayTimestamp : formatTimestamp(notif.timestamp);
                     
                     notifElement.innerHTML = `<div>${notif.message}</div><div class="text-xs text-gray-400 mt-1">${displayedTime}</div>`;
                     sideMenuContentArea.appendChild(notifElement);
 
-                    // Mark as read when notification is clicked (example)
                     notifElement.addEventListener('click', () => {
                         notif.isRead = true;
-                        renderNotifications(); // Re-render to update color and re-sort
-                        updateNotificationBadge(); // Update badge
+                        renderNotifications();
+                        updateNotificationBadge();
                     });
                 });
             }
 
-            // Function to render options menu
             function renderOptionsMenu() {
-                sideMenuContentArea.innerHTML = ''; // Clear existing content
-                dynamicSideMenuTitle.textContent = ''; // Clear title as per user request
-                dynamicSideMenuTitle.classList.add('hidden'); // Hide the title for options menu
+                sideMenuContentArea.innerHTML = '';
+                dynamicSideMenuTitle.textContent = '';
+                dynamicSideMenuTitle.classList.add('hidden');
 
                 const lineNotifItem = document.createElement('div');
                 lineNotifItem.classList.add('side-menu-item');
                 lineNotifItem.textContent = 'LINE通知';
                 lineNotifItem.addEventListener('click', () => {
-                    sideMenuContainer.classList.remove('open'); // Close side menu
-                    lineNotificationSettingsModal.classList.add('open'); // Open LINE notification modal
-                    renderLineMemberTable(); // Render the LINE member table when modal opens
+                    sideMenuContainer.classList.remove('open');
+                    lineNotificationSettingsModal.classList.add('open');
+                    renderLineMemberTable();
                 });
                 sideMenuContentArea.appendChild(lineNotifItem);
 
-                // New: Account Settings item
                 const accountSettingsItem = document.createElement('div');
                 accountSettingsItem.classList.add('side-menu-item');
                 accountSettingsItem.textContent = 'アカウント設定';
                 accountSettingsItem.addEventListener('click', () => {
-                    sideMenuContainer.classList.remove('open'); // Close side menu
-                    openAccountSettingsModal(); // Open the new account settings modal
+                    sideMenuContainer.classList.remove('open');
+                    openAccountSettingsModal();
                 });
                 sideMenuContentArea.appendChild(accountSettingsItem);
                 
-                // Added: 利用規約 / プライバシーポリシー
                 const termsPrivacyItem = document.createElement('div');
                 termsPrivacyItem.classList.add('side-menu-item');
                 termsPrivacyItem.textContent = '利用規約 / プライバシーポリシー';
                 termsPrivacyItem.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('利用規約およびプライバシーポリシーのページへ遷移します。');
                     sideMenuContainer.classList.remove('open');
                 });
                 sideMenuContentArea.appendChild(termsPrivacyItem);
 
-                // Add Logout item as per user request
                 const logoutItem = document.createElement('div');
                 logoutItem.classList.add('side-menu-item');
                 logoutItem.textContent = 'ログアウト';
                 logoutItem.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
-                    console.log('ログアウトしました。'); // Example logout message
-                    sideMenuContainer.classList.remove('open'); // Close side menu after logout
+                    console.log('ログアウトしました。');
+                    sideMenuContainer.classList.remove('open');
                 });
                 sideMenuContentArea.appendChild(logoutItem);
             }
 
-            // Function to render the LINE member table inside the modal
             function renderLineMemberTable() {
                 const lineMemberTableBody = document.getElementById('line-member-table-body');
-                lineMemberTableBody.innerHTML = ''; // Clear existing rows
+                lineMemberTableBody.innerHTML = '';
 
-                allTableData.forEach(rowData => {
+                // Take only the first 6 members for the LINE notification table
+                const membersForLineTable = allTableData.slice(0, 6);
+
+                membersForLineTable.forEach(rowData => {
                     const row = document.createElement('tr');
 
-                    // NO/支店 Cell
                     const noBranchCell = document.createElement('td');
                     noBranchCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
                     noBranchCell.innerHTML = `
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(2, '0')}</span>
                         <span>${rowData.branch}</span>
                     `;
-                    noBranchCell.setAttribute('aria-label', `NO ${rowData.no}, Branch ${rowData.branch}`); // For accessibility
+                    noBranchCell.setAttribute('aria-label', `NO ${rowData.no}, Branch ${rowData.branch}`);
                     row.appendChild(noBranchCell);
 
-                    // NO/隊員名 Cell
                     const noTeamMemberCell = document.createElement('td');
                     noTeamMemberCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
                     noTeamMemberCell.innerHTML = `
                         <span class="text-gray-400 text-xxs font-normal block">NO: ${String(rowData.no).padStart(6, '0')}</span>
                         <span>${rowData.teamMember}</span>
                     `;
-                    noTeamMemberCell.setAttribute('aria-label', `NO ${rowData.no}, Team Member ${rowData.teamMember}`); // For accessibility
+                    noTeamMemberCell.setAttribute('aria-label', `NO ${rowData.no}, Team Member ${rowData.teamMember}`);
+                    noTeamMemberCell.appendChild(document.createTextNode(' '));
                     row.appendChild(noTeamMemberCell);
 
-                    // LINE ID Cell (input field)
                     const lineIdCell = document.createElement('td');
                     lineIdCell.classList.add('px-4', 'py-2', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
                     const lineIdInput = document.createElement('input');
                     lineIdInput.type = 'text';
                     lineIdInput.value = rowData.lineId;
                     lineIdInput.classList.add('w-full', 'p-1', 'border', 'border-gray-300', 'rounded-md', 'text-sm', 'text-gray-900');
-                    lineIdInput.setAttribute('aria-label', `LINE ID for ${rowData.teamMember}`); // For accessibility
+                    lineIdInput.setAttribute('aria-label', `LINE ID for ${rowData.teamMember}`);
                     lineIdCell.appendChild(lineIdInput);
                     row.appendChild(lineIdCell);
 
@@ -1664,29 +1786,19 @@
                 });
             }
 
-
-            // Initial badge update on load
             updateNotificationBadge();
 
-            // Notification button click handler
             if (notificationButton) {
                 notificationButton.addEventListener('click', () => {
-                    dynamicSideMenuTitle.textContent = '通知'; // Set title
-                    dynamicSideMenuTitle.classList.remove('hidden'); // Ensure title is visible for notifications
+                    dynamicSideMenuTitle.textContent = '通知';
+                    dynamicSideMenuTitle.classList.remove('hidden');
 
-                    // Add new notification to history (as unread)
                     const newNotificationMessage = 'No.4 山田 太郎さんの報告が来ておりません';
-                    // Check if the same unread notification already exists
-                    const existsUnread = notificationHistory.some(notif => notif.message === newNotificationMessage && !notif.isRead);
-
-                    // If the specific notification (山田 太郎さんの報告が来ておりません) is already in the list
-                    // and its timestamp is not the fixed one, or if it doesn't exist, update/add it.
-                    const targetMessage = 'No.4 山田 太郎さんの報告が来ておりません'; // Redefine for scope
-                    const fixedDate = new Date('2025-06-28T21:00:00'); // Redefine for scope
+                    const fixedDate = new Date('2025-06-28T21:00:00');
                     const fixedTimestamp = fixedDate.getTime();
                     const fixedDisplayTimestamp = '2025/06/28 21:00';
 
-                    const existingFixedNotification = notificationHistory.find(notif => 
+                    const existingFixedNotification = notificationHistory.find(notif =>
                         notif.message === targetMessage && notif.timestamp === fixedTimestamp
                     );
 
@@ -1695,11 +1807,11 @@
                         if (index !== -1) {
                             notificationHistory[index].timestamp = fixedTimestamp;
                             notificationHistory[index].displayTimestamp = fixedDisplayTimestamp;
-                            notificationHistory[index].isRead = false; // Ensure it's unread when updated this way
+                            notificationHistory[index].isRead = false;
                         } else {
                             notificationHistory.unshift({
-                                id: Date.now(), // Use a new ID if it's a new entry
-                                message: targetMessage,
+                                id: Date.now(),
+                                message: newNotificationMessage,
                                 isRead: false,
                                 timestamp: fixedTimestamp,
                                 displayTimestamp: fixedDisplayTimestamp
@@ -1707,161 +1819,159 @@
                         }
                     }
 
-                    renderNotifications(); // Render notification list
-                    updateNotificationBadge(); // Update badge
-                    sideMenuContainer.classList.add('open'); // Open side menu
+                    renderNotifications();
+                    updateNotificationBadge();
+                    sideMenuContainer.classList.add('open');
                 });
             }
 
-            // Options button click handler
             if (optionsButton) {
                 optionsButton.addEventListener('click', () => {
-                    dynamicSideMenuTitle.textContent = ''; // Clear title as per user request
-                    dynamicSideMenuTitle.classList.add('hidden'); // Hide the title for options menu
-                    renderOptionsMenu(); // Render options menu
-                    sideMenuContainer.classList.add('open'); // Open side menu
+                    dynamicSideMenuTitle.textContent = '';
+                    dynamicSideMenuTitle.classList.add('hidden');
+                    renderOptionsMenu();
+                    sideMenuContainer.classList.add('open');
                 });
             }
 
-            // Side menu close button click handler
             if (sideMenuCloseButton) {
                 sideMenuCloseButton.addEventListener('click', () => {
-                    sideMenuContainer.classList.remove('open'); // Hide side menu
+                    sideMenuContainer.classList.remove('open');
                 });
             }
 
-            // Close side menu when clicking on overlay
             if (sideMenuContainer) {
                 sideMenuContainer.addEventListener('click', (event) => {
-                    // Do not close if side menu content itself is clicked
                     if (event.target === sideMenuContainer) {
                         sideMenuContainer.classList.remove('open');
                     }
                 });
             }
 
-            // --- Date Navigation and Calendar Selection ---
-            // Function to navigate days
             function navigateDay(days) {
                 currentSystemDate.setDate(currentSystemDate.getDate() + days);
-                updateSystemDateDisplay();
-                // If table data depends on the date, re-render it here.
-                // renderTable();  
+                updateAllDateDisplays();
+                if (currentView === 'main') {
+                    renderTable();
+                } else if (currentView === 'summary') {
+                    filterAndRenderSummary();
+                } else if (currentView === 'unassigned') {
+                    filterAndRenderUnassignedPersonnelTable();
+                } else if (currentView === 'work-history') {
+                    filterAndRenderWorkHistoryTable();
+                }
             }
 
-            // Event listeners for Previous and Next Day buttons
-            if (prevDayButton) {
-                prevDayButton.addEventListener('click', () => navigateDay(-1));
-            }
-            if (nextDayButton) {
-                nextDayButton.addEventListener('click', () => navigateDay(1));
-            }
-
-            // Calendar button click handler
-            let currentCalendarDate = new Date(); // State for current month/year in calendar
-            if (calendarButton) {
-                calendarButton.addEventListener('click', () => {
-                    currentCalendarDate = new Date(currentSystemDate); // Initialize calendar with current system date
+            if (mainPrevDayButton) { mainPrevDayButton.addEventListener('click', () => navigateDay(-1)); }
+            if (mainNextDayButton) { mainNextDayButton.addEventListener('click', () => navigateDay(1)); }
+            if (mainCalendarButton) {
+                mainCalendarButton.addEventListener('click', () => {
+                    currentCalendarDate = new Date(currentSystemDate);
                     renderCalendar(currentCalendarDate);
-                    calendarModal.classList.add('open'); // Open calendar modal
+                    calendarModal.classList.add('open');
                 });
             }
 
-            // Calendar month navigation buttons
-            if (prevMonthButton) {
-                prevMonthButton.addEventListener('click', () => {
-                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            if (summaryPrevDayButton) { summaryPrevDayButton.addEventListener('click', () => navigateDay(-1)); }
+            if (summaryNextDayButton) { summaryNextDayButton.addEventListener('click', () => navigateDay(1)); }
+            if (summaryCalendarButton) {
+                summaryCalendarButton.addEventListener('click', () => {
+                    currentCalendarDate = new Date(currentSystemDate);
                     renderCalendar(currentCalendarDate);
+                    calendarModal.classList.add('open');
                 });
             }
 
-            if (nextMonthButton) {
-                nextMonthButton.addEventListener('click', () => {
-                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-                    renderCalendar(currentCalendarDate);  
+            if (unassignedPrevDayButton) { unassignedPrevDayButton.addEventListener('click', () => navigateDay(-1)); }
+            if (unassignedNextDayButton) { unassignedNextDayButton.addEventListener('click', () => navigateDay(1)); }
+            if (unassignedCalendarButton) {
+                unassignedCalendarButton.addEventListener('click', () => {
+                    currentCalendarDate = new Date(currentSystemDate);
+                    renderCalendar(currentCalendarDate);
+                    calendarModal.classList.add('open');
                 });
             }
 
-            // Calendar modal close button handler
+            if (workHistoryPrevDayButton) { workHistoryPrevDayButton.addEventListener('click', () => navigateDay(-1)); }
+            if (workHistoryNextDayButton) { workHistoryNextDayButton.addEventListener('click', () => navigateDay(1)); }
+            if (workHistoryCalendarButton) {
+                workHistoryCalendarButton.addEventListener('click', () => {
+                    currentCalendarDate = new Date(currentSystemDate);
+                    renderCalendar(currentCalendarDate);
+                    calendarModal.classList.add('open');
+                });
+            }
+
+
             if (calendarModalCloseButton) {
                 calendarModalCloseButton.addEventListener('click', () => {
-                    calendarModal.classList.remove('open'); // Close calendar modal
+                    calendarModal.classList.remove('open');
                 });
             }
 
-            // Close calendar modal when clicking on overlay
             if (calendarModal) {
                 calendarModal.addEventListener('click', (event) => {
                     if (event.target === calendarModal) {
-                        closeCalendarModal();  
+                        closeCalendarModal();
                     }
                 });
             }
-            // Function to close calendar modal, factoring in any child elements
             function closeCalendarModal() {
                 calendarModal.classList.remove('open');
             }
 
-            // Function to render the calendar
             function renderCalendar(date) {
                 const year = date.getFullYear();
-                const month = date.getMonth(); // 0-indexed
+                const month = date.getMonth();
 
-                calendarMonthYear.textContent = `${year}年 ${month + 1}月`; // Display current month and year
+                calendarMonthYear.textContent = `${year}年 ${month + 1}月`;
 
-                // Clear previous days, keeping day labels
-                // Keep the first 7 children (day labels)
                 while (calendarGrid.children.length > 7) {
                     calendarGrid.removeChild(calendarGrid.lastChild);
                 }
 
-                // Get first day of the month and number of days in month
-                const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 (Sunday) to 6 (Saturday)
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-                // Add empty spans for days before the first day of the month
                 for (let i = 0; i < firstDayOfMonth; i++) {
                     const emptySpan = document.createElement('span');
                     emptySpan.textContent = '';
                     calendarGrid.appendChild(emptySpan);
                 }
 
-                // Add days of the month
-                const today = new Date(); // Get today's date for highlighting
+                const today = new Date();
                 for (let day = 1; day <= daysInMonth; day++) {
                     const daySpan = document.createElement('span');
                     daySpan.textContent = day;
                     daySpan.classList.add('current-month');
                     
-                    // Determine the day of the week for the current day
                     const currentDayOfWeek = new Date(year, month, day).getDay();
 
-                    // Apply styles for Sunday (0) and Saturday (6)
-                    if (currentDayOfWeek === 0) { // Sunday
-                        daySpan.classList.add('sunday');
-                    } else if (currentDayOfWeek === 6) { // Saturday
-                        daySpan.classList.add('saturday');
-                    }
+                    if (currentDayOfWeek === 0) { daySpan.classList.add('sunday'); } else if (currentDayOfWeek === 6) { daySpan.classList.add('saturday'); }
 
-                    // Highlight today's date
                     if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                         daySpan.classList.add('today');
                     }
-                    // Add click event for individual day
                     daySpan.addEventListener('click', (event) => {
                         const selectedDay = parseInt(event.target.textContent);
-                        currentSystemDate = new Date(year, month, selectedDay); // Update global system date
-                        updateSystemDateDisplay(); // Update displayed date
-                        calendarModal.classList.remove('open'); // Close calendar modal
-                        // If table data depends on the date, re-render it here.
-                        // renderTable();  
+                        currentSystemDate = new Date(year, month, selectedDay);
+                        updateAllDateDisplays();
+                        calendarModal.classList.remove('open');
+                        if (currentView === 'main') {
+                            renderTable();
+                        } else if (currentView === 'summary') {
+                            filterAndRenderSummary();
+                        } else if (currentView === 'unassigned') {
+                            filterAndRenderUnassignedPersonnelTable();
+                        } else if (currentView === 'work-history') {
+                            filterAndRenderWorkHistoryTable();
+                        }
                     });
                     calendarGrid.appendChild(daySpan);
                 }
             }
 
 
-            // Status dropdown change event listener - now triggers filter directly
             if (statusSearchSelect) {
                 statusSearchSelect.addEventListener('change', () => {
                     const selectedStatus = statusSearchSelect.value;
@@ -1869,27 +1979,24 @@
                 });
             }
 
-            // Function to apply search filter by status
             function applySearchFilterByStatus(statusTerm) {
                 if (!statusTerm) {
-                    displayedTableData = [...allTableData]; // Reset to all data if no status selected
+                    displayedTableData = [...allTableData];
                 } else {
                     displayedTableData = allTableData.filter(row => {
                         return row.status === statusTerm;
                     });
                 }
-                sortTable(currentSortKey); // Re-sort after filtering to maintain order
-                renderTable(); // Re-render table with filtered data
+                displayedTableData = sortTableData(displayedTableData, currentSortKey, currentSortDirection);
+                renderTable();
             }
 
-            // LINE Notification Modal Close button handler
             if (lineNotificationModalCloseButton) {
                 lineNotificationModalCloseButton.addEventListener('click', () => {
-                    lineNotificationSettingsModal.classList.remove('open'); // Hide modal
+                    lineNotificationSettingsModal.classList.remove('open');
                 });
             }
 
-            // Close LINE Notification Modal when clicking on overlay
             if (lineNotificationSettingsModal) {
                 lineNotificationSettingsModal.addEventListener('click', (event) => {
                     if (event.target === lineNotificationSettingsModal) {
@@ -1898,42 +2005,38 @@
                 });
             }
 
-            // Save button click handler for LINE settings
             if (saveLineSettingsButton) {
                 saveLineSettingsButton.addEventListener('click', () => {
                     const departureTime = document.getElementById('departure-time').value;
                     const startReportTime = document.getElementById('start-report-time').value;
                     const endReportTime = document.getElementById('end-report-time').value;
                     
-                    // Get all LINE ID input values
                     const lineIdInputs = lineNotificationSettingsModal.querySelectorAll('#line-member-table-body input[type="text"]');
                     let lineIds = [];
                     lineIdInputs.forEach((input, index) => {
-                        // Assuming the order matches allTableData
-                        allTableData[index].lineId = input.value; // Update the lineId in allTableData
+                        // Ensure we only update the first 6 members that are displayed
+                        if (index < 6) {
+                            allTableData[index].lineId = input.value;
+                        }
                         lineIds.push(input.value);
                     });
 
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log(`LINE通知設定を保存しました:\n自宅出発: ${departureTime}分前\n上番報告: ${startReportTime}分前\n下番報告: ${endReportTime}分後\nLINE IDs: ${lineIds.join(', ')}`);
-                    lineNotificationSettingsModal.classList.remove('open'); // Close modal after saving
+                    lineNotificationSettingsModal.classList.remove('open');
                 });
             }
 
             if (cancelLineSettingsButton) {
                 cancelLineSettingsButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('LINE通知設定の変更を取消しました。');
-                    lineNotificationSettingsModal.classList.remove('open'); // Close modal without saving
+                    lineNotificationSettingsModal.classList.remove('open');
                 });
             }
 
-            // Phone Call Modal Functions
             function openPhoneCallModal(teamMemberName, phoneNumber) {
                 phoneCallModalTitle.textContent = `${teamMemberName}に電話`;
                 phoneCallModalNumber.textContent = phoneNumber;
                 phoneCallModal.classList.add('open');
-                // Store the phone number on the call button for easy access
                 callButton.dataset.phoneNumber = phoneNumber;
             }
 
@@ -1941,7 +2044,6 @@
                 phoneCallModal.classList.remove('open');
             }
 
-            // Phone Call Modal Event Listeners
             if (phoneCallModalCloseButton) {
                 phoneCallModalCloseButton.addEventListener('click', closePhoneCallModal);
             }
@@ -1958,7 +2060,6 @@
                 callButton.addEventListener('click', () => {
                     const phoneNumber = callButton.dataset.phoneNumber;
                     if (phoneNumber) {
-                        // Use window.location.href for 'tel:' protocol to initiate call on mobile devices
                         window.location.href = `tel:${phoneNumber}`;
                         closePhoneCallModal();
                     }
@@ -1969,9 +2070,8 @@
                 cancelCallButton.addEventListener('click', closePhoneCallModal);
             }
 
-            // Account Settings Modal Functions
             function openAccountSettingsModal() {
-                renderAccountList(); // Render the account list before opening
+                renderAccountList();
                 accountSettingsModal.classList.add('open');
             }
 
@@ -1980,15 +2080,21 @@
             }
 
             function renderAccountList() {
-                accountListArea.innerHTML = ''; // Clear existing list items
+                accountListArea.innerHTML = '';
+                if (accounts.length === 0) {
+                    const noAccountsMessage = document.createElement('div');
+                    noAccountsMessage.classList.add('text-gray-500', 'text-center', 'py-4');
+                    noAccountsMessage.textContent = 'アカウントは登録されていません。';
+                    accountListArea.appendChild(noAccountsMessage);
+                    return;
+                }
                 accounts.forEach(account => {
                     const accountItem = document.createElement('div');
                     accountItem.classList.add('account-list-item');
                     accountItem.innerHTML = `
                         <span>${account.name} (${account.email})</span>
-                        <button class="settings-icon" data-account-id="${account.id}">⚙</button> <!-- Added data-account-id -->
+                        <button class="settings-icon" data-account-id="${account.id}">⚙</button>
                     `;
-                    // Add event listener to the gear icon
                     accountItem.querySelector('.settings-icon').addEventListener('click', (event) => {
                         const accountId = parseInt(event.currentTarget.dataset.accountId);
                         const selectedAccount = accounts.find(acc => acc.id === accountId);
@@ -1998,16 +2104,8 @@
                     });
                     accountListArea.appendChild(accountItem);
                 });
-
-                if (accounts.length === 0) {
-                    const noAccountsMessage = document.createElement('div');
-                    noAccountsMessage.classList.add('text-gray-500', 'text-center', 'py-4');
-                    noAccountsMessage.textContent = 'アカウントは登録されていません。';
-                    accountListArea.appendChild(noAccountsMessage);
-                }
             }
 
-            // Account Settings Modal Event Listeners
             if (accountSettingsModalCloseButton) {
                 accountSettingsModalCloseButton.addEventListener('click', closeAccountSettingsModal);
             }
@@ -2022,42 +2120,36 @@
 
             if (addAccountButton) {
                 addAccountButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('新しいアカウントを追加します。');
                 });
             }
 
-            // Individual Account Settings Modal Functions
             function openIndividualAccountSettingsModal(account) {
-                // Close the main account settings modal first
-                closeAccountSettingsModal();    
-
+                closeAccountSettingsModal();
+                
                 individualAccountSettingsTitle.textContent = `アカウント設定: ${account.name}`;
                 
-                // Populate Notification Settings
                 individualDepartureTime.value = account.notificationSettings.departure;
                 individualStartReportTime.value = account.notificationSettings.start;
                 individualEndReportTime.value = account.notificationSettings.end;
 
-                const allBranches = ['東京支店', '神奈川支店', '大阪支店', '福岡支店'];
+                const allBranches = [...new Set(allTableData.map(item => item.branch))].sort();
 
-                // Populate Notification Branches
                 notificationBranchesCheckboxes.innerHTML = '';
                 allBranches.forEach(branch => {
                     const checkboxContainer = document.createElement('label');
-                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2'); // Adjusted width for layout
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2');
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.value = branch;
                     checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
                     checkbox.checked = account.notificationBranches.includes(branch);
-                    checkbox.setAttribute('aria-label', `通知支店: ${branch}`); // For accessibility
+                    checkbox.setAttribute('aria-label', `通知支店: ${branch}`);
                     checkboxContainer.appendChild(checkbox);
                     checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
                     notificationBranchesCheckboxes.appendChild(checkboxContainer);
                 });
                 
-                // Populate Notification Device List
                 notificationDeviceList.innerHTML = '';
                 if (account.devices && account.devices.length > 0) {
                     account.devices.forEach(device => {
@@ -2068,9 +2160,7 @@
                             <button class="device-action-button">削除</button>
                         `;
                         deviceItem.querySelector('.device-action-button').addEventListener('click', () => {
-                            // Replaced alert with console.log as alerts are not allowed.
                             console.log(`${device} を削除します。`);
-                            // In a real app, you'd remove the device from the account.devices array and re-render.
                         });
                         notificationDeviceList.appendChild(deviceItem);
                     });
@@ -2081,17 +2171,16 @@
                     notificationDeviceList.appendChild(noDevicesMessage);
                 }
 
-                // Populate Attendance Display Branches (Renamed from Display Branches)
                 attendanceDisplayBranchesCheckboxes.innerHTML = '';
                 allBranches.forEach(branch => {
                     const checkboxContainer = document.createElement('label');
-                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2'); // Adjusted width for layout
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'w-1/2');
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.value = branch;
                     checkbox.classList.add('form-checkbox', 'h-5', 'w-5', 'text-blue-600', 'rounded');
-                    checkbox.checked = account.attendanceDisplayBranches.includes(branch); // Use new property name
-                    checkbox.setAttribute('aria-label', `勤怠表示支店: ${branch}`); // For accessibility
+                    checkbox.checked = account.attendanceDisplayBranches.includes(branch);
+                    checkbox.setAttribute('aria-label', `勤怠表示支店: ${branch}`);
                     checkboxContainer.appendChild(checkbox);
                     checkboxContainer.appendChild(document.createTextNode(` ${branch}`));
                     attendanceDisplayBranchesCheckboxes.appendChild(checkboxContainer);
@@ -2105,7 +2194,6 @@
                 individualAccountSettingsModal.classList.remove('open');
             }
 
-            // Individual Account Settings Modal Event Listeners
             if (individualAccountSettingsModalCloseButton) {
                 individualAccountSettingsModalCloseButton.addEventListener('click', closeIndividualAccountSettingsModal);
             }
@@ -2118,24 +2206,20 @@
                 });
             }
 
-            // Functionality for buttons within Individual Account Settings Modal
             if (addNotificationDeviceButton) {
                 addNotificationDeviceButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('新しい通知端末を追加します。');
                 });
             }
 
             if (changePasswordButton) {
                 changePasswordButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('パスワード変更画面へ遷移します。');
                 });
             }
 
             if (deleteAccountButton) {
                 deleteAccountButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('このアカウントを削除します。');
                 });
             }
@@ -2144,42 +2228,39 @@
                 saveIndividualAccountSettingsButton.addEventListener('click', () => {
                     const departure = individualDepartureTime.value;
                     const start = individualStartReportTime.value;
-                    const end = individualEndReportTime.value;
+                    const dataForWorkHistory = individualEndReportTime.value;
 
-                    // Get selected notification branches
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                .map(cb => cb.value);
+                                                              .map(cb => cb.value);
 
-                    // Get selected attendance display branches
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                    .map(cb => cb.value);
+                                                                  .map(cb => cb.value);
 
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log(`アカウント設定を保存しました:\n` +
                                 `自宅出発: ${departure}分前\n` +
                                 `上番報告: ${start}分前\n` +
-                                `下番報告: ${end}分後\n` +
+                                `下番報告: ${dataForWorkHistory}分後\n` +
                                 `通知支店: ${selectedNotificationBranches.join(', ')}\n` +
-                                `勤怠表示支店: ${selectedAttendanceDisplayBranches.join(', ')}`); // Updated alert message
+                                `勤怠表示支店: ${selectedAttendanceDisplayBranches.join(', ')}`);
                     closeIndividualAccountSettingsModal();
                 });
             }
 
             if (cancelIndividualAccountSettingsButton) {
                 cancelIndividualAccountSettingsButton.addEventListener('click', () => {
-                    // Replaced alert with console.log as alerts are not allowed.
                     console.log('アカウント設定の変更を取消しました。');
                     closeIndividualAccountSettingsModal();
                 });
             }
 
-            // Function to render the assignment summary cards
             function renderAssignmentSummary(dataToRender) {
-                assignmentSummaryContainer.innerHTML = ''; // Clear existing content
+                assignmentSummaryContainer.innerHTML = '';
 
                 const groupedAssignments = {};
 
-                dataToRender.forEach(item => {
+                const assignedData = dataToRender.filter(item => item.assignmentStatus !== '未配置');
+
+                assignedData.forEach(item => {
                     const assignment = item.assignment;
                     if (!groupedAssignments[assignment]) {
                         groupedAssignments[assignment] = {
@@ -2199,13 +2280,11 @@
                     }
                 });
 
-                // Convert to array for easier iteration and sorting if needed
                 let sortedAssignments = Object.keys(groupedAssignments).map(key => ({
                     assignment: key,
                     ...groupedAssignments[key]
                 }));
 
-                // Custom sort: "新宿駅東口再開発" first, then alphabetical
                 sortedAssignments.sort((a, b) => {
                     if (a.assignment === '新宿駅東口再開発') return -1;
                     if (b.assignment === '新宿駅東口再開発') return 1;
@@ -2224,7 +2303,6 @@
                     const card = document.createElement('div');
                     card.classList.add('assignment-card');
                     
-                    // Construct work content with icons
                     let workContentHtml = `<strong>業務内容:</strong> ${group.workContent}`;
                     if (group.workContent === '日勤') {
                         workContentHtml += ` <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun inline-block text-orange-500 align-middle">
@@ -2236,9 +2314,7 @@
                             </svg>`;
                     }
 
-                    // Determine class for '勤務中' count
                     const inProgressCountClass = group.inProgressMembers.length === 0 ? 'zero-count' : '';
-                    // Determine class for '報告待ち' count
                     const pendingReportCountClass = group.pendingReportMembers.length === 0 ? 'zero-count' : 'text-red-600';
 
 
@@ -2265,7 +2341,6 @@
                     assignmentSummaryContainer.appendChild(card);
                 });
 
-                // Add event listeners for hover and click on count items
                 document.querySelectorAll('.assignment-card-count-item').forEach(item => {
                     item.addEventListener('mouseover', showTooltip);
                     item.addEventListener('mouseout', hideTooltip);
@@ -2273,18 +2348,19 @@
                 });
             }
 
-            function showTooltip(event) {
+            function showTooltip(event, text = '') {
                 const members = event.currentTarget.dataset.members;
                 if (members) {
                     const memberList = members.split(',').map(name => `<li>${name}</li>`).join('');
                     tooltipContent.innerHTML = `<ul>${memberList}</ul>`;
-                    detailTooltip.classList.add('visible');
-
-                    // Position the tooltip
-                    const rect = event.currentTarget.getBoundingClientRect();
-                    detailTooltip.style.left = `${rect.left + rect.width / 2}px`;
-                    detailTooltip.style.top = `${rect.top + rect.height + 10}px`; // 10px below the element
+                } else {
+                    tooltipContent.textContent = text;
                 }
+                detailTooltip.classList.add('visible');
+
+                const rect = event.currentTarget.getBoundingClientRect();
+                detailTooltip.style.left = `${rect.left + rect.width / 2}px`;
+                detailTooltip.style.top = `${rect.top + rect.height + 10}px`;
             }
 
             function hideTooltip() {
@@ -2293,57 +2369,64 @@
 
             function handleCountClick(event) {
                 const assignment = event.currentTarget.dataset.assignment;
-                const status = event.currentTarget.dataset.status; // Will be undefined for "totalAssigned"
+                const status = event.currentTarget.dataset.status;
 
-                // Switch back to the main table view
-                mainAppContent.classList.remove('hidden');
-                switchedScreenContent.classList.add('hidden');
-                isMainScreen = true;
+                currentView = 'main';
+                updateScreenVisibility();
 
-                // Filter the main table data
-                if (status) { // If a specific status count was clicked
-                    displayedTableData = allTableData.filter(row => 
+                if (status) {
+                    displayedTableData = allTableData.filter(row =>
                         row.assignment === assignment && row.status === status
                     );
-                    // Update the status dropdown to reflect the filter
                     statusSearchSelect.value = status;
-                } else { // If total assigned count was clicked
-                    displayedTableData = allTableData.filter(row => 
+                } else {
+                    displayedTableData = allTableData.filter(row =>
                         row.assignment === assignment
                     );
-                    // Reset status dropdown if filtering by assignment only
                     statusSearchSelect.value = '';
                 }
                 
-                renderTable(); // Re-render the main table with filtered data
+                renderTable();
             }
 
 
-            // Screen Switch Button Logic
-            let isMainScreen = true; // Track current screen state
+            function populateBranchFilterCheckboxes() {
+                summaryBranchCheckboxesContainer.innerHTML = '';
+                allBranches.forEach(branch => {
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'cursor-pointer', 'px-3', 'py-1', 'rounded-md', 'bg-gray-100', 'hover:bg-gray-200', 'transition-colors');
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = branch;
+                    checkbox.classList.add('form-checkbox', 'h-4', 'w-4', 'text-blue-600', 'rounded', 'mr-1');
+                    checkbox.checked = selectedSummaryBranches.includes(branch);
+                    checkbox.setAttribute('aria-label', `支店フィルター: ${branch}`);
 
-            // Function to populate branch filter dropdown for summary screen
-            function populateBranchFilter() {
-                const branches = [...new Set(allTableData.map(item => item.branch))].sort();
-                summaryBranchFilter.innerHTML = '<option value="">全ての支店</option>'; // Add default option
-                branches.forEach(branch => {
-                    const option = document.createElement('option');
-                    option.value = branch;
-                    option.textContent = branch;
-                    summaryBranchFilter.appendChild(option);
+                    checkbox.addEventListener('change', (event) => {
+                        if (event.target.checked) {
+                            if (!selectedSummaryBranches.includes(branch)) {
+                                selectedSummaryBranches.push(branch);
+                            }
+                        } else {
+                            selectedSummaryBranches = selectedSummaryBranches.filter(b => b !== branch);
+                        }
+                        filterAndRenderSummary();
+                    });
+
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(document.createTextNode(branch));
+                    summaryBranchCheckboxesContainer.appendChild(checkboxContainer);
                 });
             }
 
-            // Function to apply filters and render the summary
             function filterAndRenderSummary() {
                 let dataForSummary = [...allTableData];
 
-                // Apply branch filter
-                if (currentSummaryFilterBranch) {
-                    dataForSummary = dataForSummary.filter(item => item.branch === currentSummaryFilterBranch);
-                }
+                dataForSummary = dataForSummary.filter(item => item.assignmentStatus !== '未配置');
 
-                // Apply pending report filter
+                dataForSummary = dataForSummary.filter(item => selectedSummaryBranches.includes(item.branch));
+
                 if (showOnlyPending) {
                     dataForSummary = dataForSummary.filter(item => item.status === '報告待ち');
                 }
@@ -2353,65 +2436,397 @@
 
             if (screenSwitchButton) {
                 screenSwitchButton.addEventListener('click', () => {
-                    if (isMainScreen) {
-                        mainAppContent.classList.add('hidden');
-                        switchedScreenContent.classList.remove('hidden');
-                        populateBranchFilter(); // Populate branches when switching to summary
-                        // Reset summary filters when entering the summary screen
-                        currentSummaryFilterBranch = '';
-                        showOnlyPending = false;
-                        summaryBranchFilter.value = ''; // Reset dropdown
-                        filterAndRenderSummary(); // Render summary with initial filters
-                    } else {
-                        mainAppContent.classList.remove('hidden');
-                        switchedScreenContent.classList.add('hidden');
-                        assignmentSummaryContainer.innerHTML = ''; // Clear summary when leaving
-                    }
-                    isMainScreen = !isMainScreen; // Toggle screen state
+                    currentView = 'summary';
+                    updateScreenVisibility();
+                    selectedSummaryBranches = [...allBranches];
+                    showOnlyPending = false;
+                    summaryPendingFilter.classList.remove('bg-yellow-600');
                 });
             }
 
             if (backToMainButton) {
                 backToMainButton.addEventListener('click', () => {
-                    mainAppContent.classList.remove('hidden');
-                    switchedScreenContent.classList.add('hidden');
-                    assignmentSummaryContainer.innerHTML = ''; // Clear summary when returning to main
-                    isMainScreen = true; // Ensure state is correct
+                    currentView = 'main';
+                    updateScreenVisibility();
+                    assignmentSummaryContainer.innerHTML = '';
                 });
             }
 
             if (summaryCloseButton) {
                 summaryCloseButton.addEventListener('click', () => {
-                    mainAppContent.classList.remove('hidden');
-                    switchedScreenContent.classList.add('hidden');
-                    assignmentSummaryContainer.innerHTML = ''; // Clear summary when returning to main
-                    isMainScreen = true; // Ensure state is correct
+                    currentView = 'main';
+                    updateScreenVisibility();
+                    assignmentSummaryContainer.innerHTML = '';
                 });
             }
 
-            // Event listener for summary branch filter
-            if (summaryBranchFilter) {
-                summaryBranchFilter.addEventListener('change', (event) => {
-                    currentSummaryFilterBranch = event.target.value;
-                    filterAndRenderSummary();
-                });
-            }
-
-            // Event listener for summary pending filter button
             if (summaryPendingFilter) {
                 summaryPendingFilter.addEventListener('click', () => {
-                    showOnlyPending = !showOnlyPending; // Toggle the state
+                    showOnlyPending = !showOnlyPending;
                     if (showOnlyPending) {
-                        summaryPendingFilter.classList.add('bg-yellow-600'); // Indicate active state
+                        summaryPendingFilter.classList.add('bg-yellow-600');
                     } else {
-                        summaryPendingFilter.classList.remove('bg-yellow-600'); // Indicate inactive state
+                        summaryPendingFilter.classList.remove('bg-yellow-600');
                     }
                     filterAndRenderSummary();
                 });
             }
 
-            // The main application content is now visible by default.
-            mainAppContent.classList.remove('hidden');
+            function renderUnassignedPersonnelTable() {
+                unassignedPersonnelTableBody.innerHTML = '';
+
+                let filteredUnassignedData = unassignedPersonnelData.filter(item => {
+                    const matchesBranch = selectedUnassignedBranches.includes(item.branch);
+                    const searchTermLower = unassignedSearchTerm.toLowerCase();
+                    const matchesSearch = item.teamMember.toLowerCase().includes(searchTermLower) ||
+                                            item.consecutiveWorkStatus.toLowerCase().includes(searchTermLower) ||
+                                            item.holidayStatus.toLowerCase().includes(searchTermLower);
+                    return matchesBranch && matchesSearch;
+                });
+
+                if (unassignedCurrentSortKey) {
+                    filteredUnassignedData = sortTableData(filteredUnassignedData, unassignedCurrentSortKey, unassignedCurrentSortDirection);
+                }
+
+
+                if (filteredUnassignedData.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `<td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">未配置者はいません。</td>`;
+                    unassignedPersonnelTableBody.appendChild(noDataRow);
+                    return;
+                }
+
+                filteredUnassignedData.forEach(rowData => {
+                    const row = document.createElement('tr');
+                    row.classList.add('hover:bg-gray-50');
+
+                    const branchCell = document.createElement('td');
+                    branchCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    branchCell.textContent = rowData.branch;
+                    row.appendChild(branchCell);
+
+                    const teamMemberCell = document.createElement('td');
+                    teamMemberCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    const teamMemberDiv = document.createElement('div');
+                    teamMemberDiv.classList.add('flex', 'items-center');
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = rowData.teamMember;
+                    teamMemberDiv.appendChild(nameSpan);
+                    
+                    const phoneIconSvg = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone cursor-pointer text-gray-500 hover:text-gray-700 transition-colors ml-2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-3.67A19.79 19.79 0 0 1 2 5.18 2 2 0 0 1 4.11 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    `;
+                    const phoneIconWrapper = document.createElement('span');
+                    phoneIconWrapper.innerHTML = phoneIconSvg;
+                    phoneIconWrapper.addEventListener('click', () => {
+                        openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
+                    });
+                    teamMemberDiv.appendChild(phoneIconWrapper);
+                    teamMemberCell.appendChild(teamMemberDiv);
+                    row.appendChild(teamMemberCell);
+
+                    const consecutiveWorkStatusCell = document.createElement('td');
+                    consecutiveWorkStatusCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    if (rowData.consecutiveWorkStatus === '6連勤中') {
+                        consecutiveWorkStatusCell.classList.add('consecutive-work-red');
+                    }
+                    consecutiveWorkStatusCell.textContent = rowData.consecutiveWorkStatus;
+                    row.appendChild(consecutiveWorkStatusCell);
+
+                    const holidayStatusCell = document.createElement('td');
+                    holidayStatusCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    holidayStatusCell.textContent = rowData.holidayStatus;
+                    row.appendChild(holidayStatusCell);
+
+                    unassignedPersonnelTableBody.appendChild(row);
+                });
+            }
+
+            function filterAndRenderUnassignedPersonnelTable() {
+                renderUnassignedPersonnelTable();
+                updateGenericSortIndicators(document.querySelectorAll('#unassigned-personnel-screen th[data-sort-key]'), unassignedCurrentSortKey, unassignedCurrentSortDirection);
+            }
+
+            function populateUnassignedBranchFilterCheckboxes() {
+                unassignedBranchCheckboxesContainer.innerHTML = '';
+                allBranches.forEach(branch => {
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'cursor-pointer', 'px-3', 'py-1', 'rounded-md', 'bg-gray-100', 'hover:bg-gray-200', 'transition-colors');
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = branch;
+                    checkbox.classList.add('form-checkbox', 'h-4', 'w-4', 'text-blue-600', 'rounded', 'mr-1');
+                    checkbox.checked = selectedUnassignedBranches.includes(branch);
+                    checkbox.setAttribute('aria-label', `未配置者支店フィルター: ${branch}`);
+
+                    checkbox.addEventListener('change', (event) => {
+                        if (event.target.checked) {
+                            if (!selectedUnassignedBranches.includes(branch)) {
+                                selectedUnassignedBranches.push(branch);
+                            }
+                        } else {
+                            selectedUnassignedBranches = selectedUnassignedBranches.filter(b => b !== branch);
+                        }
+                        filterAndRenderUnassignedPersonnelTable();
+                    });
+
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(document.createTextNode(branch));
+                    unassignedBranchCheckboxesContainer.appendChild(checkboxContainer);
+                });
+            }
+
+            document.querySelectorAll('#unassigned-personnel-screen th[data-sort-key]').forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.dataset.sortKey;
+                    if (sortKey) {
+                        if (unassignedCurrentSortKey === sortKey) {
+                            unassignedCurrentSortDirection = unassignedCurrentSortDirection === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            unassignedCurrentSortKey = sortKey;
+                            unassignedCurrentSortDirection = 'asc';
+                        }
+                        filterAndRenderUnassignedPersonnelTable();
+                    }
+                });
+            });
+
+
+            if (unassignedPersonnelButton) {
+                unassignedPersonnelButton.addEventListener('click', () => {
+                    currentView = 'unassigned';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedCloseButton) {
+                unassignedCloseButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedBackToMainButton) {
+                unassignedBackToMainButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedSearchInput) {
+                unassignedSearchInput.addEventListener('input', (event) => {
+                    unassignedSearchTerm = event.target.value.trim();
+                    filterAndRenderUnassignedPersonnelTable();
+                });
+            }
+
+            function renderWorkHistoryTable() {
+                workHistoryTableBody.innerHTML = '';
+                workHistoryTitle.textContent = `勤務履歴確認画面: ${currentWorkHistoryAssignment}`;
+
+                let dataForWorkHistory = allTableData.filter(item => item.assignment === currentWorkHistoryAssignment);
+
+                const searchTermLower = workHistorySearchTerm.toLowerCase();
+                dataForWorkHistory = dataForWorkHistory.filter(item => {
+                    return item.teamMember.toLowerCase().includes(searchTermLower) ||
+                           item.branch.toLowerCase().includes(searchTermLower) ||
+                           item.consecutiveWorkStatus.toLowerCase().includes(searchTermLower) ||
+                           item.holidayStatus.toLowerCase().includes(searchTermLower) ||
+                           item.assignmentStatus.toLowerCase().includes(searchTermLower) ||
+                           item.lastWorkDate.toLowerCase().includes(searchTermLower);
+                });
+
+                dataForWorkHistory = dataForWorkHistory.filter(item => selectedWorkHistoryBranches.includes(item.branch));
+
+                if (showOnlyUnassignedInWorkHistory) {
+                    dataForWorkHistory = dataForWorkHistory.filter(item => item.assignmentStatus === '未配置');
+                }
+
+                if (workHistoryCurrentSortKey) {
+                    dataForWorkHistory = sortTableData(dataForWorkHistory, workHistoryCurrentSortKey, workHistoryCurrentSortDirection);
+                }
+
+                if (dataForWorkHistory.length === 0) {
+                    const noDataRow = document.createElement('tr');
+                    noDataRow.innerHTML = `<td colspan="6" class="px-6 py-4 text-sm text-gray-500 text-center">この配置先の勤務履歴はありません。</td>`;
+                    workHistoryTableBody.appendChild(noDataRow);
+                    return;
+                }
+
+                dataForWorkHistory.forEach(rowData => {
+                    const row = document.createElement('tr');
+                    row.classList.add('hover:bg-gray-50');
+
+                    const branchCell = document.createElement('td');
+                    branchCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    branchCell.textContent = rowData.branch;
+                    row.appendChild(branchCell);
+
+                    const teamMemberCell = document.createElement('td');
+                    teamMemberCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    const teamMemberDiv = document.createElement('div');
+                    teamMemberDiv.classList.add('flex', 'items-center');
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = rowData.teamMember;
+                    teamMemberDiv.appendChild(nameSpan);
+                    
+                    const phoneIconSvg = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone cursor-pointer text-gray-500 hover:text-gray-700 transition-colors ml-2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-3.67-3.67A19.79 19.79 0 0 1 2 5.18 2 2 0 0 1 4.11 3h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    `;
+                    const phoneIconWrapper = document.createElement('span');
+                    phoneIconWrapper.innerHTML = phoneIconSvg;
+                    phoneIconWrapper.addEventListener('click', () => {
+                        openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
+                    });
+                    teamMemberDiv.appendChild(phoneIconWrapper);
+                    teamMemberCell.appendChild(teamMemberDiv);
+                    row.appendChild(teamMemberCell);
+
+                    const consecutiveWorkStatusCell = document.createElement('td');
+                    consecutiveWorkStatusCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    if (rowData.consecutiveWorkStatus === '6連勤中') {
+                        consecutiveWorkStatusCell.classList.add('consecutive-work-red');
+                    }
+                    consecutiveWorkStatusCell.textContent = rowData.consecutiveWorkStatus;
+                    row.appendChild(consecutiveWorkStatusCell);
+
+                    const holidayStatusCell = document.createElement('td');
+                    holidayStatusCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    holidayStatusCell.textContent = rowData.holidayStatus;
+                    row.appendChild(holidayStatusCell);
+
+                    const assignmentStatusCell = document.createElement('td');
+                    assignmentStatusCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    assignmentStatusCell.textContent = rowData.assignmentStatus;
+                    row.appendChild(assignmentStatusCell);
+
+                    const lastWorkDateCell = document.createElement('td');
+                    lastWorkDateCell.classList.add('px-6', 'py-4', 'whitespace-nowrap', 'text-sm', 'text-gray-900');
+                    lastWorkDateCell.textContent = rowData.lastWorkDate;
+                    row.appendChild(lastWorkDateCell);
+
+                    workHistoryTableBody.appendChild(row);
+                });
+            }
+
+            function filterAndRenderWorkHistoryTable() {
+                renderWorkHistoryTable();
+                updateGenericSortIndicators(document.querySelectorAll('#work-history-screen th[data-sort-key]'), workHistoryCurrentSortKey, workHistoryCurrentSortDirection);
+            }
+
+            function populateWorkHistoryBranchFilterCheckboxes() {
+                workHistoryBranchCheckboxesContainer.innerHTML = '';
+                allBranches.forEach(branch => {
+                    const checkboxContainer = document.createElement('label');
+                    checkboxContainer.classList.add('inline-flex', 'items-center', 'cursor-pointer', 'px-3', 'py-1', 'rounded-md', 'bg-gray-100', 'hover:bg-gray-200', 'transition-colors');
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = branch;
+                    checkbox.classList.add('form-checkbox', 'h-4', 'w-4', 'text-blue-600', 'rounded', 'mr-1');
+                    checkbox.checked = selectedWorkHistoryBranches.includes(branch);
+                    checkbox.setAttribute('aria-label', `勤務履歴支店フィルター: ${branch}`);
+
+                    checkbox.addEventListener('change', (event) => {
+                        if (event.target.checked) {
+                            if (!selectedWorkHistoryBranches.includes(branch)) {
+                                selectedWorkHistoryBranches.push(branch);
+                            }
+                        } else {
+                            selectedWorkHistoryBranches = selectedWorkHistoryBranches.filter(b => b !== branch);
+                        }
+                        filterAndRenderWorkHistoryTable();
+                    });
+
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(document.createTextNode(branch));
+                    workHistoryBranchCheckboxesContainer.appendChild(checkboxContainer);
+                });
+            }
+
+            document.querySelectorAll('#work-history-screen th[data-sort-key]').forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortKey = header.dataset.sortKey;
+                    if (sortKey) {
+                        if (workHistoryCurrentSortKey === sortKey) {
+                            workHistoryCurrentSortDirection = workHistoryCurrentSortDirection === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            workHistoryCurrentSortKey = sortKey;
+                            workHistoryCurrentSortDirection = 'asc';
+                        }
+                        filterAndRenderWorkHistoryTable();
+                    }
+                });
+            });
+
+            if (workHistoryCloseButton) {
+                workHistoryCloseButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (workHistoryBackToMainButton) {
+                workHistoryBackToMainButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (workHistorySearchInput) {
+                workHistorySearchInput.addEventListener('input', (event) => {
+                    workHistorySearchTerm = event.target.value.trim();
+                    filterAndRenderWorkHistoryTable();
+                });
+            }
+
+            if (workHistoryUnassignedFilterButton) {
+                workHistoryUnassignedFilterButton.addEventListener('click', () => {
+                    showOnlyUnassignedInWorkHistory = !showOnlyUnassignedInWorkHistory;
+                    if (showOnlyUnassignedInWorkHistory) {
+                        workHistoryUnassignedFilterButton.classList.add('bg-yellow-600');
+                    } else {
+                        workHistoryUnassignedFilterButton.classList.remove('bg-yellow-600');
+                    }
+                    filterAndRenderWorkHistoryTable();
+                });
+            }
+
+
+            if (unassignedPersonnelButton) {
+                unassignedPersonnelButton.addEventListener('click', () => {
+                    currentView = 'unassigned';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedCloseButton) {
+                unassignedCloseButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedBackToMainButton) {
+                unassignedBackToMainButton.addEventListener('click', () => {
+                    currentView = 'main';
+                    updateScreenVisibility();
+                });
+            }
+
+            if (unassignedSearchInput) {
+                unassignedSearchInput.addEventListener('input', (event) => {
+                    unassignedSearchTerm = event.target.value.trim();
+                    filterAndRenderUnassignedPersonnelTable();
+                });
+            }
+
+            updateScreenVisibility();
         });
     </script>
 </body>
