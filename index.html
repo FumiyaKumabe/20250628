@@ -624,6 +624,8 @@
                     <option value="下番完了">下番完了</option>
                     <option value="勤務中">勤務中</option>
                 </select>
+                <!-- Moved main-search-input here -->
+                <input type="text" id="main-search-input" placeholder="隊員名、得意先、配置先で検索..." class="p-2 rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 w-48 text-gray-700">
                 <button id="notification-button" class="relative flex items-center justify-center p-2 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-colors w-9 h-9 md:w-10 md:h-10 flex-shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-bell">
                         <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
@@ -891,7 +893,7 @@
                                     <span class="sort-indicator"></span>
                                 </div>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="assignmentStatus">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-now nowrap cursor-pointer" data-sort-key="assignmentStatus">
                                 <div class="flex items-center">
                                     <span>配置状況</span>
                                     <span class="sort-indicator"></span>
@@ -1099,6 +1101,7 @@
             const mainPrevDayButton = document.getElementById('prev-day-button');
             const mainNextDayButton = document.getElementById('next-day-button');
             const mainCalendarButton = document.getElementById('calendar-button');
+            const mainSearchInput = document.getElementById('main-search-input'); // New search input
 
             const summaryDateElement = document.getElementById('summary-system-date');
             const summaryPrevDayButton = document.getElementById('summary-prev-day-button');
@@ -1339,6 +1342,7 @@
 
 
             let displayedTableData = [...allTableData];
+            let mainSearchTerm = ''; // New variable for main screen search
 
             let currentSortKey = null;
             let currentSortDirection = 'asc';
@@ -1392,7 +1396,7 @@
 
                 if (currentView === 'main') {
                     mainAppContent.classList.remove('hidden');
-                    renderTable();
+                    filterAndRenderMainTable(); // Call new filter function for main table
                 } else if (currentView === 'summary') {
                     switchedScreenContent.classList.remove('hidden');
                     populateBranchFilterCheckboxes();
@@ -1417,23 +1421,62 @@
                 updateAllDateDisplays();
             }
 
-            function renderTable() {
+            function filterAndRenderMainTable() {
+                let filteredData = [...allTableData];
+
+                // Filter out '未配置' status for the main table
+                filteredData = filteredData.filter(item => item.status !== '未配置');
+
+                // Apply status filter from dropdown
+                const selectedStatus = statusSearchSelect.value;
+                if (selectedStatus) {
+                    filteredData = filteredData.filter(row => row.status === selectedStatus);
+                }
+
+                // Apply text search filter
+                const searchTermLower = mainSearchInput.value.toLowerCase().trim();
+                if (searchTermLower) {
+                    filteredData = filteredData.filter(row =>
+                        row.teamMember.toLowerCase().includes(searchTermLower) ||
+                        row.client.toLowerCase().includes(searchTermLower) ||
+                        row.assignment.toLowerCase().includes(searchTermLower)
+                    );
+                }
+
+                // Apply sorting
+                if (currentSortKey) {
+                    filteredData = sortTableData(filteredData, currentSortKey, currentSortDirection);
+                }
+                
+                renderTable(filteredData);
+            }
+
+            function renderTable(dataToRender) {
                 tableBody.innerHTML = '';
 
-                const mainTableFilteredData = displayedTableData.filter(item => item.status !== '未配置');
-
-                if (mainTableFilteredData.length === 0) {
+                if (dataToRender.length === 0) {
                     const noDataRow = document.createElement('tr');
-                    noDataRow.innerHTML = `<td colspan="10" class="px-6 py-4 text-sm text-gray-500 text-center">表示するデータがありません。</td>`;
+                    noDataRow.innerHTML = `<td colspan="11" class="px-6 py-4 text-sm text-gray-500 text-center">表示するデータがありません。</td>`;
                     tableBody.appendChild(noDataRow);
                     return;
                 }
 
-                mainTableFilteredData.forEach(rowData => {
+                dataToRender.forEach(rowData => {
                     const row = document.createElement('tr');
+                    
+                    // Apply light yellow background if status is '報告待ち'
                     if (rowData.status === '報告待ち') {
                         row.classList.add('bg-yellow-50');
                     }
+
+                    // Add hover effect for all rows except the one with no: 4
+                    // If rowData.no is 4, do NOT add 'hover:bg-gray-50'
+                    if (rowData.no !== 4) {
+                        row.classList.add('hover:bg-gray-50');
+                    }
+                    // No need for 'no-hover-effect' class or CSS rule anymore,
+                    // as we conditionally apply 'hover:bg-gray-50' directly.
+
 
                     const noCell = document.createElement('td');
                     noCell.classList.add('px-6', 'py-4', 'text-sm', 'font-medium', 'text-gray-900', 'text-center');
@@ -1604,7 +1647,7 @@
                             currentSortKey = sortKey;
                             currentSortDirection = 'asc';
                         }
-                        applySearchFilterByStatus(statusSearchSelect.value);
+                        filterAndRenderMainTable(); // Use the new filter function
                         updateGenericSortIndicators(document.querySelectorAll('#table-container th[data-sort-key]'), currentSortKey, currentSortDirection);
                     }
                 });
@@ -1852,7 +1895,7 @@
                 currentSystemDate.setDate(currentSystemDate.getDate() + days);
                 updateAllDateDisplays();
                 if (currentView === 'main') {
-                    renderTable();
+                    filterAndRenderMainTable(); // Use the new filter function
                 } else if (currentView === 'summary') {
                     filterAndRenderSummary();
                 } else if (currentView === 'unassigned') {
@@ -1958,7 +2001,7 @@
                         updateAllDateDisplays();
                         calendarModal.classList.remove('open');
                         if (currentView === 'main') {
-                            renderTable();
+                            filterAndRenderMainTable(); // Use the new filter function
                         } else if (currentView === 'summary') {
                             filterAndRenderSummary();
                         } else if (currentView === 'unassigned') {
@@ -1974,22 +2017,17 @@
 
             if (statusSearchSelect) {
                 statusSearchSelect.addEventListener('change', () => {
-                    const selectedStatus = statusSearchSelect.value;
-                    applySearchFilterByStatus(selectedStatus);
+                    filterAndRenderMainTable(); // Use the new filter function
                 });
             }
 
-            function applySearchFilterByStatus(statusTerm) {
-                if (!statusTerm) {
-                    displayedTableData = [...allTableData];
-                } else {
-                    displayedTableData = allTableData.filter(row => {
-                        return row.status === statusTerm;
-                    });
-                }
-                displayedTableData = sortTableData(displayedTableData, currentSortKey, currentSortDirection);
-                renderTable();
+            // New: Event listener for main search input
+            if (mainSearchInput) {
+                mainSearchInput.addEventListener('input', () => {
+                    filterAndRenderMainTable(); // Trigger re-render on search input
+                });
             }
+
 
             if (lineNotificationModalCloseButton) {
                 lineNotificationModalCloseButton.addEventListener('click', () => {
@@ -2231,10 +2269,10 @@
                     const dataForWorkHistory = individualEndReportTime.value;
 
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                              .map(cb => cb.value);
+                                                                .map(cb => cb.value);
 
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                  .map(cb => cb.value);
+                                                                    .map(cb => cb.value);
 
                     console.log(`アカウント設定を保存しました:\n` +
                                 `自宅出発: ${departure}分前\n` +
@@ -2375,18 +2413,15 @@
                 updateScreenVisibility();
 
                 if (status) {
-                    displayedTableData = allTableData.filter(row =>
-                        row.assignment === assignment && row.status === status
-                    );
+                    mainSearchInput.value = ''; // Clear main search input
                     statusSearchSelect.value = status;
                 } else {
-                    displayedTableData = allTableData.filter(row =>
-                        row.assignment === assignment
-                    );
+                    mainSearchInput.value = ''; // Clear main search input
                     statusSearchSelect.value = '';
                 }
-                
-                renderTable();
+                // Set the main search input to the assignment name to filter the table
+                mainSearchInput.value = assignment;
+                filterAndRenderMainTable();
             }
 
 
