@@ -929,6 +929,11 @@
                     <span class="assignment-detail-label">現場住所</span>
                     <span class="assignment-detail-value"></span>
                 </div>
+                <!-- New: Site Supervisor Name -->
+                <div id="assignment-detail-site-supervisor" class="assignment-detail-item">
+                    <span class="assignment-detail-label">現場監督名</span>
+                    <span class="assignment-detail-value"></span>
+                </div>
             </div>
 
             <div class="flex justify-end mt-4">
@@ -1083,6 +1088,7 @@
             const assignmentDetailWorkHistory = document.getElementById('assignment-detail-work-history');
             const assignmentDetailPhoneNumber = document.getElementById('assignment-detail-phone-number');
             const assignmentDetailSiteAddress = document.getElementById('assignment-detail-site-address');
+            const assignmentDetailSiteSupervisor = document.getElementById('assignment-detail-site-supervisor'); // New element
             const assignmentDetailOkButton = document.getElementById('assignment-detail-ok-button');
 
 
@@ -1095,7 +1101,8 @@
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
                     holidayStatus: '',
-                    siteAddress: '福岡県福岡市博多区博多駅中央街1-1'
+                    siteAddress: '福岡県福岡市博多区博多駅中央街1-1',
+                    siteSupervisor: '田中 健太郎' // Added site supervisor
                 },
                 {
                     no: 4, teamMember: '山田 太郎', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
@@ -1105,7 +1112,8 @@
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
                     holidayStatus: '',
-                    siteAddress: '東京都新宿区新宿3丁目38-1'
+                    siteAddress: '東京都新宿区新宿3丁目38-1',
+                    siteSupervisor: '鈴木 一郎' // Added site supervisor
                 },
                 {
                     no: 5, teamMember: '佐藤 花子', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
@@ -1115,7 +1123,8 @@
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
                     holidayStatus: '',
-                    siteAddress: '大阪府大阪市北区梅田1丁目'
+                    siteAddress: '大阪府大阪市北区梅田1丁目',
+                    siteSupervisor: '山本 太郎' // Added site supervisor
                 },
                 {
                     no: 6, teamMember: '高橋 悟', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
@@ -1125,7 +1134,8 @@
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
                     holidayStatus: '',
-                    siteAddress: '東京都新宿区新宿3丁目38-1'
+                    siteAddress: '東京都新宿区新宿3丁目38-1',
+                    siteSupervisor: '鈴木 一郎' // Added site supervisor
                 },
                 {
                     no: 7, teamMember: '中村 健一', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
@@ -1135,14 +1145,15 @@
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
                     holidayStatus: '',
-                    siteAddress: '大阪府大阪市北区梅田1丁目'
+                    siteAddress: '大阪府大阪市北区梅田1丁目',
+                    siteSupervisor: '山本 太郎' // Added site supervisor
                 }
             ];
 
             const originalEntryNo1 = allTableData.find(item => item.no === 1);
             if (originalEntryNo1) {
-                const newEntry1 = { ...originalEntryNo1, no: 2, teamMember: '田中 健太', lineId: 'kenta.tanaka', status: '下番完了', lastWorkDate: '2025/06/26', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '' };
-                const newEntry2 = { ...originalEntryNo1, no: 3, teamMember: '鈴木 美咲', lineId: 'misaki.suzuki', status: '下番完了', lastWorkDate: '2025/06/25', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '' };
+                const newEntry1 = { ...originalEntryNo1, no: 2, teamMember: '田中 健太', lineId: 'kenta.tanaka', status: '下番完了', lastWorkDate: '2025/06/26', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '', siteSupervisor: '佐藤 次郎' }; // Added site supervisor
+                const newEntry2 = { ...originalEntryNo1, no: 3, teamMember: '鈴木 美咲', lineId: 'misaki.suzuki', status: '下番完了', lastWorkDate: '2025/06/25', assignmentStatus: '配置済み', consecutiveWorkStatus: '3連勤中', holidayStatus: '', siteSupervisor: '高橋 吾郎' }; // Added site supervisor
                 allTableData.push(newEntry1, newEntry2);
             }
 
@@ -1190,7 +1201,8 @@
                     assignmentStatus: '未配置',
                     consecutiveWorkStatus: randomConsecutiveStatus,
                     holidayStatus: holidayStatus,
-                    siteAddress: '未定' // Unassigned personnel don't have a specific site address
+                    siteAddress: '未定', // Unassigned personnel don't have a specific site address
+                    siteSupervisor: '未定' // Added site supervisor for unassigned
                 });
             }
 
@@ -2767,6 +2779,10 @@
                 // Updated tooltip text for "現場住所"
                 assignmentDetailSiteAddress.addEventListener('mouseover', (event) => showTooltip(event, 'GoogleMapで確認'));
                 assignmentDetailSiteAddress.addEventListener('mouseout', hideTooltip);
+
+                // New: Set up Site Supervisor Name
+                assignmentDetailSiteSupervisor.querySelector('.assignment-detail-value').textContent = rowData.siteSupervisor;
+                // No click or mouseover actions for site supervisor as per request
 
                 assignmentDetailModal.classList.add('open');
             }
