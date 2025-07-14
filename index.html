@@ -76,7 +76,7 @@
             border-radius: 4px;
         }
 
-        .line-notification-modal-overlay {
+        .modal-overlay { /* Generic modal overlay */
             position: fixed;
             top: 0;
             left: 0;
@@ -86,16 +86,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1010;
+            z-index: 1010; /* Base Z-index for modals */
             visibility: hidden;
             opacity: 0;
             transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
         }
-        .line-notification-modal-overlay.open {
+        .modal-overlay.open {
             visibility: visible;
             opacity: 1;
         }
-        .line-notification-modal-content {
+        .modal-content { /* Generic modal content */
             background-color: white;
             padding: 24px;
             border-radius: 8px;
@@ -107,7 +107,7 @@
             flex-direction: column;
             gap: 16px;
         }
-        .line-notification-modal-close-button {
+        .modal-close-button { /* Generic modal close button */
             position: absolute;
             top: 8px;
             right: 8px;
@@ -117,13 +117,21 @@
             cursor: pointer;
             color: #6b7280;
         }
-        .line-notification-modal-title {
+        .modal-title { /* Generic modal title */
             font-size: 1.5rem;
             font-weight: bold;
             color: #1f2937;
             text-align: center;
             margin-bottom: 1rem;
         }
+
+        /* Specific modal Z-indices */
+        #calendar-modal { z-index: 1020; }
+        #phone-call-modal { z-index: 1030; }
+        #account-settings-modal { z-index: 1040; }
+        #individual-account-settings-modal { z-index: 1050; }
+        #assignment-detail-modal { z-index: 1025; /* Between calendar and phone call */ }
+
 
         .sort-indicator {
             display: inline-block;
@@ -145,128 +153,6 @@
         }
         .sort-indicator.desc {
             transform: rotate(180deg);
-        }
-
-        .calendar-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1020;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .calendar-modal-overlay.open {
-            visibility: visible;
-            opacity: 1;
-        }
-        .calendar-modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            max-width: 90%;
-            width: 350px;
-            position: relative;
-            text-align: center;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-        .calendar-grid span {
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .calendar-grid span.day-label {
-            font-weight: bold;
-            color: #4b5563;
-        }
-        .calendar-grid span.current-month {
-            color: #1f2937;
-        }
-        .calendar-grid span.other-month {
-            color: #9ca3af;
-        }
-        .calendar-grid span.today {
-            background-color: #bfdbfe;
-            font-weight: bold;
-        }
-        .calendar-grid span.saturday {
-            color: #2563eb;
-        }
-        .calendar-grid span.sunday {
-            color: #dc2626;
-        }
-        .calendar-grid span:not(.day-label):hover {
-            background-color: #e5e7eb;
-        }
-
-        .phone-call-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1030;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .phone-call-modal-overlay.open {
-            visibility: visible;
-            opacity: 1;
-        }
-        .phone-call-modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            max-width: 95%;
-            width: 350px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-        }
-        .phone-call-modal-close-button {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6b7280;
-        }
-        .phone-call-modal-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 1rem;
         }
 
         .status-tag {
@@ -298,128 +184,6 @@
             font-size: 0.625rem;
         }
 
-        .account-settings-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1040;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .account-settings-modal-overlay.open {
-            visibility: visible;
-            opacity: 1;
-        }
-        .account-settings-modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            max-width: 95%;
-            width: 450px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .account-settings-modal-close-button {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6b7280;
-        }
-        .account-settings-modal-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .account-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #e5e7eb;
-            color: #374151;
-            font-size: 1.125rem;
-        }
-        .account-list-item:last-child {
-            border-bottom: none;
-        }
-        .account-list-item .settings-icon {
-            cursor: pointer;
-            color: #6b7280;
-            transition: color 0.2s ease-in-out;
-            font-size: 1.25rem;
-        }
-        .account-list-item .settings-icon:hover {
-            color: #1f2937;
-        }
-
-        .individual-account-settings-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1050;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
-        }
-        .individual-account-settings-modal-overlay.open {
-            visibility: visible;
-            opacity: 1;
-        }
-        .individual-account-settings-modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-            max-width: 95%;
-            width: 500px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-            max-height: 90vh;
-        }
-        .individual-account-settings-modal-close-button {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #6b7280;
-        }
-        .individual-account-settings-modal-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: #1f2937;
-            text-align: center;
-            margin-bottom: 1rem;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e5e7eb;
-        }
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
@@ -577,6 +341,59 @@
             color: #dc2626;
             font-weight: bold;
         }
+
+        /* Styles for the new assignment detail modal */
+        .assignment-detail-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 95%;
+            width: 450px; /* Adjusted width for detail modal */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .assignment-detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px; /* Increased padding */
+            border: 1px solid #d1d5db; /* Slightly darker border */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .assignment-detail-item:hover {
+            background-color: #e5e7eb; /* Lighter hover background */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+        }
+
+        .assignment-detail-label {
+            font-size: 0.95rem; /* Slightly larger font */
+            color: #4b5563; /* Darker gray for better contrast */
+            font-weight: 500;
+        }
+
+        .assignment-detail-value {
+            font-size: 1.15rem; /* Slightly larger font */
+            font-weight: 600;
+            color: #1f2937; /* Darker text for values */
+            word-break: break-word; /* Ensure long addresses wrap */
+            text-decoration: none; /* Remove underline by default */
+        }
+
+        /* Removed link-style as per user request for assignment name, 
+           but keeping it here in case it's needed for other links in the future. */
+        /* .assignment-detail-value.link-style {
+            color: #3b82f6;
+            text-decoration: underline;
+        } */
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
@@ -893,7 +710,7 @@
                                     <span class="sort-indicator"></span>
                                 </div>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-now nowrap cursor-pointer" data-sort-key="assignmentStatus">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap cursor-pointer" data-sort-key="assignmentStatus">
                                 <div class="flex items-center">
                                     <span>配置状況</span>
                                     <span class="sort-indicator"></span>
@@ -931,10 +748,10 @@
         </div>
     </div>
 
-    <div id="line-notification-settings-modal" class="line-notification-modal-overlay">
-        <div class="line-notification-modal-content">
-            <button id="line-notification-modal-close-button" class="line-notification-modal-close-button">&times;</button>
-            <h3 class="line-notification-modal-title">LINE通知設定</h3>
+    <div id="line-notification-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="line-notification-modal-close-button" class="modal-close-button">&times;</button>
+            <h3 class="modal-title">LINE通知設定</h3>
 
             <div class="space-y-4">
                 <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-2">通知設定</h4>
@@ -983,9 +800,9 @@
         </div>
     </div>
 
-    <div id="calendar-modal" class="calendar-modal-overlay">
-        <div class="calendar-modal-content">
-            <button id="calendar-modal-close-button" class="line-notification-modal-close-button">&times;</button>
+    <div id="calendar-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="calendar-modal-close-button" class="modal-close-button">&times;</button>
             <div class="calendar-header">
                 <button id="prev-month-button" class="p-1 rounded-full hover:bg-gray-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
@@ -1011,10 +828,10 @@
         </div>
     </div>
 
-    <div id="phone-call-modal" class="phone-call-modal-overlay">
-        <div class="phone-call-modal-content">
-            <button id="phone-call-modal-close-button" class="phone-call-modal-close-button">&times;</button>
-            <h3 id="phone-call-modal-title" class="phone-call-modal-title"></h3>
+    <div id="phone-call-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="phone-call-modal-close-button" class="modal-close-button">&times;</button>
+            <h3 id="phone-call-modal-title" class="modal-title"></h3>
             <p id="phone-call-modal-number" class="text-2xl font-bold text-gray-900 mb-4"></p>
             <div class="flex justify-center space-x-4">
                 <button id="call-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">電話をかける</button>
@@ -1023,20 +840,20 @@
         </div>
     </div>
 
-    <div id="account-settings-modal" class="account-settings-modal-overlay">
-        <div class="account-settings-modal-content">
-            <button id="account-settings-modal-close-button" class="account-settings-modal-close-button">&times;</button>
-            <h3 class="account-settings-modal-title">アカウント設定</h3>
+    <div id="account-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="account-settings-modal-close-button" class="modal-close-button">&times;</button>
+            <h3 class="modal-title">アカウント設定</h3>
             <div id="account-list-area" class="flex-grow overflow-y-auto space-y-2">
             </div>
             <button id="add-account-button" class="mt-4 px-6 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors">アカウント追加</button>
         </div>
     </div>
 
-    <div id="individual-account-settings-modal" class="individual-account-settings-modal-overlay">
-        <div class="individual-account-settings-modal-content">
-            <button id="individual-account-settings-modal-close-button" class="individual-account-settings-modal-close-button">&times;</button>
-            <h3 id="individual-account-settings-title" class="individual-account-settings-modal-title"></h3>
+    <div id="individual-account-settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="individual-account-settings-modal-close-button" class="modal-close-button">&times;</button>
+            <h3 id="individual-account-settings-title" class="modal-title"></h3>
 
             <div>
                 <h4 class="section-title">通知設定</h4>
@@ -1092,6 +909,34 @@
             </div>
         </div>
     </div>
+
+    <!-- New Assignment Detail Modal -->
+    <div id="assignment-detail-modal" class="modal-overlay">
+        <div class="assignment-detail-modal-content">
+            <button id="assignment-detail-modal-close-button" class="modal-close-button">&times;</button>
+            <h3 id="assignment-detail-modal-title" class="modal-title"></h3>
+            
+            <div class="grid grid-cols-1 gap-4">
+                <div id="assignment-detail-work-history" class="assignment-detail-item">
+                    <span class="assignment-detail-label">勤務履歴</span>
+                    <span class="assignment-detail-value">確認する</span>
+                </div>
+                <div id="assignment-detail-phone-number" class="assignment-detail-item">
+                    <span class="assignment-detail-label">電話番号</span>
+                    <span class="assignment-detail-value"></span>
+                </div>
+                <div id="assignment-detail-site-address" class="assignment-detail-item">
+                    <span class="assignment-detail-label">現場住所</span>
+                    <span class="assignment-detail-value"></span>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button id="assignment-detail-ok-button" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors">OK</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         let currentSystemDate = new Date();
@@ -1231,6 +1076,15 @@
             const detailTooltip = document.getElementById('detail-tooltip');
             const tooltipContent = detailTooltip.querySelector('.tooltip-content');
 
+            // New Assignment Detail Modal elements
+            const assignmentDetailModal = document.getElementById('assignment-detail-modal');
+            const assignmentDetailModalCloseButton = document.getElementById('assignment-detail-modal-close-button');
+            const assignmentDetailModalTitle = document.getElementById('assignment-detail-modal-title');
+            const assignmentDetailWorkHistory = document.getElementById('assignment-detail-work-history');
+            const assignmentDetailPhoneNumber = document.getElementById('assignment-detail-phone-number');
+            const assignmentDetailSiteAddress = document.getElementById('assignment-detail-site-address');
+            const assignmentDetailOkButton = document.getElementById('assignment-detail-ok-button');
+
 
             let allTableData = [
                 {
@@ -1240,7 +1094,8 @@
                     lastWorkDate: '2025/06/27',
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
-                    holidayStatus: ''
+                    holidayStatus: '',
+                    siteAddress: '福岡県福岡市博多区博多駅中央街1-1'
                 },
                 {
                     no: 4, teamMember: '山田 太郎', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
@@ -1249,7 +1104,8 @@
                     lastWorkDate: '2025/06/28',
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
-                    holidayStatus: ''
+                    holidayStatus: '',
+                    siteAddress: '東京都新宿区新宿3丁目38-1'
                 },
                 {
                     no: 5, teamMember: '佐藤 花子', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
@@ -1258,7 +1114,8 @@
                     lastWorkDate: '2025/06/27',
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
-                    holidayStatus: ''
+                    holidayStatus: '',
+                    siteAddress: '大阪府大阪市北区梅田1丁目'
                 },
                 {
                     no: 6, teamMember: '高橋 悟', branch: '東京支店', client: '中央開発', assignment: '新宿駅東口再開発',
@@ -1267,7 +1124,8 @@
                     lastWorkDate: '2025/06/28',
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
-                    holidayStatus: ''
+                    holidayStatus: '',
+                    siteAddress: '東京都新宿区新宿3丁目38-1'
                 },
                 {
                     no: 7, teamMember: '中村 健一', branch: '大阪支店', client: '関西電鉄', assignment: '梅田地下街警備',
@@ -1276,7 +1134,8 @@
                     lastWorkDate: '2025/06/27',
                     assignmentStatus: '配置済み',
                     consecutiveWorkStatus: '3連勤中',
-                    holidayStatus: ''
+                    holidayStatus: '',
+                    siteAddress: '大阪府大阪市北区梅田1丁目'
                 }
             ];
 
@@ -1330,7 +1189,8 @@
                     lastWorkDate: `2025/06/${String(1 + i).padStart(2, '0')}`,
                     assignmentStatus: '未配置',
                     consecutiveWorkStatus: randomConsecutiveStatus,
-                    holidayStatus: holidayStatus
+                    holidayStatus: holidayStatus,
+                    siteAddress: '未定' // Unassigned personnel don't have a specific site address
                 });
             }
 
@@ -1405,6 +1265,8 @@
                     unassignedPersonnelScreen.classList.remove('hidden');
                     selectedUnassignedBranches = [...allBranches];
                     unassignedSearchInput.value = '';
+                    unassignedCurrentSortKey = null; // Reset sort for unassigned screen
+                    unassignedCurrentSortDirection = 'asc';
                     populateUnassignedBranchFilterCheckboxes();
                     filterAndRenderUnassignedPersonnelTable();
                 } else if (currentView === 'work-history') {
@@ -1415,6 +1277,8 @@
                     if (workHistoryUnassignedFilterButton) {
                         workHistoryUnassignedFilterButton.classList.remove('bg-yellow-600');
                     }
+                    workHistoryCurrentSortKey = null; // Reset sort for work history screen
+                    workHistoryCurrentSortDirection = 'asc';
                     populateWorkHistoryBranchFilterCheckboxes();
                     filterAndRenderWorkHistoryTable();
                 }
@@ -1499,7 +1363,8 @@
                     const phoneIconWrapper = document.createElement('span');
                     phoneIconWrapper.classList.add('ml-2');
                     phoneIconWrapper.innerHTML = phoneIconSvg;
-                    phoneIconWrapper.addEventListener('click', () => {
+                    phoneIconWrapper.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent row click from firing
                         openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
                     });
                     teamMemberDiv.appendChild(phoneIconWrapper);
@@ -1517,14 +1382,14 @@
                     row.appendChild(clientCell);
 
                     const assignmentCell = document.createElement('td');
+                    // Removed 'underline' and 'text-blue-600' classes
                     assignmentCell.classList.add('px-6', 'py-4', 'text-sm', 'text-gray-900', 'text-center', 'cursor-pointer');
                     assignmentCell.textContent = rowData.assignment;
                     assignmentCell.addEventListener('click', () => {
-                        currentWorkHistoryAssignment = rowData.assignment;
-                        currentView = 'work-history';
-                        updateScreenVisibility();
+                        openAssignmentDetailModal(rowData);
                     });
-                    assignmentCell.addEventListener('mouseover', (event) => showTooltip(event, '勤務履歴を確認'));
+                    // Add mouseover and mouseout for tooltip
+                    assignmentCell.addEventListener('mouseover', (event) => showTooltip(event, '詳細を確認する'));
                     assignmentCell.addEventListener('mouseout', hideTooltip);
                     row.appendChild(assignmentCell);
 
@@ -2269,10 +2134,10 @@
                     const dataForWorkHistory = individualEndReportTime.value;
 
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                .map(cb => cb.value);
+                                                                 .map(cb => cb.value);
 
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                    .map(cb => cb.value);
+                                                                     .map(cb => cb.value);
 
                     console.log(`アカウント設定を保存しました:\n` +
                                 `自宅出発: ${departure}分前\n` +
@@ -2386,13 +2251,13 @@
                 });
             }
 
-            function showTooltip(event, text = '') {
+            function showTooltip(event, text = '') { // Added back 'text' parameter for generic use
                 const members = event.currentTarget.dataset.members;
                 if (members) {
                     const memberList = members.split(',').map(name => `<li>${name}</li>`).join('');
                     tooltipContent.innerHTML = `<ul>${memberList}</ul>`;
                 } else {
-                    tooltipContent.textContent = text;
+                    tooltipContent.textContent = text; 
                 }
                 detailTooltip.classList.add('visible');
 
@@ -2514,8 +2379,8 @@
                     const matchesBranch = selectedUnassignedBranches.includes(item.branch);
                     const searchTermLower = unassignedSearchTerm.toLowerCase();
                     const matchesSearch = item.teamMember.toLowerCase().includes(searchTermLower) ||
-                                            item.consecutiveWorkStatus.toLowerCase().includes(searchTermLower) ||
-                                            item.holidayStatus.toLowerCase().includes(searchTermLower);
+                                                item.consecutiveWorkStatus.toLowerCase().includes(searchTermLower) ||
+                                                item.holidayStatus.toLowerCase().includes(searchTermLower);
                     return matchesBranch && matchesSearch;
                 });
 
@@ -2555,7 +2420,8 @@
                     `;
                     const phoneIconWrapper = document.createElement('span');
                     phoneIconWrapper.innerHTML = phoneIconSvg;
-                    phoneIconWrapper.addEventListener('click', () => {
+                    phoneIconWrapper.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent row click from firing
                         openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
                     });
                     teamMemberDiv.appendChild(phoneIconWrapper);
@@ -2715,7 +2581,8 @@
                     `;
                     const phoneIconWrapper = document.createElement('span');
                     phoneIconWrapper.innerHTML = phoneIconSvg;
-                    phoneIconWrapper.addEventListener('click', () => {
+                    phoneIconWrapper.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent row click from firing
                         openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
                     });
                     teamMemberDiv.appendChild(phoneIconWrapper);
@@ -2860,6 +2727,71 @@
                     filterAndRenderUnassignedPersonnelTable();
                 });
             }
+
+            // --- Assignment Detail Modal Functions ---
+            function openAssignmentDetailModal(rowData) {
+                assignmentDetailModalTitle.textContent = `${rowData.assignment} 詳細`;
+                
+                // Set up Work History link
+                assignmentDetailWorkHistory.querySelector('.assignment-detail-value').textContent = '確認する';
+                assignmentDetailWorkHistory.onclick = () => {
+                    currentWorkHistoryAssignment = rowData.assignment;
+                    currentView = 'work-history';
+                    updateScreenVisibility();
+                    closeAssignmentDetailModal();
+                };
+                // Updated tooltip text for "電話番号"
+                assignmentDetailWorkHistory.addEventListener('mouseover', (event) => showTooltip(event, '勤務履歴を確認'));
+                assignmentDetailWorkHistory.addEventListener('mouseout', hideTooltip);
+
+                // Set up Phone Number link
+                assignmentDetailPhoneNumber.querySelector('.assignment-detail-value').textContent = rowData.phoneNumber;
+                assignmentDetailPhoneNumber.onclick = () => {
+                    openPhoneCallModal(rowData.teamMember, rowData.phoneNumber);
+                    closeAssignmentDetailModal();
+                };
+                // Updated tooltip text for "電話番号"
+                assignmentDetailPhoneNumber.addEventListener('mouseover', (event) => showTooltip(event, '電話をかける'));
+                assignmentDetailPhoneNumber.addEventListener('mouseout', hideTooltip);
+
+                // Set up Site Address link
+                assignmentDetailSiteAddress.querySelector('.assignment-detail-value').textContent = rowData.siteAddress;
+                assignmentDetailSiteAddress.onclick = () => {
+                    if (rowData.siteAddress && rowData.siteAddress !== '未定') {
+                        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(rowData.siteAddress)}`, '_blank');
+                    } else {
+                        console.log('現場住所が未定のため、地図を開けません。');
+                    }
+                    closeAssignmentDetailModal();
+                };
+                // Updated tooltip text for "現場住所"
+                assignmentDetailSiteAddress.addEventListener('mouseover', (event) => showTooltip(event, 'GoogleMapで確認'));
+                assignmentDetailSiteAddress.addEventListener('mouseout', hideTooltip);
+
+                assignmentDetailModal.classList.add('open');
+            }
+
+            function closeAssignmentDetailModal() {
+                assignmentDetailModal.classList.remove('open');
+            }
+
+            if (assignmentDetailModalCloseButton) {
+                assignmentDetailModalCloseButton.addEventListener('click', closeAssignmentDetailModal);
+            }
+
+            if (assignmentDetailOkButton) {
+                assignmentDetailOkButton.addEventListener('click', closeAssignmentDetailModal);
+            }
+
+            if (assignmentDetailModal) {
+                assignmentDetailModal.addEventListener('click', (event) => {
+                    if (event.target === assignmentDetailModal) {
+                        closeAssignmentDetailModal();
+                    }
+                });
+            }
+            // --- End Assignment Detail Modal Functions ---
+
 
             updateScreenVisibility();
         });
