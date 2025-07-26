@@ -389,11 +389,65 @@
         }
 
         /* Removed link-style as per user request for assignment name, 
-           but keeping it here in case it's needed for other links in the future. */
+            but keeping it here in case it's needed for other links in the future. */
         /* .assignment-detail-value.link-style {
             color: #3b82f6;
             text-decoration: underline;
         } */
+
+        /* Calendar specific styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .calendar-grid .day-label {
+            font-weight: bold;
+            color: #4b5563;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex; /* Ensure day labels are centered */
+            align-items: center;
+            justify-content: center;
+        }
+        .calendar-grid span.current-month {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            background-color: #f9fafb;
+            color: #1f2937;
+            display: flex; /* Use flex to center the number */
+            align-items: center;
+            justify-content: center;
+            height: 40px; /* Give a fixed height for consistent grid cells */
+        }
+        .calendar-grid span.current-month:hover {
+            background-color: #e5e7eb;
+        }
+        .calendar-grid span.sunday {
+            color: #ef4444; /* Red for Sunday */
+        }
+        .calendar-grid span.saturday {
+            color: #3b82f6; /* Blue for Saturday */
+        }
+        .calendar-grid span.today {
+            background-color: #bfdbfe; /* Light blue for today */
+            font-weight: bold;
+            color: #1e40af;
+            border: 1px solid #60a5fa;
+        }
     </style>
 </head>
 <body class="bg-gray-100 p-4 min-h-screen flex items-start justify-center">
@@ -945,6 +999,7 @@
 
     <script>
         let currentSystemDate = new Date();
+        let currentCalendarDate = new Date(); // Initialize for calendar modal
 
         document.addEventListener('DOMContentLoaded', () => {
             const mainDateElement = document.getElementById('system-date');
@@ -1846,6 +1901,7 @@
 
                 calendarMonthYear.textContent = `${year}年 ${month + 1}月`;
 
+                // Remove all children except the first 7 (day labels)
                 while (calendarGrid.children.length > 7) {
                     calendarGrid.removeChild(calendarGrid.lastChild);
                 }
@@ -1889,6 +1945,20 @@
                     });
                     calendarGrid.appendChild(daySpan);
                 }
+            }
+
+            // Calendar navigation buttons event listeners (added to fix calendar functionality)
+            if (prevMonthButton) {
+                prevMonthButton.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+                    renderCalendar(currentCalendarDate);
+                });
+            }
+            if (nextMonthButton) {
+                nextMonthButton.addEventListener('click', () => {
+                    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+                    renderCalendar(currentCalendarDate);
+                });
             }
 
 
@@ -2146,10 +2216,10 @@
                     const dataForWorkHistory = individualEndReportTime.value;
 
                     const selectedNotificationBranches = Array.from(notificationBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                 .map(cb => cb.value);
+                                                                .map(cb => cb.value);
 
                     const selectedAttendanceDisplayBranches = Array.from(attendanceDisplayBranchesCheckboxes.querySelectorAll('input:checked'))
-                                                                     .map(cb => cb.value);
+                                                                    .map(cb => cb.value);
 
                     console.log(`アカウント設定を保存しました:\n` +
                                 `自宅出発: ${departure}分前\n` +
